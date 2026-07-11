@@ -1,0 +1,23 @@
+:root {
+  --primary-color: #3b82f6;
+  --bg-color: #0f172a;
+  --text-color: #f8fafc;
+  --surface-color: #1e293b;
+}
+
+body {
+  margin: 0;
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
