@@ -1,0 +1,43 @@
+.footer {
+  padding: 1.5rem 2rem;
+  background-color: transparent;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  margin-top: auto;
+  transition: all 0.3s ease;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.text {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #71717a; /* Dark grey for light theme */
+}
+
+.credits {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #71717a;
+}
+
+.author {
+  font-weight: 600;
+  color: var(--accent-color, #ff74b2); /* Pink accent */
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 640px) {
+  .container {
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+  }
+}

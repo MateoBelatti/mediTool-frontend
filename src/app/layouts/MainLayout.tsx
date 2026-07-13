@@ -1,18 +1,18 @@
 import { Outlet } from 'react-router-dom'
+import { Sidebar } from '@/shared/components/Sidebar'
+import { Footer } from '@/shared/components/Footer'
 import styles from './MainLayout.module.css'
 
 export const MainLayout = () => {
   return (
     <div className={styles.layout}>
-      <header className={styles.header}>
-        <h1>MediTool</h1>
-      </header>
-      <main className={styles.main}>
-        <Outlet />
-      </main>
-      <footer className={styles.footer}>
-        <p>&copy; {new Date().getFullYear()} MediTool. All rights reserved.</p>
-      </footer>
+      <Sidebar />
+      <div className={styles.contentWrapper}>
+        <main className={styles.main}>
+          <Outlet />
+        </main>
+        <Footer />
+      </div>
     </div>
   )
 }

@@ -1,8 +1,13 @@
 :root {
-  --primary-color: #3b82f6;
-  --bg-color: #0f172a;
-  --text-color: #f8fafc;
-  --surface-color: #1e293b;
+  --primary-color: #111111;
+  --bg-color: #f8f6f0; /* Cream background like the image */
+  --text-color: #111111;
+  --surface-color: #ffffff;
+  --sidebar-bg: #18181b;
+  --accent-pink: #f8b4d9;
+  --accent-yellow: #fde08b;
+  --accent-green: #a3c586;
+  --accent-blue: #9bb8d3;
 }
 
 body {
