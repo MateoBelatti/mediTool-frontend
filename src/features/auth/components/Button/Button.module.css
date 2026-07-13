@@ -1,0 +1,46 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Variantes */
+.primary {
+  background-color: #031346; /* Azul muy oscuro basado en la imagen */
+  color: #ffffff;
+}
+
+.primary:hover:not(:disabled) {
+  background-color: #051b5c;
+}
+
+.primary:focus-visible {
+  box-shadow: 0 0 0 3px rgba(3, 19, 70, 0.3);
+}
+
+.secondary {
+  background-color: transparent;
+  color: #031346;
+  border: 1px solid #d1d5db;
+}
+
+.secondary:hover:not(:disabled) {
+  background-color: #f3f4f6;
+}
+
+.fullWidth {
+  width: 100%;
+}

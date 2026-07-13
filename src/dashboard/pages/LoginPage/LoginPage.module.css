@@ -1,0 +1,103 @@
+.pageContainer {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f4f6; /* Fondo gris claro suave */
+  padding: 1rem;
+  box-sizing: border-box; /* Previene el scroll por el padding */
+}
+
+.card {
+  display: flex;
+  width: 100%;
+  max-width: 900px; /* Reducido de 1000px */
+  height: 520px; /* Reducido de 600px para que quede más compacto */
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.05),
+    0 4px 6px rgba(0, 0, 0, 0.02);
+  overflow: hidden; /* Para asegurar que la imagen respete el border-radius */
+}
+
+/* Lado izquierdo: Imagen */
+.imageSection {
+  display: none; /* Oculto en móviles */
+  width: 50%;
+  position: relative;
+  /* Imagen placeholder que recuerda al arte oscuro/azul del requerimiento */
+  background: linear-gradient(135deg, #02091c 0%, #061c47 100%);
+  /* Si se tuviera la imagen real:
+  background-image: url('ruta-a-imagen.jpg');
+  background-size: cover;
+  background-position: center;
+  */
+}
+
+.imageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.2); /* Oscurece ligeramente */
+}
+
+.imageTitle {
+  color: #ffffff;
+  font-size: 2.5rem;
+  letter-spacing: 0.2em;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+/* Lado derecho: Formulario */
+.formSection {
+  width: 100%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Logo placeholder */
+.logoPlaceholder {
+  position: absolute;
+  top: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logoCircle {
+  width: 2rem;
+  height: 2rem;
+  background-color: #031346;
+  border-radius: 50%;
+}
+
+.logoText {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #031346;
+  letter-spacing: -0.02em;
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .imageSection {
+    display: block; /* Muestra la imagen en pantallas medianas y grandes */
+  }
+
+  .formSection {
+    width: 50%;
+    padding: 3rem;
+  }
+}
