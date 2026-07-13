@@ -29,15 +29,30 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true
       try {
-        // TODO: Implementar lógica de refresh token
-        // const { data } = await axios.post(`${env.VITE_API_URL}/auth/refresh`)
-        // localStorage.setItem('token', data.token)
-        // originalRequest.headers.Authorization = `Bearer ${data.token}`
-        // return apiClient(originalRequest)
+        const refreshToken = localStorage.getItem('refreshToken')
 
-        return Promise.reject(error)
+        if (!refreshToken) {
+          throw new Error('No refresh token available')
+        }
+
+        const { data } = await axios.post(
+          `${env.VITE_API_URL}/api/Auth/refresh`,
+          { refreshToken }
+        )
+
+        if (data.token) {
+          localStorage.setItem('token', data.token)
+          originalRequest.headers.Authorization = `Bearer ${data.token}`
+        }
+
+        if (data.refreshToken) {
+          localStorage.setItem('refreshToken', data.refreshToken)
+        }
+
+        return apiClient(originalRequest)
       } catch (refreshError) {
         localStorage.removeItem('token')
+        localStorage.removeItem('refreshToken')
         window.location.href = '/login'
         return Promise.reject(refreshError)
       }
