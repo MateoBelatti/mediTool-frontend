@@ -12,8 +12,8 @@ export const authService = {
       credentials
     )
 
-    if (response.data.token) {
-      localStorage.setItem('token', response.data.token)
+    if (response.data.accessToken) {
+      localStorage.setItem('token', response.data.accessToken)
     }
 
     if (response.data.refreshToken) {
@@ -29,8 +29,8 @@ export const authService = {
       data
     )
 
-    if (response.data.token) {
-      localStorage.setItem('token', response.data.token)
+    if (response.data.accessToken) {
+      localStorage.setItem('token', response.data.accessToken)
     }
 
     if (response.data.refreshToken) {

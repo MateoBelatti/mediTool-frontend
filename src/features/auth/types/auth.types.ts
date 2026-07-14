@@ -8,7 +8,7 @@ export interface RefreshTokenRequestDto {
 }
 
 export interface AuthResponseDto {
-  token: string
+  accessToken: string
   refreshToken?: string
 }
 
