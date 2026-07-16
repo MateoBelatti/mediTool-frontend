@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { MainLayout } from '@/app/layouts/MainLayout'
 import { HomePage } from '@/features/dashboard/pages/HomePage'
 import { LoginPage } from '@/dashboard/pages/LoginPage/LoginPage'
-import { PacientesPage } from '@/features/pacientes/pages/PacientesPage'
+import { PacientesPage } from '@/dashboard/pages/pacientesPage/PacientesPage'
 
 const router = createBrowserRouter([
   {
