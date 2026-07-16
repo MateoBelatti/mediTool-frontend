@@ -2,25 +2,25 @@ import { apiClient } from '@/shared/api/apiClient'
 import {
   CrearTurnoFijoDto,
   EditarTurnoFijoDto,
+  TurnoFijo,
 } from '../schemas/turnos-fijos.schema'
 
 export const turnosFijosService = {
-  getByProfesional: async (profesionalId: number) => {
-    const response = await apiClient.get(
+  getByProfesional: async (profesionalId: number): Promise<TurnoFijo[]> => {
+    const response = await apiClient.get<TurnoFijo[]>(
       `/TurnoFijo/profesional/${profesionalId}`
     )
     return response.data
   },
-  create: async (data: CrearTurnoFijoDto) => {
-    const response = await apiClient.post('/TurnoFijo', data)
+  create: async (data: CrearTurnoFijoDto): Promise<TurnoFijo> => {
+    const response = await apiClient.post<TurnoFijo>('/TurnoFijo', data)
     return response.data
   },
-  update: async (id: number, data: EditarTurnoFijoDto) => {
-    const response = await apiClient.put(`/TurnoFijo/${id}`, data)
+  update: async (id: number, data: EditarTurnoFijoDto): Promise<TurnoFijo> => {
+    const response = await apiClient.put<TurnoFijo>(`/TurnoFijo/${id}`, data)
     return response.data
   },
-  delete: async (id: number) => {
-    const response = await apiClient.delete(`/TurnoFijo/${id}`)
-    return response.data
+  delete: async (id: number): Promise<void> => {
+    await apiClient.delete(`/TurnoFijo/${id}`)
   },
 }

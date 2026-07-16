@@ -1,39 +1,39 @@
 import { apiClient } from '@/shared/api/apiClient'
-import { CrearTurnoDto, EstadoTurno } from '../schemas/turnos.schema'
+import { CrearTurnoDto, EstadoTurno, Turno } from '../schemas/turnos.schema'
 
 export const turnosService = {
   getAgenda: async (params: {
     desde: string
     hasta: string
     profesionalId?: number
-  }) => {
-    const response = await apiClient.get('/Turno/agenda', { params })
+  }): Promise<Turno[]> => {
+    const response = await apiClient.get<Turno[]>('/Turno/agenda', { params })
     return response.data
   },
-  getById: async (id: number) => {
-    const response = await apiClient.get(`/Turno/${id}`)
+  getById: async (id: number): Promise<Turno> => {
+    const response = await apiClient.get<Turno>(`/Turno/${id}`)
     return response.data
   },
-  createSuelto: async (data: CrearTurnoDto) => {
-    const response = await apiClient.post('/Turno', data)
+  createSuelto: async (data: CrearTurnoDto): Promise<Turno> => {
+    const response = await apiClient.post<Turno>('/Turno', data)
     return response.data
   },
-  reprogramar: async (id: number, nuevaFechaHora: string) => {
-    const response = await apiClient.patch(`/Turno/${id}/reprogramar`, null, {
+  reprogramar: async (id: number, nuevaFechaHora: string): Promise<void> => {
+    await apiClient.patch(`/Turno/${id}/reprogramar`, null, {
       params: { nuevaFechaHora },
     })
-    return response.data
   },
-  cambiarEstado: async (id: number, nuevoEstado: EstadoTurno) => {
-    const response = await apiClient.patch(`/Turno/${id}/estado`, null, {
+  cambiarEstado: async (
+    id: number,
+    nuevoEstado: EstadoTurno
+  ): Promise<void> => {
+    await apiClient.patch(`/Turno/${id}/estado`, null, {
       params: { nuevoEstado },
     })
-    return response.data
   },
-  generarMasivo: async (hastaFecha: string) => {
-    const response = await apiClient.post('/Turno/generar-masivo', null, {
+  generarMasivo: async (hastaFecha: string): Promise<void> => {
+    await apiClient.post('/Turno/generar-masivo', null, {
       params: { hastaFecha },
     })
-    return response.data
   },
 }

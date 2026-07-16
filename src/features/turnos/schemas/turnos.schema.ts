@@ -19,4 +19,15 @@ export const CrearTurnoSchema = z.object({
   estado: z.nativeEnum(EstadoTurno).optional(),
 })
 
+export const TurnoSchema = z.object({
+  id: z.number(),
+  turnoFijoId: z.number().nullable().optional(),
+  pacienteId: z.number(),
+  profesionalId: z.number(),
+  fechaHora: z.string(),
+  duracionMin: z.number(),
+  estado: z.string(),
+})
+
 export type CrearTurnoDto = z.infer<typeof CrearTurnoSchema>
+export type Turno = z.infer<typeof TurnoSchema>

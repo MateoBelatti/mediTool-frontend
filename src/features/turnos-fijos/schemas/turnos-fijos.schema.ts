@@ -25,5 +25,18 @@ export const EditarTurnoFijoSchema = z.object({
   activo: z.boolean({ required_error: 'El estado activo es requerido' }),
 })
 
+export const TurnoFijoSchema = z.object({
+  id: z.number(),
+  pacienteId: z.number(),
+  profesionalId: z.number(),
+  diaSemana: z.number(),
+  hora: z.string(),
+  duracionMin: z.number(),
+  fechaInicio: z.string(),
+  fechaFin: z.string().nullable().optional(),
+  activo: z.boolean(),
+})
+
 export type CrearTurnoFijoDto = z.infer<typeof CrearTurnoFijoSchema>
 export type EditarTurnoFijoDto = z.infer<typeof EditarTurnoFijoSchema>
+export type TurnoFijo = z.infer<typeof TurnoFijoSchema>
