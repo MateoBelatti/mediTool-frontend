@@ -16,3 +16,20 @@ export interface EditarTurnoFijoDto {
   fechaFin?: string
   activo: boolean
 }
+
+export interface TurnoFijo {
+  id: number
+  pacienteId: number
+  paciente?: {
+    id: number
+    nombre: string
+    apellido: string
+  }
+  profesionalId: number
+  diaSemana: number
+  hora: string
+  duracionMin: number
+  fechaInicio: string
+  fechaFin?: string
+  activo: boolean
+}

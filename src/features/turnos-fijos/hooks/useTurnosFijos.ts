@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { turnosFijosService } from '../services/turnosFijos.service'
-import {
+import type {
   CrearTurnoFijoDto,
   EditarTurnoFijoDto,
 } from '../schemas/turnos-fijos.schema'

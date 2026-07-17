@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { turnosService } from '../services/turnos.service'
-import { CrearTurnoDto, EstadoTurno } from '../schemas/turnos.schema'
+import { type CrearTurnoDto, EstadoTurno } from '../schemas/turnos.schema'
 
 export const TURNOS_KEYS = {
   all: ['turnos'] as const,

@@ -1,5 +1,9 @@
 import { apiClient } from '@/shared/api/apiClient'
-import { CrearTurnoDto, EstadoTurno, Turno } from '../schemas/turnos.schema'
+import {
+  type CrearTurnoDto,
+  EstadoTurno,
+  type Turno,
+} from '../schemas/turnos.schema'
 
 export const turnosService = {
   getAgenda: async (params: {

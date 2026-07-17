@@ -1,5 +1,5 @@
 import { apiClient } from '@/shared/api/apiClient'
-import {
+import type {
   CrearTurnoFijoDto,
   EditarTurnoFijoDto,
   TurnoFijo,
