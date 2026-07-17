@@ -20,7 +20,7 @@ const GENERAL_ITEMS = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
   { icon: Users, label: 'Pacientes', path: '/pacientes' },
   { icon: CalendarDays, label: 'Turnos', path: '/turnos' },
-  { icon: StickyNote, label: 'Notas', path: '/notas' },
+  { icon: StickyNote, label: 'Reuniones', path: '/Reuniones' },
   { icon: ClipboardCheck, label: 'Asistencia', path: '/asistencia' },
   { icon: BarChart2, label: 'Informes', path: '/informes' },
 ]
