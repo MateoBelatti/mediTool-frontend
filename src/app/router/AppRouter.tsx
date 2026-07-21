@@ -5,6 +5,8 @@ import { LoginPage } from '@/dashboard/pages/LoginPage/LoginPage'
 import { PacientesPage } from '@/dashboard/pages/pacientesPage/PacientesPage'
 import { TurnosPage } from '@/dashboard/pages/TurnosPage/TurnosPage'
 import { AsistenciasPage } from '@/dashboard/pages/AsistenciasPage/AsistenciasPage'
+import { InformesPage } from '@/dashboard/pages/InformesPage/InformesPage'
+import { ReunionesPage } from '@/dashboard/pages/ReunionesPage/ReunionesPage'
 
 const router = createBrowserRouter([
   {
@@ -30,6 +32,14 @@ const router = createBrowserRouter([
       {
         path: 'asistencia',
         element: <AsistenciasPage />,
+      },
+      {
+        path: 'informes',
+        element: <InformesPage />,
+      },
+      {
+        path: 'reuniones',
+        element: <ReunionesPage />,
       },
       {
         path: '*',
