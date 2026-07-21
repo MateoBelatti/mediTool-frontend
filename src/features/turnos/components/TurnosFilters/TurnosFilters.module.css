@@ -1,8 +1,10 @@
 .filtersContainer {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
   gap: 1.5rem;
-  background-color: white;
+  background-color: var(--surface-color);
   padding: 1.5rem;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
@@ -10,20 +12,15 @@
   flex-shrink: 0;
 }
 
-.topSection {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--surface-alt);
-  padding-bottom: 1rem;
-}
+/* Removed topSection */
 
 .title {
   margin: 0;
-  font-size: var(--text-xl);
+  font-size: var(--text-2xl);
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.025em;
+  margin-bottom: 6px;
 }
 
 .controlsSection {
@@ -31,6 +28,8 @@
   flex-wrap: wrap;
   gap: 1.5rem;
   align-items: flex-end;
+  flex: 1;
+  justify-content: center;
 }
 
 .filterGroup {
