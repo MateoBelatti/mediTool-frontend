@@ -55,15 +55,6 @@ export const ReunionesPage = () => {
 
   return (
     <div className={styles.pageContainer}>
-      <header className={styles.header}>
-        <div className={styles.headerContent}>
-          <h1 className={styles.title}>Reuniones</h1>
-          <p className={styles.subtitle}>
-            Organiza y visualiza tus reuniones agendadas
-          </p>
-        </div>
-      </header>
-
       <div className={styles.content}>
         <ReunionesFilters
           fechaDesde={fechaDesde}

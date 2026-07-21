@@ -83,9 +83,6 @@ export const AsistenciasPage = () => {
       <header className={styles.header}>
         <div className={styles.headerContent}>
           <h1 className={styles.title}>Asistencias</h1>
-          <p className={styles.subtitle}>
-            Control de asistencias mensual de tus pacientes
-          </p>
         </div>
 
         <div className={styles.monthSelector}>

@@ -1,12 +1,8 @@
 .pageContainer {
   display: flex;
   flex-direction: column;
-  padding: 1rem 2rem 2rem 2rem;
-  max-width: 1280px;
-  margin: 0 auto;
-  width: 100%;
-  height: calc(100vh - 64px);
-  animation: fadeIn 0.3s ease-out;
+  height: 100%;
+  gap: 1.5rem;
 }
 
 .header {

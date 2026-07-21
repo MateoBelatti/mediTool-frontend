@@ -8,6 +8,7 @@ import type { Paciente } from '../../../features/pacientes/types/paciente.types'
 import type { PacienteFormData } from '../../../features/pacientes/schemas/paciente.schema'
 import styles from './PacientesPage.module.css'
 import { Plus, Search } from 'lucide-react'
+import { Button } from '@/shared/components/Button/Button'
 
 export const PacientesPage: React.FC = () => {
   const { user } = useAuth()
@@ -82,46 +83,57 @@ export const PacientesPage: React.FC = () => {
 
   return (
     <div className={styles.pageContainer}>
-      <div className={styles.header}>
-        <div>
-          <h1>Pacientes</h1>
-          <p>
-            Gestiona los datos de tus pacientes y vincula nuevos a tu lista.
-          </p>
-        </div>
-        <button className={styles.addBtn} onClick={() => handleOpenModal()}>
-          <Plus size={20} />
-          <span>Nuevo Paciente</span>
-        </button>
-      </div>
+      <div className={styles.filtersContainer}>
+        <h2 className={styles.title}>Pacientes</h2>
 
-      <div className={styles.tabs}>
-        <button
-          className={`${styles.tab} ${activeTab === 'mis-pacientes' ? styles.activeTab : ''}`}
-          onClick={() => setActiveTab('mis-pacientes')}
+        <div className={styles.controlsSection}>
+          <div className={styles.filterGroup}>
+            <label className={styles.label}>
+              <span>Vista</span>
+            </label>
+            <div className={styles.tabs}>
+              <button
+                className={`${styles.tab} ${activeTab === 'mis-pacientes' ? styles.activeTab : ''}`}
+                onClick={() => setActiveTab('mis-pacientes')}
+              >
+                Mis Pacientes
+              </button>
+              <button
+                className={`${styles.tab} ${activeTab === 'todos' ? styles.activeTab : ''}`}
+                onClick={() => setActiveTab('todos')}
+              >
+                Todos
+              </button>
+            </div>
+          </div>
+
+          <div className={styles.filterGroup}>
+            <label className={styles.label}>
+              <Search size={16} />
+              <span>Buscar Paciente</span>
+            </label>
+            <div className={styles.searchContainer}>
+              <input
+                type="text"
+                placeholder="DNI..."
+                value={searchDni}
+                onChange={(e) => setSearchDni(e.target.value)}
+                className={styles.searchInput}
+              />
+            </div>
+          </div>
+        </div>
+
+        <Button
+          onClick={() => handleOpenModal()}
+          leftIcon={<Plus size={18} />}
+          size="sm"
         >
-          Mis Pacientes
-        </button>
-        <button
-          className={`${styles.tab} ${activeTab === 'todos' ? styles.activeTab : ''}`}
-          onClick={() => setActiveTab('todos')}
-        >
-          Todos los Pacientes
-        </button>
+          Nuevo Paciente
+        </Button>
       </div>
 
       <div className={styles.content}>
-        <div className={styles.searchContainer}>
-          <Search size={20} className={styles.searchIcon} />
-          <input
-            type="text"
-            placeholder="Buscar por DNI..."
-            value={searchDni}
-            onChange={(e) => setSearchDni(e.target.value)}
-            className={styles.searchInput}
-          />
-        </div>
-
         {isLoading ? (
           <div className={styles.loading}>Cargando pacientes...</div>
         ) : (

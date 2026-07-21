@@ -24,16 +24,7 @@ export const InformesFilters = ({
 }: InformesFiltersProps) => {
   return (
     <div className={styles.filtersContainer}>
-      <div className={styles.topSection}>
-        <h2 className={styles.title}>Informes</h2>
-        <Button
-          onClick={onNewInformeClick}
-          leftIcon={<Plus size={18} />}
-          size="sm"
-        >
-          Nuevo Informe
-        </Button>
-      </div>
+      <h2 className={styles.title}>Informes</h2>
 
       <div className={styles.controlsSection}>
         <div className={styles.filterGroup}>
@@ -74,6 +65,14 @@ export const InformesFilters = ({
           </div>
         </div>
       </div>
+
+      <Button
+        onClick={onNewInformeClick}
+        leftIcon={<Plus size={18} />}
+        size="sm"
+      >
+        Nuevo Informe
+      </Button>
     </div>
   )
 }

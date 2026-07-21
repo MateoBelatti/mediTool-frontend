@@ -24,16 +24,7 @@ export const TurnosFilters = ({
 }: TurnosFiltersProps) => {
   return (
     <div className={styles.filtersContainer}>
-      <div className={styles.topSection}>
-        <h2 className={styles.title}>Turnos</h2>
-        <Button
-          onClick={onNewTurnoClick}
-          leftIcon={<Plus size={18} />}
-          size="sm"
-        >
-          Nuevo Turno
-        </Button>
-      </div>
+      <h2 className={styles.title}>Turnos</h2>
 
       <div className={styles.controlsSection}>
         <div className={styles.filterGroup}>
@@ -74,6 +65,10 @@ export const TurnosFilters = ({
           </div>
         </div>
       </div>
+
+      <Button onClick={onNewTurnoClick} leftIcon={<Plus size={18} />} size="sm">
+        Nuevo Turno
+      </Button>
     </div>
   )
 }

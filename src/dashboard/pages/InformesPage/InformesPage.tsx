@@ -79,15 +79,6 @@ export const InformesPage = () => {
 
   return (
     <div className={styles.pageContainer}>
-      <header className={styles.header}>
-        <div className={styles.headerContent}>
-          <h1 className={styles.title}>Informes</h1>
-          <p className={styles.subtitle}>
-            Gestiona los informes y evoluciones de tus pacientes
-          </p>
-        </div>
-      </header>
-
       <div className={styles.content}>
         <InformesFilters
           fechaDesde={fechaDesde}

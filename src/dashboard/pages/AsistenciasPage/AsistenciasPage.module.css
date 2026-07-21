@@ -9,17 +9,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: white;
-  padding: var(--space-6);
-  border-radius: var(--radius-lg);
+  background-color: var(--surface-color);
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
+  margin-bottom: 0;
+  flex-shrink: 0;
 }
 
 .title {
-  font-size: var(--text-xl);
+  margin: 0;
+  font-size: var(--text-2xl);
   font-weight: 700;
   color: var(--text-primary);
-  margin: 0 0 var(--space-1) 0;
+  letter-spacing: -0.025em;
 }
 
 .subtitle {
@@ -32,9 +35,10 @@
   display: flex;
   align-items: center;
   gap: var(--space-4);
-  background: var(--surface-color);
+  background: white;
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .currentMonth {

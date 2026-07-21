@@ -24,16 +24,7 @@ export const ReunionesFilters = ({
 }: ReunionesFiltersProps) => {
   return (
     <div className={styles.filtersContainer}>
-      <div className={styles.topSection}>
-        <h2 className={styles.title}>Reuniones</h2>
-        <Button
-          onClick={onNewReunionClick}
-          leftIcon={<Plus size={18} />}
-          size="sm"
-        >
-          Nueva Reunión
-        </Button>
-      </div>
+      <h2 className={styles.title}>Reuniones</h2>
 
       <div className={styles.controlsSection}>
         <div className={styles.filterGroup}>
@@ -74,6 +65,14 @@ export const ReunionesFilters = ({
           </div>
         </div>
       </div>
+
+      <Button
+        onClick={onNewReunionClick}
+        leftIcon={<Plus size={18} />}
+        size="sm"
+      >
+        Nueva Reunión
+      </Button>
     </div>
   )
 }
