@@ -6,12 +6,12 @@
 
 .listItem {
   background: white;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 1rem 1.25rem;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
   cursor: pointer;
   transition: all 0.2s ease;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -19,8 +19,8 @@
 
 .listItem:hover {
   transform: translateX(4px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  border-color: #d1d5db;
+  box-shadow: var(--shadow-sm);
+  border-color: var(--border-color);
 }
 
 .itemMainInfo {
@@ -39,8 +39,8 @@
 
 .pacienteName {
   font-weight: 600;
-  color: #111827;
-  font-size: 1rem;
+  color: var(--text-primary);
+  font-size: var(--text-base);
 }
 
 .datetimeInfo {
@@ -53,12 +53,12 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #4b5563;
-  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
 }
 
 .icon {
-  color: #9ca3af;
+  color: var(--border-color);
 }
 
 .itemBadges {
@@ -70,43 +70,43 @@
 .estadoBadge {
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .estadoPendiente {
-  background-color: #fef3c7;
-  color: #92400e;
+  background-color: var(--warning);
+  color: white;
 }
 
 .estadoPresente {
-  background-color: #d1fae5;
-  color: #065f46;
+  background-color: var(--success);
+  color: white;
 }
 
 .estadoCancelado {
-  background-color: #fee2e2;
-  color: #991b1b;
+  background-color: var(--danger);
+  color: white;
 }
 
 .estadoReprogramado {
-  background-color: #e0e7ff;
-  color: #3730a3;
+  background-color: var(--accent);
+  color: white;
 }
 
 .estadoAusente {
-  background-color: #f3f4f6;
-  color: #374151;
+  background-color: var(--surface-alt);
+  color: var(--text-secondary);
 }
 
 .fijoBadge {
   font-size: 0.7rem;
-  background-color: #f3e8ff;
-  color: #6b21a8;
+  background-color: var(--warning);
+  color: white;
   padding: 0.2rem 0.5rem;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-weight: 600;
 }
 
@@ -117,23 +117,23 @@
   align-items: center;
   justify-content: center;
   padding: 4rem 2rem;
-  color: #6b7280;
+  color: var(--text-muted);
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
   text-align: center;
 }
 
 .emptyIcon {
-  color: #d1d5db;
+  color: var(--border-color);
   margin-bottom: 1rem;
 }
 
 .spinner {
   width: 2.5rem;
   height: 2.5rem;
-  border: 3px solid #f3f4f6;
-  border-top-color: #3b82f6;
+  border: 3px solid var(--surface-alt);
+  border-top-color: var(--accent);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;

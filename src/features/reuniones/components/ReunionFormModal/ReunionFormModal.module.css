@@ -24,23 +24,23 @@
 }
 
 .field label {
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   font-weight: 500;
-  color: #374151;
+  color: var(--text-secondary);
 }
 
 .input,
 .textarea {
   padding: 0.625rem 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  color: #111827;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
   outline: none;
   transition:
     border-color 0.2s,
     box-shadow 0.2s;
-  background-color: #f9fafb;
+  background-color: var(--bg-color);
 }
 
 .textarea {
@@ -49,14 +49,14 @@
 
 .input:focus,
 .textarea:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-sm);
   background-color: white;
 }
 
 .error {
-  color: #ef4444;
-  font-size: 0.75rem;
+  color: var(--danger);
+  font-size: var(--text-xs);
   margin-top: 0.25rem;
 }
 
@@ -66,5 +66,5 @@
   gap: 1rem;
   margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid var(--surface-alt);
 }

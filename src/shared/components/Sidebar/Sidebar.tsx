@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import {
   LayoutDashboard,
@@ -30,15 +30,20 @@ const TOOLS_ITEMS = [
   { icon: LogOut, label: 'Salir', path: '/login' },
 ]
 
-export const Sidebar: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false)
+interface SidebarProps {
+  isOpen: boolean
+  setIsOpen: (isOpen: boolean) => void
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
   const location = useLocation()
 
-  // Close sidebar on route change for mobile
+  // Close sidebar on route change for mobile only
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsOpen(false)
-  }, [location.pathname])
+    if (window.innerWidth <= 768) {
+      setIsOpen(false)
+    }
+  }, [location.pathname, setIsOpen])
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen)

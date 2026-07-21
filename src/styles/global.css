@@ -1,13 +1,36 @@
 :root {
-  --primary-color: #111111;
-  --bg-color: #f8f6f0; /* Cream background like the image */
-  --text-color: #111111;
+  --bg-color: #faf9f5;
   --surface-color: #ffffff;
-  --sidebar-bg: #18181b;
-  --accent-pink: #f8b4d9;
-  --accent-yellow: #fde08b;
-  --accent-green: #a3c586;
-  --accent-blue: #9bb8d3;
+  --surface-alt: #f1efe9;
+  --border-color: #e3e0d6;
+  --text-primary: #1f2420;
+  --text-secondary: #5b6660;
+  --text-muted: #8b948c;
+  --sidebar-bg: #22302a;
+  --sidebar-text: #edefea;
+  --accent: #4a6b5c;
+  --accent-hover: #3c5749;
+  --accent-bg: #e4ebe5;
+  --success: #4c7a5b;
+  --warning: #c08a3e;
+  --danger: #b4483b;
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 24px;
+  --text-2xl: 32px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-sm: 0 1px 2px rgba(31, 36, 32, 0.06);
+  --shadow-md: 0 4px 12px rgba(31, 36, 32, 0.08);
 }
 
 body {
@@ -18,9 +41,10 @@ body {
     -apple-system,
     sans-serif;
   background-color: var(--bg-color);
-  color: var(--text-color);
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
 }
 
 * {

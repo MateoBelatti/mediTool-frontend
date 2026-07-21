@@ -14,13 +14,13 @@
 }
 
 .modal {
-  background-color: #ffffff;
+  background-color: var(--surface-color);
   border-radius: 20px;
   width: 100%;
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
 }
@@ -35,14 +35,14 @@
 
 .header h2 {
   margin: 0;
-  font-size: 1.25rem;
-  color: #111111;
+  font-size: var(--text-lg);
+  color: var(--text-primary);
 }
 
 .closeBtn {
   background: none;
   border: none;
-  color: #71717a;
+  color: var(--text-secondary);
   cursor: pointer;
   padding: 0.5rem;
   border-radius: 50%;
@@ -53,8 +53,8 @@
 }
 
 .closeBtn:hover {
-  background-color: #f4f4f5;
-  color: #111111;
+  background-color: var(--surface-alt);
+  color: var(--text-primary);
 }
 
 .form {
@@ -77,29 +77,29 @@
 }
 
 .formGroup label {
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   font-weight: 500;
-  color: #111111;
+  color: var(--text-primary);
 }
 
 .formGroup input {
   padding: 0.75rem 1rem;
-  border-radius: 8px;
-  border: 1px solid #e4e4e7;
-  background-color: #fafafa;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-color);
   font-size: 0.95rem;
   outline: none;
   transition: all 0.2s ease;
 }
 
 .formGroup input:focus {
-  border-color: #111111;
-  background-color: #ffffff;
+  border-color: var(--text-primary);
+  background-color: var(--surface-color);
 }
 
 .error {
-  color: #ef4444;
-  font-size: 0.75rem;
+  color: var(--danger);
+  font-size: var(--text-xs);
 }
 
 .footer {
@@ -114,7 +114,7 @@
 .cancelBtn,
 .submitBtn {
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
@@ -124,21 +124,21 @@
 
 .cancelBtn {
   background-color: transparent;
-  color: #71717a;
+  color: var(--text-secondary);
 }
 
 .cancelBtn:hover {
-  background-color: #f4f4f5;
-  color: #111111;
+  background-color: var(--surface-alt);
+  color: var(--text-primary);
 }
 
 .submitBtn {
-  background-color: #111111;
-  color: #ffffff;
+  background-color: var(--text-primary);
+  color: var(--surface-color);
 }
 
 .submitBtn:hover {
-  background-color: #27272a;
+  background-color: var(--border-color);
 }
 
 .submitBtn:disabled {

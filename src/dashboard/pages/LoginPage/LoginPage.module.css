@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f3f4f6; /* Fondo gris claro suave */
+  background-color: var(--surface-alt); /* Fondo gris claro suave */
   padding: 1rem;
   box-sizing: border-box; /* Previene el scroll por el padding */
 }
@@ -14,11 +14,9 @@
   width: 100%;
   max-width: 900px; /* Reducido de 1000px */
   height: 520px; /* Reducido de 600px para que quede más compacto */
-  background-color: #ffffff;
+  background-color: var(--surface-color);
   border-radius: 1rem;
-  box-shadow:
-    0 10px 25px rgba(0, 0, 0, 0.05),
-    0 4px 6px rgba(0, 0, 0, 0.02);
+  box-shadow: var(--shadow-sm);
   overflow: hidden; /* Para asegurar que la imagen respete el border-radius */
 }
 
@@ -28,7 +26,11 @@
   width: 50%;
   position: relative;
   /* Imagen placeholder que recuerda al arte oscuro/azul del requerimiento */
-  background: linear-gradient(135deg, #02091c 0%, #061c47 100%);
+  background: linear-gradient(
+    135deg,
+    var(--text-primary) 0%,
+    var(--text-primary) 100%
+  );
   /* Si se tuviera la imagen real:
   background-image: url('ruta-a-imagen.jpg');
   background-size: cover;
@@ -49,7 +51,7 @@
 }
 
 .imageTitle {
-  color: #ffffff;
+  color: var(--surface-color);
   font-size: 2.5rem;
   letter-spacing: 0.2em;
   font-weight: 300;
@@ -79,14 +81,14 @@
 .logoCircle {
   width: 2rem;
   height: 2rem;
-  background-color: #031346;
+  background-color: var(--accent);
   border-radius: 50%;
 }
 
 .logoText {
   font-weight: 700;
-  font-size: 1.25rem;
-  color: #031346;
+  font-size: var(--text-lg);
+  color: var(--accent);
   letter-spacing: -0.02em;
 }
 

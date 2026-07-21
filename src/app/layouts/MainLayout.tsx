@@ -1,17 +1,20 @@
+import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Sidebar } from '@/shared/components/Sidebar'
-import { Footer } from '@/shared/components/Footer'
 import styles from './MainLayout.module.css'
 
 export const MainLayout = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768)
+
   return (
     <div className={styles.layout}>
-      <Sidebar />
-      <div className={styles.contentWrapper}>
+      <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+      <div
+        className={`${styles.contentWrapper} ${isSidebarOpen ? styles.sidebarOpen : ''}`}
+      >
         <main className={styles.main}>
           <Outlet />
         </main>
-        <Footer />
       </div>
     </div>
   )
