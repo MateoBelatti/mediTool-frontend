@@ -16,6 +16,14 @@ const getUserFromToken = (): User | null => {
 
   try {
     const decoded = jwtDecode<UserClaims>(token)
+
+    // Check if token is expired
+    if (decoded.exp && decoded.exp * 1000 < Date.now()) {
+      localStorage.removeItem('token')
+      localStorage.removeItem('refreshToken')
+      return null
+    }
+
     return {
       id:
         decoded.sub ||
@@ -36,6 +44,8 @@ const getUserFromToken = (): User | null => {
     }
   } catch (error) {
     console.error('Error decoding token:', error)
+    localStorage.removeItem('token')
+    localStorage.removeItem('refreshToken')
     return null
   }
 }

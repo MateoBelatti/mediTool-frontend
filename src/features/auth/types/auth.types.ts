@@ -16,6 +16,7 @@ export interface UserClaims {
   sub?: string
   email?: string
   name?: string
+  exp?: number
   // Fallbacks for .NET default claims mapping
   'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'?: string
   'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'?: string
