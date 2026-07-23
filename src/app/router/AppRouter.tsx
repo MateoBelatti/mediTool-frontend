@@ -1,12 +1,12 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { MainLayout } from '@/app/layouts/MainLayout'
-import { HomePage } from '@/features/dashboard/pages/HomePage'
-import { LoginPage } from '@/dashboard/pages/LoginPage/LoginPage'
-import { PacientesPage } from '@/dashboard/pages/pacientesPage/PacientesPage'
-import { TurnosPage } from '@/dashboard/pages/TurnosPage/TurnosPage'
-import { AsistenciasPage } from '@/dashboard/pages/AsistenciasPage/AsistenciasPage'
-import { InformesPage } from '@/dashboard/pages/InformesPage/InformesPage'
-import { ReunionesPage } from '@/dashboard/pages/ReunionesPage/ReunionesPage'
+import { HomePage } from '@/pages/dashboard/HomePage'
+import { LoginPage } from '@/pages/LoginPage/LoginPage'
+import { PacientesPage } from '@/pages/pacientesPage/PacientesPage'
+import { TurnosPage } from '@/pages/TurnosPage/TurnosPage'
+import { AsistenciasPage } from '@/pages/AsistenciasPage/AsistenciasPage'
+import { InformesPage } from '@/pages/InformesPage/InformesPage'
+import { ReunionesPage } from '@/pages/ReunionesPage/ReunionesPage'
 
 const router = createBrowserRouter([
   {
