@@ -1,0 +1,157 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.headerTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.headerTitle h3 {
+  margin: 0;
+  font-size: var(--text-lg);
+  color: var(--text-primary);
+}
+
+.icon {
+  color: var(--accent);
+}
+
+.selectedDateText {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  font-weight: 500;
+  background-color: var(--surface-alt);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.agendaList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  overflow-y: auto;
+  flex: 1;
+  padding-right: var(--space-2); /* Space for scrollbar */
+}
+
+/* Custom Scrollbar */
+.agendaList::-webkit-scrollbar {
+  width: 6px;
+}
+.agendaList::-webkit-scrollbar-track {
+  background: var(--surface-alt);
+  border-radius: 4px;
+}
+.agendaList::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+.agendaItem {
+  display: flex;
+  padding: var(--space-3);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-color);
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.agendaItem:hover {
+  transform: translateX(4px);
+  border-color: var(--accent);
+}
+
+.agendaItem::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: var(--accent);
+}
+
+.agendaItem.fijo::before {
+  background-color: var(--warning);
+}
+
+.timeColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-right: var(--space-3);
+  border-right: 1px solid var(--border-color);
+  min-width: 65px;
+}
+
+.timeText {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: var(--text-base);
+}
+
+.durationText {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.detailsColumn {
+  padding-left: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
+
+.patientName {
+  margin: 0 0 var(--space-1) 0;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: var(--text-base);
+}
+
+.appointmentType {
+  font-size: var(--text-xs);
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background-color: var(--accent-bg);
+  color: var(--accent);
+  align-self: flex-start;
+}
+
+.appointmentType.fijo {
+  background-color: #fdf6e3;
+  color: var(--warning);
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-muted);
+  text-align: center;
+  padding: var(--space-4);
+}
+
+.emptyState p {
+  margin-top: var(--space-2);
+}

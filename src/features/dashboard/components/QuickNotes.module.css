@@ -1,0 +1,46 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.header h3 {
+  margin: 0;
+  font-size: var(--text-lg);
+  color: var(--text-primary);
+}
+
+.icon {
+  color: var(--accent);
+}
+
+.textarea {
+  flex: 1;
+  width: 100%;
+  resize: none;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+  font-family: inherit;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  background-color: var(--surface-alt);
+  transition: border-color 0.2s ease;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  background-color: var(--surface-color);
+}
+
+.textarea::placeholder {
+  color: var(--text-muted);
+}
