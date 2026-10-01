@@ -12,6 +12,7 @@ export const CrearTurnoFijoSchema = z.object({
   fechaInicio: z.string({ required_error: 'La fecha de inicio es requerida' }),
   fechaFin: z.string().optional(),
   activo: z.boolean().optional(),
+  horizonteMeses: z.number().optional(),
 })
 
 export const EditarTurnoFijoSchema = z.object({

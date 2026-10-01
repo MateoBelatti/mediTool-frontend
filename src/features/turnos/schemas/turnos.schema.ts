@@ -27,6 +27,13 @@ export const TurnoSchema = z.object({
   fechaHora: z.string(),
   duracionMin: z.number(),
   estado: z.string(),
+  justificada: z.boolean().optional(),
+  facturable: z.boolean().optional(),
+  fechaRegistro: z.string().optional(),
+  fechaRegistroAsistencia: z.string().nullable().optional(),
+  observaciones: z.string().nullable().optional(),
+  paciente: z.any().optional(), // Using any/optional for now for simplicity, ideally define PacienteResumenDto
+  profesional: z.any().optional(),
 })
 
 export type CrearTurnoDto = z.infer<typeof CrearTurnoSchema>
