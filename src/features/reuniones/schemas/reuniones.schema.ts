@@ -1,16 +1,14 @@
 import { z } from 'zod'
 
 export const ReunionCreateSchema = z.object({
-  titulo: z
-    .string({ required_error: 'El título es requerido' })
-    .max(150, 'El título no puede superar los 150 caracteres'),
-  fechaHora: z.string({ required_error: 'La fecha y hora son requeridas' }),
+  titulo: z.string().max(150, 'El título no puede superar los 150 caracteres'),
+  fechaHora: z.string(),
   modalidad: z
     .string()
     .max(20, 'La modalidad no puede superar los 20 caracteres')
     .optional(),
   descripcion: z.string().optional(),
-  profesionalId: z.number({ required_error: 'El profesional es requerido' }),
+  profesionalId: z.number(),
 })
 
 export const ReunionUpdateSchema = ReunionCreateSchema

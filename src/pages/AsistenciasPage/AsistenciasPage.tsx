@@ -29,13 +29,21 @@ export const AsistenciasPage = () => {
   const formatDate = (d: Date) => d.toISOString().split('T')[0]
 
   // Fetch turnos for the whole month
-  const { data: turnosData, isLoading } = useAgendaTurnos({
+  const { data: turnosDataPage, isLoading } = useAgendaTurnos({
     desde: formatDate(firstDayOfMonth),
     hasta: formatDate(lastDayOfMonth),
-    profesionalId,
+    profesionalId: profesionalId!,
+    page: 1,
+    pageSize: 100, // Fetch up to 100 turnos for the month view
   })
 
-  const { pacientes } = usePacientes()
+  const { pacientes: pacientesPage } = usePacientes(undefined, {
+    page: 1,
+    pageSize: 100,
+  })
+
+  const turnosData = turnosDataPage?.items
+  const pacientes = pacientesPage?.items
 
   // Enrich turnos with paciente data if missing, just like in TurnosPage
   const turnos = React.useMemo(() => {

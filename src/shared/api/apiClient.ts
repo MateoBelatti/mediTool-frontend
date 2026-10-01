@@ -20,6 +20,18 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 )
 
+let isRefreshing = false
+let refreshSubscribers: ((token: string) => void)[] = []
+
+const onRefreshed = (token: string) => {
+  refreshSubscribers.forEach((callback) => callback(token))
+  refreshSubscribers = []
+}
+
+const addRefreshSubscriber = (callback: (token: string) => void) => {
+  refreshSubscribers.push(callback)
+}
+
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -27,7 +39,18 @@ apiClient.interceptors.response.use(
 
     // Manejo de refresh token en error 401
     if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        return new Promise((resolve) => {
+          addRefreshSubscriber((token: string) => {
+            originalRequest.headers.Authorization = `Bearer ${token}`
+            resolve(apiClient(originalRequest))
+          })
+        })
+      }
+
       originalRequest._retry = true
+      isRefreshing = true
+
       try {
         const refreshToken = localStorage.getItem('refreshToken')
 
@@ -48,8 +71,13 @@ apiClient.interceptors.response.use(
           localStorage.setItem('refreshToken', data.refreshToken)
         }
 
+        isRefreshing = false
+        onRefreshed(data.accessToken)
+
         return apiClient(originalRequest)
       } catch (refreshError) {
+        isRefreshing = false
+        refreshSubscribers = []
         localStorage.removeItem('token')
         localStorage.removeItem('refreshToken')
         window.location.href = '/login'

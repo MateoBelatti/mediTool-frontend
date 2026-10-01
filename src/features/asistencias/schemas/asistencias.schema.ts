@@ -3,7 +3,7 @@ import { z } from 'zod'
 export const ActualizarAsistenciaSchema = z.object({
   asistio: z.boolean({ required_error: 'Requerido' }),
   justificada: z.boolean({ required_error: 'Requerido' }),
-  facturable: z.boolean({ required_error: 'Requerido' }),
+  observaciones: z.string().max(500, 'Máximo 500 caracteres').optional(),
 })
 
 export const AsistenciaSchema = z.object({

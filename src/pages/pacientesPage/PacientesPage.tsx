@@ -25,20 +25,17 @@ export const PacientesPage: React.FC = () => {
 
   // Hooks
   const {
-    pacientes: todosLosPacientes,
+    pacientes: todosLosPacientesPage,
     isLoadingPacientes: isLoadingTodos,
+    pacientesVinculados: pacientesVinculadosPage,
+    isLoadingVinculados: isLoadingMisPacientes,
     create: createPaciente,
     isCreating,
     update: updatePaciente,
     isUpdating,
-  } = usePacientes()
+  } = usePacientes(undefined, { page: 1, pageSize: 100 })
 
-  const {
-    pacientesVinculados,
-    isLoadingPacientes: isLoadingMisPacientes,
-    vincularPaciente,
-    isVinculando,
-  } = useProfesionales(profesionalId)
+  const { vincularPaciente, isVinculando } = useProfesionales(profesionalId)
 
   const handleOpenModal = (paciente?: Paciente) => {
     setSelectedPaciente(paciente || null)
@@ -74,7 +71,9 @@ export const PacientesPage: React.FC = () => {
   const isLoading =
     activeTab === 'mis-pacientes' ? isLoadingMisPacientes : isLoadingTodos
   const currentPacientes =
-    activeTab === 'mis-pacientes' ? pacientesVinculados : todosLosPacientes
+    activeTab === 'mis-pacientes'
+      ? pacientesVinculadosPage?.items
+      : todosLosPacientesPage?.items
 
   const filteredPacientes = currentPacientes?.filter(
     (p) =>

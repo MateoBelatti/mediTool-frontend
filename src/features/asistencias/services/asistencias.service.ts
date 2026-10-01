@@ -1,51 +1,37 @@
 import { apiClient } from '@/shared/api/apiClient'
-import {
+import type {
   ActualizarAsistenciaDto,
-  Asistencia,
   ResumenAsistenciaDto,
 } from '../schemas/asistencias.schema'
+import type { Turno } from '../../turnos/schemas/turnos.schema'
 
 export const asistenciasService = {
-  getByTurno: async (turnoId: number): Promise<Asistencia> => {
-    const response = await apiClient.get<Asistencia>(
-      `/Asistencia/turno/${turnoId}`
-    )
-    return response.data
-  },
   getFacturables: async (params: {
     pacienteId: number
     desde: string
     hasta: string
-  }): Promise<Asistencia[]> => {
-    const response = await apiClient.get<Asistencia[]>(
-      '/Asistencia/facturables',
-      { params }
-    )
+  }): Promise<Turno[]> => {
+    const response = await apiClient.get<Turno[]>('/Turno/facturables', {
+      params,
+    })
     return response.data
   },
   getResumenPorTurnoFijo: async (
     turnoFijoId: number
   ): Promise<ResumenAsistenciaDto> => {
     const response = await apiClient.get<ResumenAsistenciaDto>(
-      `/Asistencia/resumen/turnofijo/${turnoFijoId}`
+      `/Turno/turnofijo/${turnoFijoId}/resumen-asistencia`
     )
     return response.data
   },
-  registrar: async (
-    turnoId: number,
-    params: { asistio: boolean; justificada?: boolean; observaciones?: string }
-  ): Promise<Asistencia> => {
-    const response = await apiClient.post<Asistencia>(
-      `/Asistencia/turno/${turnoId}`,
-      null,
-      { params }
-    )
-    return response.data
-  },
-  update: async (
+  registrarActualizar: async (
     turnoId: number,
     data: ActualizarAsistenciaDto
-  ): Promise<void> => {
-    await apiClient.put(`/Asistencia/turno/${turnoId}`, data)
+  ): Promise<Turno> => {
+    const response = await apiClient.patch<Turno>(
+      `/Turno/${turnoId}/asistencia`,
+      data
+    )
+    return response.data
   },
 }

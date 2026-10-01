@@ -26,7 +26,8 @@ export const InformeFormModal = ({
 }: InformeFormModalProps) => {
   const { user } = useAuth()
   const profesionalId = user?.id ? parseInt(user.id) : 0
-  const { pacientes } = usePacientes()
+  const { pacientes: pacientesPage } = usePacientes()
+  const pacientes = pacientesPage?.items
 
   const createMutation = useCreateInforme()
   const updateMutation = useUpdateInforme()

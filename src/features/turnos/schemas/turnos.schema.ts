@@ -1,21 +1,12 @@
 import { z } from 'zod'
-
-export enum EstadoTurno {
-  Pendiente = 0,
-  Presente = 1,
-  Cancelado = 2,
-  Reprogramado = 3,
-  Ausente = 4,
-}
+import { EstadoTurno } from '../types/turnos.types'
 
 export const CrearTurnoSchema = z.object({
   turnoFijoId: z.number().optional(),
-  pacienteId: z.number({ required_error: 'El paciente es requerido' }),
-  profesionalId: z.number({ required_error: 'El profesional es requerido' }),
-  fechaHora: z.string({ required_error: 'La fecha y hora son requeridas' }),
-  duracionMin: z
-    .number({ required_error: 'La duración es requerida' })
-    .min(1, 'La duración debe ser mayor a 0'),
+  pacienteId: z.number(),
+  profesionalId: z.number(),
+  fechaHora: z.string(),
+  duracionMin: z.number().min(1, 'La duración debe ser mayor a 0'),
   estado: z.nativeEnum(EstadoTurno).optional(),
 })
 
@@ -26,7 +17,14 @@ export const TurnoSchema = z.object({
   profesionalId: z.number(),
   fechaHora: z.string(),
   duracionMin: z.number(),
-  estado: z.string(),
+  estado: z.nativeEnum(EstadoTurno),
+  justificada: z.boolean().optional(),
+  facturable: z.boolean().optional(),
+  fechaRegistro: z.string().optional(),
+  fechaRegistroAsistencia: z.string().nullable().optional(),
+  observaciones: z.string().nullable().optional(),
+  paciente: z.any().optional(), // Using any/optional for now for simplicity, ideally define PacienteResumenDto
+  profesional: z.any().optional(),
 })
 
 export type CrearTurnoDto = z.infer<typeof CrearTurnoSchema>
