@@ -4,10 +4,26 @@ import type {
   PacienteCreateDto,
   PacienteUpdateDto,
 } from '../types/paciente.types'
+import type {
+  PageResult,
+  PaginationParams,
+} from '@/shared/types/pagination.types'
 
 export const pacienteService = {
-  async getAll(): Promise<Paciente[]> {
-    const response = await apiClient.get<Paciente[]>('/Paciente')
+  async getAll(params?: PaginationParams): Promise<PageResult<Paciente>> {
+    const response = await apiClient.get<PageResult<Paciente>>('/Paciente', {
+      params,
+    })
+    return response.data
+  },
+
+  async getVinculados(
+    params?: PaginationParams
+  ): Promise<PageResult<Paciente>> {
+    const response = await apiClient.get<PageResult<Paciente>>(
+      '/Paciente/vinculados',
+      { params }
+    )
     return response.data
   },
 

@@ -4,7 +4,6 @@ import type {
   ProfesionalCreateDto,
   ProfesionalUpdateDto,
 } from '../types/profesional.types'
-import type { Paciente } from '../types/paciente.types'
 
 export const profesionalService = {
   async getById(id: number): Promise<Profesional> {
@@ -31,12 +30,5 @@ export const profesionalService = {
 
   async vincularPaciente(id: number, pacienteId: number): Promise<void> {
     await apiClient.post(`/Profesional/${id}/pacientes/${pacienteId}`)
-  },
-
-  async getPacientesVinculados(id: number): Promise<Paciente[]> {
-    const response = await apiClient.get<Paciente[]>(
-      `/Profesional/${id}/pacientes`
-    )
-    return response.data
   },
 }

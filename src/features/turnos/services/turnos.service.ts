@@ -4,14 +4,24 @@ import {
   EstadoTurno,
   type Turno,
 } from '../schemas/turnos.schema'
+import type {
+  PageResult,
+  PaginationParams,
+} from '@/shared/types/pagination.types'
 
 export const turnosService = {
-  getAgenda: async (params: {
-    desde: string
-    hasta: string
-    profesionalId?: number
-  }): Promise<Turno[]> => {
-    const response = await apiClient.get<Turno[]>('/Turno/agenda', { params })
+  getAgenda: async (
+    params: {
+      desde: string
+      hasta: string
+      profesionalId: number
+    } & PaginationParams
+  ): Promise<PageResult<Turno>> => {
+    const { profesionalId, ...queryParams } = params
+    const response = await apiClient.get<PageResult<Turno>>(
+      `/Profesional/${profesionalId}/agenda`,
+      { params: queryParams }
+    )
     return response.data
   },
   getById: async (id: number): Promise<Turno> => {
