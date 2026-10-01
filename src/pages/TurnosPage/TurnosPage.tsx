@@ -24,13 +24,21 @@ export const TurnosPage = () => {
   const [fechaHasta, setFechaHasta] = useState(formatDate(nextMonth))
   const [pacienteSearch, setPacienteSearch] = useState('')
 
-  const { data: turnosData, isLoading } = useAgendaTurnos({
+  const { data: turnosDataPage, isLoading } = useAgendaTurnos({
     desde: fechaDesde,
     hasta: fechaHasta,
-    profesionalId,
+    profesionalId: profesionalId!,
+    page: 1,
+    pageSize: 100,
   })
 
-  const { pacientes } = usePacientes()
+  const { pacientes: pacientesPage } = usePacientes(undefined, {
+    page: 1,
+    pageSize: 100,
+  })
+
+  const turnosData = turnosDataPage?.items
+  const pacientes = pacientesPage?.items
 
   // Enrich turnos with paciente data if it's null from the backend
   const turnos = React.useMemo(() => {

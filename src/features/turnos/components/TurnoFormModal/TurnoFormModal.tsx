@@ -28,7 +28,8 @@ export const TurnoFormModal = ({ isOpen, onClose }: TurnoFormModalProps) => {
   const [activeTab, setActiveTab] = useState<TabType>('suelto')
   const { user } = useAuth()
   const profesionalId = user?.id ? parseInt(user.id) : 0
-  const { pacientes } = usePacientes()
+  const { pacientes: pacientesPage } = usePacientes()
+  const pacientes = pacientesPage?.items
 
   const createSueltoMutation = useCreateTurnoSuelto()
   const createFijoMutation = useCreateTurnoFijo()
@@ -248,7 +249,6 @@ export const TurnoFormModal = ({ isOpen, onClose }: TurnoFormModalProps) => {
               <Button type="button" variant="ghost" onClick={onClose}>
                 Cancelar
               </Button>
-              {/* @ts-expect-error - value is generic but correctly typed by field.name */}
               <Button type="submit" isLoading={formFijo.formState.isSubmitting}>
                 Crear Turno Fijo
               </Button>

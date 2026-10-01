@@ -7,7 +7,11 @@ interface EstadoAsistenciaModalProps {
   isOpen: boolean
   onClose: () => void
   turno: Turno | null
-  onSave: (estado: EstadoTurno) => void
+  onSave: (
+    estado: EstadoTurno,
+    justificada?: boolean,
+    observaciones?: string
+  ) => void
 }
 
 export const EstadoAsistenciaModal: React.FC<EstadoAsistenciaModalProps> = ({
@@ -16,10 +20,52 @@ export const EstadoAsistenciaModal: React.FC<EstadoAsistenciaModalProps> = ({
   turno,
   onSave,
 }) => {
+  const [selectedEstado, setSelectedEstado] =
+    React.useState<EstadoTurno | null>(null)
+  const [justificada, setJustificada] = React.useState(
+    turno?.justificada || false
+  )
+  const [observaciones, setObservaciones] = React.useState(
+    turno?.observaciones || ''
+  )
+
+  React.useEffect(() => {
+    if (turno) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSelectedEstado(turno.estado as unknown as EstadoTurno)
+
+      setJustificada(turno.justificada || false)
+
+      setObservaciones(turno.observaciones || '')
+    }
+  }, [turno])
+
   if (!isOpen || !turno) return null
 
-  const handleEstadoSelect = (estado: EstadoTurno) => {
-    onSave(estado)
+  const getAllowedStates = (currentState: string) => {
+    switch (currentState) {
+      case 'Pendiente':
+      case 'Reprogramado':
+        return [
+          EstadoTurno.Presente,
+          EstadoTurno.Ausente,
+          EstadoTurno.Cancelado,
+        ]
+      case 'Presente':
+      case 'Ausente':
+        return [EstadoTurno.Presente, EstadoTurno.Ausente]
+      default:
+        return []
+    }
+  }
+
+  const allowedStates = getAllowedStates(turno.estado)
+
+  const handleSaveClick = () => {
+    if (selectedEstado) {
+      onSave(selectedEstado, justificada, observaciones)
+      onClose()
+    }
   }
 
   const estadoOptions = [
@@ -53,7 +99,7 @@ export const EstadoAsistenciaModal: React.FC<EstadoAsistenciaModalProps> = ({
       icon: <Ban size={20} />,
       colorClass: styles.optCancelado,
     },
-  ]
+  ].filter((opt) => allowedStates.includes(opt.value))
 
   const dateStr = new Date(turno.fechaHora).toLocaleDateString('es-AR', {
     weekday: 'long',
@@ -88,19 +134,83 @@ export const EstadoAsistenciaModal: React.FC<EstadoAsistenciaModalProps> = ({
         </div>
 
         <div className={styles.content}>
-          <p className={styles.instruction}>Selecciona el estado del turno:</p>
-          <div className={styles.optionsList}>
-            {estadoOptions.map((opt) => (
+          {allowedStates.length > 0 ? (
+            <>
+              <p className={styles.instruction}>
+                Selecciona el estado del turno:
+              </p>
+              <div className={styles.optionsList}>
+                {estadoOptions.map((opt) => (
+                  <button
+                    key={opt.value}
+                    className={`${styles.optionBtn} ${opt.colorClass} ${selectedEstado === opt.value ? styles.selected : ''}`}
+                    onClick={() => setSelectedEstado(opt.value)}
+                  >
+                    {opt.icon}
+                    <span>{opt.label}</span>
+                  </button>
+                ))}
+              </div>
+
+              {selectedEstado === EstadoTurno.Ausente && (
+                <div
+                  style={{
+                    marginTop: '1rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '10px',
+                  }}
+                >
+                  <label
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={justificada}
+                      onChange={(e) => setJustificada(e.target.checked)}
+                    />
+                    Ausencia Justificada
+                  </label>
+                  <textarea
+                    placeholder="Observaciones (opcional)"
+                    value={observaciones}
+                    onChange={(e) => setObservaciones(e.target.value)}
+                    style={{
+                      padding: '8px',
+                      borderRadius: '4px',
+                      border: '1px solid #ccc',
+                      resize: 'vertical',
+                    }}
+                    rows={3}
+                  />
+                </div>
+              )}
+
               <button
-                key={opt.value}
-                className={`${styles.optionBtn} ${opt.colorClass} ${turno.estado === opt.value ? styles.selected : ''}`}
-                onClick={() => handleEstadoSelect(opt.value)}
+                onClick={handleSaveClick}
+                style={{
+                  marginTop: '1rem',
+                  width: '100%',
+                  padding: '10px',
+                  backgroundColor: '#007bff',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                }}
               >
-                {opt.icon}
-                <span>{opt.label}</span>
+                Guardar
               </button>
-            ))}
-          </div>
+            </>
+          ) : (
+            <p style={{ textAlign: 'center', padding: '20px 0' }}>
+              El estado actual ({turno.estado}) no permite ser modificado.
+            </p>
+          )}
         </div>
       </div>
     </div>

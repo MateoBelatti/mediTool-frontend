@@ -3,6 +3,7 @@ import { type Turno, EstadoTurno } from '@/features/turnos/types/turnos.types'
 import { EstadoAsistenciaModal } from '../EstadoAsistenciaModal/EstadoAsistenciaModal'
 import { turnosService } from '@/features/turnos/services/turnos.service'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useRegistrarActualizarAsistencia } from '../../hooks/useAsistencias'
 import styles from './AsistenciasGrid.module.css'
 
 interface AsistenciasGridProps {
@@ -34,6 +35,8 @@ export const AsistenciasGrid: React.FC<AsistenciasGridProps> = ({
     },
   })
 
+  const { mutate: registrarAsistencia } = useRegistrarActualizarAsistencia()
+
   // Calculate days in the month
   const daysInMonth = useMemo(
     () => new Date(year, month + 1, 0).getDate(),
@@ -57,11 +60,8 @@ export const AsistenciasGrid: React.FC<AsistenciasGridProps> = ({
       }
 
       const date = new Date(turno.fechaHora)
-      // Make sure the turno belongs to the selected month and year
       if (date.getMonth() === month && date.getFullYear() === year) {
         const day = date.getDate()
-        // If there are multiple turnos per day for the same patient, we'll just keep the first one or we'd need a more complex UI.
-        // Assuming 1 turno per day per patient for this spreadsheet view.
         if (!rowsMap.get(turno.pacienteId)!.turnos[day]) {
           rowsMap.get(turno.pacienteId)!.turnos[day] = turno
         }
@@ -73,34 +73,44 @@ export const AsistenciasGrid: React.FC<AsistenciasGridProps> = ({
     )
   }, [turnos, month, year])
 
-  const getStatusLetter = (estado: EstadoTurno) => {
+  const getStatusEmoji = (estado: EstadoTurno | string) => {
     switch (estado) {
       case EstadoTurno.Pendiente:
-        return ''
+      case 'Pendiente':
+        return '⏳'
       case EstadoTurno.Presente:
-        return 'P' // Presente
+      case 'Presente':
+        return '✅'
       case EstadoTurno.Ausente:
-        return 'A'
+      case 'Ausente':
+        return '❌'
       case EstadoTurno.Cancelado:
-        return 'C'
+      case 'Cancelado':
+        return '🚫'
       case EstadoTurno.Reprogramado:
-        return 'R'
+      case 'Reprogramado':
+        return '🔄'
       default:
-        return ''
+        return '⏳'
     }
   }
 
-  const getStatusColorClass = (estado: EstadoTurno) => {
+  const getStatusColorClass = (estado: EstadoTurno | string) => {
     switch (estado) {
       case EstadoTurno.Presente:
+      case 'Presente':
         return styles.statusPresente
       case EstadoTurno.Ausente:
+      case 'Ausente':
         return styles.statusAusente
       case EstadoTurno.Cancelado:
+      case 'Cancelado':
         return styles.statusCancelado
       case EstadoTurno.Reprogramado:
+      case 'Reprogramado':
         return styles.statusReprogramado
       case EstadoTurno.Pendiente:
+      case 'Pendiente':
         return styles.statusPendiente
       default:
         return ''
@@ -111,8 +121,31 @@ export const AsistenciasGrid: React.FC<AsistenciasGridProps> = ({
     setSelectedTurno(turno)
   }
 
-  const handleSaveEstado = (nuevoEstado: EstadoTurno) => {
-    if (selectedTurno) {
+  const handleSaveEstado = (
+    nuevoEstado: EstadoTurno,
+    justificada?: boolean,
+    observaciones?: string
+  ) => {
+    if (!selectedTurno) return
+
+    if (
+      nuevoEstado === EstadoTurno.Presente ||
+      nuevoEstado === EstadoTurno.Ausente
+    ) {
+      registrarAsistencia(
+        {
+          turnoId: selectedTurno.id,
+          data: {
+            asistio: nuevoEstado === EstadoTurno.Presente,
+            justificada: justificada,
+            observaciones: observaciones,
+          },
+        },
+        {
+          onSuccess: () => setSelectedTurno(null),
+        }
+      )
+    } else {
       cambiarEstado({ id: selectedTurno.id, estado: nuevoEstado })
     }
   }
@@ -148,7 +181,7 @@ export const AsistenciasGrid: React.FC<AsistenciasGridProps> = ({
                           onClick={() => handleCellClick(turno)}
                           title={`Turno a las ${new Date(turno.fechaHora).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
                         >
-                          {getStatusLetter(turno.estado)}
+                          {getStatusEmoji(turno.estado)}
                         </button>
                       ) : null}
                     </td>
