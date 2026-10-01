@@ -1,10 +1,12 @@
-export enum EstadoTurno {
-  Pendiente = 0,
-  Presente = 1,
-  Cancelado = 2,
-  Reprogramado = 3,
-  Ausente = 4,
-}
+export const EstadoTurno = {
+  Pendiente: 'Pendiente',
+  Presente: 'Presente',
+  Cancelado: 'Cancelado',
+  Reprogramado: 'Reprogramado',
+  Ausente: 'Ausente',
+} as const
+
+export type EstadoTurno = (typeof EstadoTurno)[keyof typeof EstadoTurno]
 
 export interface CrearTurnoDto {
   turnoFijoId?: number
@@ -31,4 +33,8 @@ export interface Turno {
   fechaHora: string
   duracionMin: number
   estado: EstadoTurno
+  justificada?: boolean
+  facturable?: boolean
+  fechaRegistroAsistencia?: string | null
+  observaciones?: string | null
 }

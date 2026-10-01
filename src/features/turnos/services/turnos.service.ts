@@ -3,7 +3,7 @@ import {
   type CrearTurnoDto,
   EstadoTurno,
   type Turno,
-} from '../schemas/turnos.schema'
+} from '../types/turnos.types'
 import type {
   PageResult,
   PaginationParams,
