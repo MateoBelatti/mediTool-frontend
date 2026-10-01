@@ -15,13 +15,6 @@ export const useProfesionales = (id?: number) => {
     enabled: !!id,
   })
 
-  // Obtener pacientes vinculados al profesional
-  const getPacientesVinculados = useQuery({
-    queryKey: ['profesional', id, 'pacientes'],
-    queryFn: () => profesionalService.getPacientesVinculados(id!),
-    enabled: !!id,
-  })
-
   const createProfesional = useMutation({
     mutationFn: (data: ProfesionalCreateDto) => profesionalService.create(data),
   })
@@ -56,9 +49,6 @@ export const useProfesionales = (id?: number) => {
     profesional: getProfesional.data,
     isLoading: getProfesional.isLoading,
     error: getProfesional.error,
-
-    pacientesVinculados: getPacientesVinculados.data,
-    isLoadingPacientes: getPacientesVinculados.isLoading,
 
     // Mutations
     create: createProfesional.mutate,

@@ -4,13 +4,19 @@ import type {
   PacienteCreateDto,
   PacienteUpdateDto,
 } from '../types/paciente.types'
+import type { PaginationParams } from '@/shared/types/pagination.types'
 
-export const usePacientes = (id?: number) => {
+export const usePacientes = (id?: number, params?: PaginationParams) => {
   const queryClient = useQueryClient()
 
   const getAllPacientes = useQuery({
-    queryKey: ['pacientes'],
-    queryFn: pacienteService.getAll,
+    queryKey: ['pacientes', params],
+    queryFn: () => pacienteService.getAll(params),
+  })
+
+  const getVinculados = useQuery({
+    queryKey: ['pacientes', 'vinculados', params],
+    queryFn: () => pacienteService.getVinculados(params),
   })
 
   const getPaciente = useQuery({
@@ -45,6 +51,8 @@ export const usePacientes = (id?: number) => {
   return {
     pacientes: getAllPacientes.data,
     isLoadingPacientes: getAllPacientes.isLoading,
+    pacientesVinculados: getVinculados.data,
+    isLoadingVinculados: getVinculados.isLoading,
     paciente: getPaciente.data,
     isLoading: getPaciente.isLoading,
     error: getPaciente.error,
