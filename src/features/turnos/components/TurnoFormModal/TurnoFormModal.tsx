@@ -28,8 +28,8 @@ export const TurnoFormModal = ({ isOpen, onClose }: TurnoFormModalProps) => {
   const [activeTab, setActiveTab] = useState<TabType>('suelto')
   const { user } = useAuth()
   const profesionalId = user?.id ? parseInt(user.id) : 0
-  const { pacientes: pacientesPage } = usePacientes()
-  const pacientes = pacientesPage?.items
+  const { pacientes: pacientesPage, pacientesVinculados } = usePacientes()
+  const pacientes = pacientesPage?.items || pacientesVinculados?.items
 
   const createSueltoMutation = useCreateTurnoSuelto()
   const createFijoMutation = useCreateTurnoFijo()

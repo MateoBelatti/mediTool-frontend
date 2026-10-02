@@ -16,11 +16,14 @@ export const InformesPage = () => {
 
   const { data: informesData, isLoading: isLoadingInformes } =
     useInformesByProfesionalId(profesionalId)
-  const { pacientes: pacientesPage } = usePacientes(undefined, {
-    page: 1,
-    pageSize: 100,
-  })
-  const pacientes = pacientesPage?.items
+  const { pacientes: pacientesPage, pacientesVinculados } = usePacientes(
+    undefined,
+    {
+      page: 1,
+      pageSize: 100,
+    }
+  )
+  const pacientes = pacientesPage?.items || pacientesVinculados?.items
 
   const [fechaDesde, setFechaDesde] = useState('')
   const [fechaHasta, setFechaHasta] = useState('')

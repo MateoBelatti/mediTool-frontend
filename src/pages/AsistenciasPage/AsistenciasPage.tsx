@@ -37,13 +37,16 @@ export const AsistenciasPage = () => {
     pageSize: 100, // Fetch up to 100 turnos for the month view
   })
 
-  const { pacientes: pacientesPage } = usePacientes(undefined, {
-    page: 1,
-    pageSize: 100,
-  })
+  const { pacientes: pacientesPage, pacientesVinculados } = usePacientes(
+    undefined,
+    {
+      page: 1,
+      pageSize: 100,
+    }
+  )
 
   const turnosData = turnosDataPage?.items
-  const pacientes = pacientesPage?.items
+  const pacientes = pacientesPage?.items || pacientesVinculados?.items
 
   // Enrich turnos with paciente data if missing, just like in TurnosPage
   const turnos = React.useMemo(() => {

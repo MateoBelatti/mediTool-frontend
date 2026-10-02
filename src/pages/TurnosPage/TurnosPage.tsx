@@ -32,13 +32,16 @@ export const TurnosPage = () => {
     pageSize: 100,
   })
 
-  const { pacientes: pacientesPage } = usePacientes(undefined, {
-    page: 1,
-    pageSize: 100,
-  })
+  const { pacientes: pacientesPage, pacientesVinculados } = usePacientes(
+    undefined,
+    {
+      page: 1,
+      pageSize: 100,
+    }
+  )
 
   const turnosData = turnosDataPage?.items
-  const pacientes = pacientesPage?.items
+  const pacientes = pacientesPage?.items || pacientesVinculados?.items
 
   // Enrich turnos with paciente data if it's null from the backend
   const turnos = React.useMemo(() => {
