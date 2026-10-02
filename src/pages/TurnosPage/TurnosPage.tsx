@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { TurnosFilters } from '@/features/turnos/components/TurnosFilters/TurnosFilters'
 import { TurnosList } from '@/features/turnos/components/TurnosList/TurnosList'
 import { TurnoDetailModal } from '@/features/turnos/components/TurnoDetailModal/TurnoDetailModal'
@@ -59,6 +60,20 @@ export const TurnosPage = () => {
 
   const [selectedTurno, setSelectedTurno] = useState<Turno | null>(null)
   const [isFormModalOpen, setIsFormModalOpen] = useState(false)
+
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  React.useEffect(() => {
+    if (location.state?.editTurnoId && turnos) {
+      const tId = location.state.editTurnoId
+      const foundTurno = turnos.find((t: Turno) => t.id === tId)
+      if (foundTurno) {
+        setSelectedTurno(foundTurno)
+        navigate(location.pathname, { replace: true, state: {} })
+      }
+    }
+  }, [location.state, turnos, navigate, location.pathname])
 
   return (
     <div className={styles.pageContainer}>

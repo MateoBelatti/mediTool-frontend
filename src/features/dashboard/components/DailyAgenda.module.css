@@ -68,7 +68,7 @@
     transform 0.2s ease,
     border-color 0.2s ease;
   position: relative;
-  overflow: hidden;
+  /* overflow: hidden; removed so actionMenu is not clipped */
 }
 
 .agendaItem:hover {
@@ -84,6 +84,8 @@
   bottom: 0;
   width: 4px;
   background-color: var(--accent);
+  border-top-left-radius: var(--radius-md);
+  border-bottom-left-radius: var(--radius-md);
 }
 
 .agendaItem.fijo::before {
@@ -154,4 +156,39 @@
 
 .emptyState p {
   margin-top: var(--space-2);
+}
+
+.actionMenu {
+  position: absolute;
+  top: 10px;
+  right: -10px;
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-2);
+  z-index: 50;
+  min-width: 180px;
+}
+
+.actionMenu button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: none;
+  border: none;
+  padding: var(--space-2) var(--space-3);
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+}
+
+.actionMenu button:hover {
+  background-color: var(--surface-alt);
+  color: var(--accent);
 }

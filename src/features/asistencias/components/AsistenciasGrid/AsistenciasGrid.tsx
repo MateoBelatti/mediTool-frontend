@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { type Turno, EstadoTurno } from '@/features/turnos/types/turnos.types'
 import { EstadoAsistenciaModal } from '../EstadoAsistenciaModal/EstadoAsistenciaModal'
 import { turnosService } from '@/features/turnos/services/turnos.service'
@@ -24,6 +25,18 @@ export const AsistenciasGrid: React.FC<AsistenciasGridProps> = ({
   year,
 }) => {
   const [selectedTurno, setSelectedTurno] = useState<Turno | null>(null)
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (location.state?.openTurnoId && turnos.length > 0) {
+      const turnoToOpen = turnos.find(t => t.id === location.state.openTurnoId)
+      if (turnoToOpen) {
+        setSelectedTurno(turnoToOpen)
+        navigate(location.pathname, { replace: true, state: {} })
+      }
+    }
+  }, [location.state, turnos, navigate, location.pathname])
   const queryClient = useQueryClient()
 
   const { mutate: cambiarEstado } = useMutation({
@@ -137,7 +150,7 @@ export const AsistenciasGrid: React.FC<AsistenciasGridProps> = ({
           turnoId: selectedTurno.id,
           data: {
             asistio: nuevoEstado === EstadoTurno.Presente,
-            justificada: justificada,
+            justificada: justificada || false,
             observaciones: observaciones,
           },
         },

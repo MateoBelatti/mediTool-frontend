@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Modal } from '@/shared/components/Modal/Modal'
@@ -17,12 +17,14 @@ interface InformeFormModalProps {
   isOpen: boolean
   onClose: () => void
   informeToEdit?: InformeWithPaciente | null
+  initialPacienteId?: number
 }
 
 export const InformeFormModal = ({
   isOpen,
   onClose,
   informeToEdit,
+  initialPacienteId,
 }: InformeFormModalProps) => {
   const { user } = useAuth()
   const profesionalId = user?.id ? parseInt(user.id) : 0
@@ -40,6 +42,7 @@ export const InformeFormModal = ({
       tipo: '',
       contenido: '',
       estado: 'Pendiente',
+      pacienteId: initialPacienteId,
     },
   })
 
@@ -60,9 +63,10 @@ export const InformeFormModal = ({
         tipo: '',
         contenido: '',
         estado: 'Pendiente',
+        pacienteId: initialPacienteId,
       })
     }
-  }, [informeToEdit, isOpen, form, profesionalId])
+  }, [informeToEdit, isOpen, form, profesionalId, initialPacienteId])
 
   const onSubmit = (data: InformeCreateDto) => {
     const formattedData = {

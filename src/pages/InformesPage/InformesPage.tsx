@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { usePacientes } from '@/features/pacientes/hooks/usePacientes'
 import { useInformesByProfesionalId } from '@/features/informes/hooks/useInformes'
@@ -84,6 +85,17 @@ export const InformesPage = () => {
     setIsModalOpen(true)
   }
 
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (location.state?.newInformeForPacienteId) {
+      setInformeToEdit(null)
+      setIsModalOpen(true)
+      navigate(location.pathname, { replace: true, state: {} })
+    }
+  }, [location.state, navigate, location.pathname])
+
   return (
     <div className={styles.pageContainer}>
       <div className={styles.content}>
@@ -109,6 +121,7 @@ export const InformesPage = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         informeToEdit={informeToEdit}
+        initialPacienteId={location.state?.newInformeForPacienteId}
       />
     </div>
   )
