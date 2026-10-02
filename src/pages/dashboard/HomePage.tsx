@@ -85,13 +85,10 @@ export const HomePage = () => {
       hour: '2-digit',
       minute: '2-digit',
     })
-    const diffMs =
-      new Date(nextTurno.fechaHora).getTime() - new Date().getTime()
-    const diffMins = Math.round(diffMs / 60000)
     const patientName = nextTurno.paciente
       ? `${nextTurno.paciente.nombre} ${nextTurno.paciente.apellido}`
       : `Paciente ${nextTurno.pacienteId}`
-    nextAppointmentText = `Próximo turno en ${diffMins} min (${time}): ${patientName}`
+    nextAppointmentText = `Próximo turno a las ${time} - ${patientName}`
   }
 
   let turnosLabel = 'Pacientes Hoy'
