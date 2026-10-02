@@ -3,7 +3,7 @@ import { EstadoTurno } from '../types/turnos.types'
 
 export const CrearTurnoSchema = z.object({
   turnoFijoId: z.number().optional(),
-  pacienteId: z.number(),
+  pacienteId: z.number({ invalid_type_error: 'Seleccione un paciente' }),
   profesionalId: z.number(),
   fechaHora: z.string(),
   duracionMin: z.number().min(1, 'La duración debe ser mayor a 0'),
