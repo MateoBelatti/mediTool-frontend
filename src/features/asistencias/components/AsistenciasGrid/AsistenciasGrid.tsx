@@ -30,8 +30,11 @@ export const AsistenciasGrid: React.FC<AsistenciasGridProps> = ({
 
   useEffect(() => {
     if (location.state?.openTurnoId && turnos.length > 0) {
-      const turnoToOpen = turnos.find(t => t.id === location.state.openTurnoId)
+      const turnoToOpen = turnos.find(
+        (t) => t.id === location.state.openTurnoId
+      )
       if (turnoToOpen) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedTurno(turnoToOpen)
         navigate(location.pathname, { replace: true, state: {} })
       }

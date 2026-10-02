@@ -89,6 +89,14 @@ export const InformesPage = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
+    if (location.state?.openNewModal) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setInformeToEdit(null)
+      setIsModalOpen(true)
+      navigate(location.pathname, { replace: true, state: {} })
+      return
+    }
+
     if (location.state?.newInformeForPacienteId) {
       setInformeToEdit(null)
       setIsModalOpen(true)

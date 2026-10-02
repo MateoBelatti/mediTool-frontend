@@ -65,6 +65,13 @@ export const TurnosPage = () => {
   const navigate = useNavigate()
 
   React.useEffect(() => {
+    if (location.state?.openNewModal) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsFormModalOpen(true)
+      navigate(location.pathname, { replace: true, state: {} })
+      return
+    }
+
     if (location.state?.editTurnoId && turnos) {
       const tId = location.state.editTurnoId
       const foundTurno = turnos.find((t: Turno) => t.id === tId)

@@ -67,6 +67,13 @@ export const PacientesPage: React.FC = () => {
   const navigate = useNavigate()
 
   React.useEffect(() => {
+    if (location.state?.openNewModal) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      handleOpenModal()
+      navigate(location.pathname, { replace: true, state: {} })
+      return
+    }
+
     if (location.state?.openPacienteId) {
       const pId = location.state.openPacienteId
       const foundPaciente =

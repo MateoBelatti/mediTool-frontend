@@ -3,14 +3,14 @@ import { Clock } from 'lucide-react'
 import styles from './HomePage.module.css'
 
 import { StatCards } from '../../features/dashboard/components/StatCards'
+import { QuickActions } from '../../features/dashboard/components/QuickActions'
 import { MonthCalendar } from '../../features/dashboard/components/MonthCalendar'
 import { DailyAgenda } from '../../features/dashboard/components/DailyAgenda'
-import { QuickNotes } from '../../features/dashboard/components/QuickNotes'
 import { useAuth } from '../../features/auth/hooks/useAuth'
 import { useAgendaTurnos } from '../../features/turnos/hooks/useTurnos'
-import { useInformesByProfesionalId } from '../../features/informes/hooks/useInformes'
 import { useReunionesByProfesionalId } from '../../features/reuniones/hooks/useReuniones'
-import { isSameDay } from 'date-fns'
+import { isSameDay, format, isTomorrow, isYesterday } from 'date-fns'
+import { es } from 'date-fns/locale'
 
 import 'react-calendar/dist/Calendar.css'
 
@@ -51,7 +51,6 @@ export const HomePage = () => {
     pageSize: 1000,
   })
 
-  const { data: informesData } = useInformesByProfesionalId(profesionalId!)
   const { data: reunionesData } = useReunionesByProfesionalId(profesionalId!)
 
   const turnosDelMes = useMemo(
@@ -95,10 +94,17 @@ export const HomePage = () => {
     nextAppointmentText = `Próximo turno en ${diffMins} min (${time}): ${patientName}`
   }
 
-  // Get pending informes
-  const informesPendientesCount = informesData
-    ? informesData.filter((i) => i.estado === 'Pendiente').length
-    : 0
+  let turnosLabel = 'Pacientes Hoy'
+  const today = new Date()
+  if (!isSameDay(selectedDate, today)) {
+    if (isTomorrow(selectedDate)) {
+      turnosLabel = 'Pacientes Mañana'
+    } else if (isYesterday(selectedDate)) {
+      turnosLabel = 'Pacientes Ayer'
+    } else {
+      turnosLabel = `Pacientes el ${format(selectedDate, "d 'de' MMMM", { locale: es })}`
+    }
+  }
 
   return (
     <div className={styles.container}>
@@ -114,8 +120,8 @@ export const HomePage = () => {
         <div className={styles.statCardsWrapper}>
           <StatCards
             turnosHoy={turnosDelDia.length}
-            informesPendientes={informesPendientesCount}
             reunionesSemanales={reunionesData?.length || 0}
+            turnosLabel={turnosLabel}
           />
         </div>
 
@@ -134,8 +140,8 @@ export const HomePage = () => {
           />
         </div>
 
-        <div className={styles.notesWrapper}>
-          <QuickNotes />
+        <div className={styles.actionsWrapper}>
+          <QuickActions />
         </div>
       </div>
     </div>

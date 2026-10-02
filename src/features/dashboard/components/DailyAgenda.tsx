@@ -1,5 +1,12 @@
 import { useState, useRef, useEffect } from 'react'
-import { ListTodo, CalendarX2, ClipboardCheck, FileText, User, Calendar } from 'lucide-react'
+import {
+  ListTodo,
+  CalendarX2,
+  ClipboardCheck,
+  FileText,
+  User,
+  Calendar,
+} from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -35,7 +42,7 @@ export const DailyAgenda = ({
     }
   }, [])
 
-  const handleAction = (path: string, state?: any) => {
+  const handleAction = (path: string, state?: Record<string, unknown>) => {
     navigate(path, { state })
     setActiveMenuId(null)
   }
@@ -64,7 +71,8 @@ export const DailyAgenda = ({
               ? `${turno.paciente.nombre} ${turno.paciente.apellido}`
               : `Paciente ${turno.pacienteId}`
             const isActive = activeMenuId === turno.id
-            const openUpwards = index >= turnosDelDia.length - 2 && turnosDelDia.length > 2
+            const openUpwards =
+              index >= turnosDelDia.length - 2 && turnosDelDia.length > 2
 
             return (
               <div
@@ -87,23 +95,47 @@ export const DailyAgenda = ({
                     {isFijo ? 'Turno Fijo' : 'Turno Normal'}
                   </span>
                 </div>
-                
+
                 {isActive && (
-                  <div 
-                    className={styles.actionMenu} 
+                  <div
+                    className={styles.actionMenu}
                     ref={menuRef}
                     style={openUpwards ? { top: 'auto', bottom: '-10px' } : {}}
                   >
-                    <button onClick={(e) => { e.stopPropagation(); handleAction('/asistencia', { openTurnoId: turno.id }); }}>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleAction('/asistencia', { openTurnoId: turno.id })
+                      }}
+                    >
                       <ClipboardCheck size={16} /> Asistencia
                     </button>
-                    <button onClick={(e) => { e.stopPropagation(); handleAction('/informes', { newInformeForPacienteId: turno.pacienteId }); }}>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleAction('/informes', {
+                          newInformeForPacienteId: turno.pacienteId,
+                        })
+                      }}
+                    >
                       <FileText size={16} /> Informe
                     </button>
-                    <button onClick={(e) => { e.stopPropagation(); handleAction('/pacientes', { openPacienteId: turno.pacienteId }); }}>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleAction('/pacientes', {
+                          openPacienteId: turno.pacienteId,
+                        })
+                      }}
+                    >
                       <User size={16} /> Perfil
                     </button>
-                    <button onClick={(e) => { e.stopPropagation(); handleAction('/turnos', { editTurnoId: turno.id }); }}>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleAction('/turnos', { editTurnoId: turno.id })
+                      }}
+                    >
                       <Calendar size={16} /> Modificar
                     </button>
                   </div>
