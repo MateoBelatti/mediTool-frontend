@@ -1,27 +1,26 @@
 import { Calendar as CalendarIcon } from 'lucide-react'
 import Calendar from 'react-calendar'
 import styles from './MonthCalendar.module.css'
+import type { Turno } from '../../turnos/types/turnos.types'
 
 interface MonthCalendarProps {
   selectedDate: Date
   onDateChange: (date: Date) => void
+  turnosDelMes?: Turno[]
 }
 
 export const MonthCalendar = ({
   selectedDate,
   onDateChange,
+  turnosDelMes = [],
 }: MonthCalendarProps) => {
-  // In a real scenario, this would come from an API query via React Query
-  const daysWithAppointments = [
-    new Date().getDate(),
-    new Date().getDate() + 2,
-    new Date().getDate() + 5,
-  ]
+  const daysWithAppointments = turnosDelMes.map((t) =>
+    new Date(t.fechaHora).getDate()
+  )
 
   const tileContent = ({ date, view }: { date: Date; view: string }) => {
-    // Add a dot to days that have appointments (mocked)
     if (view === 'month') {
-      const isCurrentMonth = date.getMonth() === new Date().getMonth()
+      const isCurrentMonth = date.getMonth() === selectedDate.getMonth()
       if (isCurrentMonth && daysWithAppointments.includes(date.getDate())) {
         return <div className={styles.hasAppointmentDot} />
       }
@@ -40,7 +39,7 @@ export const MonthCalendar = ({
           onChange={(value) => onDateChange(value as Date)}
           value={selectedDate}
           tileContent={tileContent}
-          next2Label={null} // Hide the double arrows
+          next2Label={null}
           prev2Label={null}
         />
       </div>
