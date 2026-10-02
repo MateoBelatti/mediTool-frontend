@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import {  useState  } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Modal } from '@/shared/components/Modal/Modal'
@@ -28,8 +28,8 @@ export const TurnoFormModal = ({ isOpen, onClose }: TurnoFormModalProps) => {
   const [activeTab, setActiveTab] = useState<TabType>('suelto')
   const { user } = useAuth()
   const profesionalId = user?.id ? parseInt(user.id) : 0
-  const { pacientes: pacientesPage } = usePacientes()
-  const pacientes = pacientesPage?.items
+  const { pacientes: pacientesPage, pacientesVinculados } = usePacientes()
+  const pacientes = pacientesPage?.items || pacientesVinculados?.items
 
   const createSueltoMutation = useCreateTurnoSuelto()
   const createFijoMutation = useCreateTurnoFijo()

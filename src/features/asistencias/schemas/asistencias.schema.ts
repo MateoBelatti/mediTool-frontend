@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
 export const ActualizarAsistenciaSchema = z.object({
-  asistio: z.boolean({ required_error: 'Requerido' }),
-  justificada: z.boolean({ required_error: 'Requerido' }),
+  asistio: z.boolean(),
+  justificada: z.boolean(),
   observaciones: z.string().max(500, 'Máximo 500 caracteres').optional(),
 })
 

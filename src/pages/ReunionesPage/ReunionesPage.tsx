@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import {  useState, useMemo  } from 'react'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { useReunionesByProfesionalId } from '@/features/reuniones/hooks/useReuniones'
 import { ReunionesFilters } from '@/features/reuniones/components/ReunionesFilters/ReunionesFilters'

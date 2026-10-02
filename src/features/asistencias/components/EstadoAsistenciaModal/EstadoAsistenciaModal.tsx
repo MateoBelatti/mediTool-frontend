@@ -99,7 +99,7 @@ export const EstadoAsistenciaModal: React.FC<EstadoAsistenciaModalProps> = ({
       icon: <Ban size={20} />,
       colorClass: styles.optCancelado,
     },
-  ].filter((opt) => allowedStates.includes(opt.value))
+  ].filter((opt) => allowedStates.includes(opt.value as any))
 
   const dateStr = new Date(turno.fechaHora).toLocaleDateString('es-AR', {
     weekday: 'long',

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { TurnosFilters } from '@/features/turnos/components/TurnosFilters/TurnosFilters'
 import { TurnosList } from '@/features/turnos/components/TurnosList/TurnosList'
 import { TurnoDetailModal } from '@/features/turnos/components/TurnoDetailModal/TurnoDetailModal'
@@ -32,13 +33,16 @@ export const TurnosPage = () => {
     pageSize: 100,
   })
 
-  const { pacientes: pacientesPage } = usePacientes(undefined, {
-    page: 1,
-    pageSize: 100,
-  })
+  const { pacientes: pacientesPage, pacientesVinculados } = usePacientes(
+    undefined,
+    {
+      page: 1,
+      pageSize: 100,
+    }
+  )
 
   const turnosData = turnosDataPage?.items
-  const pacientes = pacientesPage?.items
+  const pacientes = pacientesPage?.items || pacientesVinculados?.items
 
   // Enrich turnos with paciente data if it's null from the backend
   const turnos = React.useMemo(() => {
@@ -56,6 +60,27 @@ export const TurnosPage = () => {
 
   const [selectedTurno, setSelectedTurno] = useState<Turno | null>(null)
   const [isFormModalOpen, setIsFormModalOpen] = useState(false)
+
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  React.useEffect(() => {
+    if (location.state?.openNewModal) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsFormModalOpen(true)
+      navigate(location.pathname, { replace: true, state: {} })
+      return
+    }
+
+    if (location.state?.editTurnoId && turnos) {
+      const tId = location.state.editTurnoId
+      const foundTurno = turnos.find((t: Turno) => t.id === tId)
+      if (foundTurno) {
+        setSelectedTurno(foundTurno)
+        navigate(location.pathname, { replace: true, state: {} })
+      }
+    }
+  }, [location.state, turnos, navigate, location.pathname])
 
   return (
     <div className={styles.pageContainer}>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { usePacientes } from '../../features/pacientes/hooks/usePacientes'
 import { useProfesionales } from '../../features/pacientes/hooks/useProfesionales'
@@ -61,6 +62,36 @@ export const PacientesPage: React.FC = () => {
       })
     }
   }
+
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  React.useEffect(() => {
+    if (location.state?.openNewModal) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      handleOpenModal()
+      navigate(location.pathname, { replace: true, state: {} })
+      return
+    }
+
+    if (location.state?.openPacienteId) {
+      const pId = location.state.openPacienteId
+      const foundPaciente =
+        pacientesVinculadosPage?.items?.find((p) => p.id === pId) ||
+        todosLosPacientesPage?.items?.find((p) => p.id === pId)
+
+      if (foundPaciente) {
+        handleOpenModal(foundPaciente)
+        navigate(location.pathname, { replace: true, state: {} })
+      }
+    }
+  }, [
+    location.state,
+    pacientesVinculadosPage,
+    todosLosPacientesPage,
+    navigate,
+    location.pathname,
+  ])
 
   const handleVincular = (pacienteId: number) => {
     if (profesionalId) {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import {  useState  } from 'react'
 import { CalendarClock, User as UserIcon, Clock, Edit2 } from 'lucide-react'
 import { Modal } from '@/shared/components/Modal/Modal'
 import { Button } from '@/shared/components/Button/Button'

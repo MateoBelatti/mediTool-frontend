@@ -2,8 +2,8 @@ import { z } from 'zod'
 
 export const InformeCreateSchema = z.object({
   pacienteId: z.number().optional(),
-  profesionalId: z.number({ required_error: 'El profesional es requerido' }),
-  fecha: z.string({ required_error: 'La fecha es requerida' }),
+  profesionalId: z.number(),
+  fecha: z.string(),
   tipo: z
     .string()
     .max(50, 'El tipo no puede superar los 50 caracteres')

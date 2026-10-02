@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { usePacientes } from '@/features/pacientes/hooks/usePacientes'
 import { useInformesByProfesionalId } from '@/features/informes/hooks/useInformes'
@@ -16,11 +17,14 @@ export const InformesPage = () => {
 
   const { data: informesData, isLoading: isLoadingInformes } =
     useInformesByProfesionalId(profesionalId)
-  const { pacientes: pacientesPage } = usePacientes(undefined, {
-    page: 1,
-    pageSize: 100,
-  })
-  const pacientes = pacientesPage?.items
+  const { pacientes: pacientesPage, pacientesVinculados } = usePacientes(
+    undefined,
+    {
+      page: 1,
+      pageSize: 100,
+    }
+  )
+  const pacientes = pacientesPage?.items || pacientesVinculados?.items
 
   const [fechaDesde, setFechaDesde] = useState('')
   const [fechaHasta, setFechaHasta] = useState('')
@@ -81,6 +85,25 @@ export const InformesPage = () => {
     setIsModalOpen(true)
   }
 
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (location.state?.openNewModal) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setInformeToEdit(null)
+      setIsModalOpen(true)
+      navigate(location.pathname, { replace: true, state: {} })
+      return
+    }
+
+    if (location.state?.newInformeForPacienteId) {
+      setInformeToEdit(null)
+      setIsModalOpen(true)
+      navigate(location.pathname, { replace: true, state: {} })
+    }
+  }, [location.state, navigate, location.pathname])
+
   return (
     <div className={styles.pageContainer}>
       <div className={styles.content}>
@@ -106,6 +129,7 @@ export const InformesPage = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         informeToEdit={informeToEdit}
+        initialPacienteId={location.state?.newInformeForPacienteId}
       />
     </div>
   )
