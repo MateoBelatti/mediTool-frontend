@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { CalendarClock, User as UserIcon, Clock } from 'lucide-react'
 import type { Turno } from '../../types/turnos.types'
 import { EstadoTurno } from '../../types/turnos.types'

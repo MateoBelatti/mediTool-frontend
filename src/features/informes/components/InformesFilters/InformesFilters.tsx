@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { Search, Calendar as CalendarIcon, Plus } from 'lucide-react'
 import { Button } from '@/shared/components/Button/Button'
 import styles from './InformesFilters.module.css'

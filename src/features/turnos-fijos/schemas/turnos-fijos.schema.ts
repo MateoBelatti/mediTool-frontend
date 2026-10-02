@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const CrearTurnoFijoSchema = z.object({
-  pacienteId: z.number({ invalid_type_error: 'Seleccione un paciente' }),
+  pacienteId: z.number(),
   profesionalId: z.number(),
   diaSemana: z.number().min(0).max(6),
   hora: z.string(),

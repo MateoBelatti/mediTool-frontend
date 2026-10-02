@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { FileText, User as UserIcon, Calendar, Pencil } from 'lucide-react'
 import type { InformeResponseDto } from '../../schemas/informes.schema'
 import styles from './InformesGrid.module.css'

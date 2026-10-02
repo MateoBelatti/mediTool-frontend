@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { Calendar, Users, MapPin, Pencil } from 'lucide-react'
 import type { ReunionResponseDto } from '../../schemas/reuniones.schema'
 import styles from './ReunionesGrid.module.css'
