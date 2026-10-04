@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import type { Paciente } from '../types/paciente.types'
 import styles from './PatientList.module.css'
 import { User, Calendar, Phone, Mail } from 'lucide-react'
@@ -6,16 +7,16 @@ import { User, Calendar, Phone, Mail } from 'lucide-react'
 interface PatientListProps {
   pacientes: Paciente[]
   onEdit?: (paciente: Paciente) => void
-  onDesvincular?: (pacienteId: number) => void
   isAdmin?: boolean
 }
 
 export const PatientList: React.FC<PatientListProps> = ({
   pacientes,
   onEdit,
-  onDesvincular,
   isAdmin,
 }) => {
+  const navigate = useNavigate()
+
   if (pacientes.length === 0) {
     return (
       <div className={styles.emptyState}>
@@ -66,26 +67,20 @@ export const PatientList: React.FC<PatientListProps> = ({
           </div>
 
           <div className={styles.footer}>
+            <button
+              className={styles.editBtn}
+              onClick={() => navigate(`/pacientes/${paciente.id}`)}
+              style={{ flex: 1, backgroundColor: '#f1f5f9', color: '#0f172a' }}
+            >
+              Ver Perfil
+            </button>
+
             {isAdmin && onEdit && (
               <button
                 className={styles.editBtn}
                 onClick={() => onEdit(paciente)}
               >
                 Administrar
-              </button>
-            )}
-
-            {!isAdmin && onDesvincular && (
-              <button
-                className={styles.cancelBtn}
-                style={{
-                  backgroundColor: '#fee2e2',
-                  color: '#dc2626',
-                  border: '1px solid #fca5a5',
-                }}
-                onClick={() => onDesvincular(paciente.id)}
-              >
-                Desvincular
               </button>
             )}
           </div>

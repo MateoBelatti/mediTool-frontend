@@ -3,6 +3,7 @@ import { MainLayout } from '@/app/layouts/MainLayout'
 import { HomePage } from '@/pages/dashboard/HomePage'
 import { LoginPage } from '@/pages/LoginPage/LoginPage'
 import { PacientesPage } from '@/pages/pacientesPage/PacientesPage'
+import { PacienteProfilePage } from '@/pages/pacienteProfilePage/PacienteProfilePage'
 import { TurnosPage } from '@/pages/TurnosPage/TurnosPage'
 import { AsistenciasPage } from '@/pages/AsistenciasPage/AsistenciasPage'
 import { InformesPage } from '@/pages/InformesPage/InformesPage'
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: 'pacientes',
         element: <PacientesPage />,
+      },
+      {
+        path: 'pacientes/:id',
+        element: <PacienteProfilePage />,
       },
       {
         path: 'turnos',

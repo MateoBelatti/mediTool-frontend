@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth, ROLES } from '@/features/auth/hooks/useAuth'
 import { usePacientes } from '../../features/pacientes/hooks/usePacientes'
-import { useProfesionales } from '../../features/pacientes/hooks/useProfesionales'
 import { PatientList } from '../../features/pacientes/components/PatientList'
 import { PatientFormModal } from '../../features/pacientes/components/PatientFormModal'
 import type { Paciente } from '../../features/pacientes/types/paciente.types'
@@ -10,12 +9,11 @@ import type { PacienteFormData } from '../../features/pacientes/schemas/paciente
 import styles from './PacientesPage.module.css'
 import { Plus, Search } from 'lucide-react'
 import { Button } from '@/shared/components/Button/Button'
-import { Modal } from '@/shared/components/Modal/Modal'
+import { Pagination } from '@/shared/components/Pagination/Pagination'
 
 export const PacientesPage: React.FC = () => {
   const { user } = useAuth()
   const isAdmin = user?.role === ROLES.ADMIN
-  const profesionalId = user?.id ? Number(user.id) : undefined
 
   // Admins always see 'todos', Profesionales always see 'mis-pacientes'
   const [activeTab, setActiveTab] = useState<'mis-pacientes' | 'todos'>(
@@ -42,7 +40,14 @@ export const PacientesPage: React.FC = () => {
     null
   )
 
-  const [pacienteToUnlink, setPacienteToUnlink] = useState<number | null>(null)
+  const [page, setPage] = useState(1)
+  const pageSize = 12 // Using 12 for grid
+
+  // Reset page when filters change
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPage(1)
+  }, [searchTerm, sortField, sortOrder, activeTab])
 
   // Hooks
   const {
@@ -54,10 +59,13 @@ export const PacientesPage: React.FC = () => {
     isCreating,
     update: updatePaciente,
     isUpdating,
-  } = usePacientes(undefined, { page: 1, pageSize: 100 })
-
-  const { desvincularPaciente, isDesvinculando } =
-    useProfesionales(profesionalId)
+  } = usePacientes(undefined, {
+    page,
+    pageSize,
+    searchTerm,
+    sortBy: sortField,
+    sortOrder,
+  })
 
   const handleOpenModal = (paciente?: Paciente) => {
     setSelectedPaciente(paciente || null)
@@ -114,45 +122,16 @@ export const PacientesPage: React.FC = () => {
     location.pathname,
   ])
 
-  const confirmDesvincular = () => {
-    if (profesionalId && pacienteToUnlink !== null) {
-      desvincularPaciente(
-        { id: profesionalId, pacienteId: pacienteToUnlink },
-        {
-          onSuccess: () => setPacienteToUnlink(null),
-        }
-      )
-    }
-  }
-
   const isLoading =
     activeTab === 'mis-pacientes' ? isLoadingMisPacientes : isLoadingTodos
-  const currentPacientes =
-    activeTab === 'mis-pacientes'
-      ? pacientesVinculadosPage?.items
-      : todosLosPacientesPage?.items
 
-  const filteredPacientes = currentPacientes
-    ?.filter((p) => {
-      const term = searchTerm.toLowerCase().trim()
-      if (!term) return true
-      return (
-        p.nombre.toLowerCase().includes(term) ||
-        p.apellido.toLowerCase().includes(term) ||
-        (p.dni && p.dni.includes(term)) ||
-        (p.email && p.email.toLowerCase().includes(term)) ||
-        (p.obraSocial && p.obraSocial.toLowerCase().includes(term))
-      )
-    })
-    .sort((a, b) => {
-      let valA = a[sortField] || ''
-      let valB = b[sortField] || ''
-      valA = valA.toString().toLowerCase()
-      valB = valB.toString().toLowerCase()
-      if (valA < valB) return sortOrder === 'asc' ? -1 : 1
-      if (valA > valB) return sortOrder === 'asc' ? 1 : -1
-      return 0
-    })
+  const currentPageResult =
+    activeTab === 'mis-pacientes'
+      ? pacientesVinculadosPage
+      : todosLosPacientesPage
+
+  const currentPacientes = currentPageResult?.items || []
+  const totalPages = currentPageResult?.totalPages || 1
 
   return (
     <div className={styles.pageContainer}>
@@ -171,7 +150,7 @@ export const PacientesPage: React.FC = () => {
             <div className={styles.searchContainer}>
               <input
                 type="text"
-                placeholder="Buscar por nombre, apellido, DNI, email u obra social..."
+                placeholder="Buscar por nombre, apellido o DNI..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className={styles.searchInput}
@@ -231,14 +210,21 @@ export const PacientesPage: React.FC = () => {
         {isLoading ? (
           <div className={styles.loading}>Cargando pacientes...</div>
         ) : (
-          <PatientList
-            pacientes={filteredPacientes || []}
-            onEdit={isAdmin ? handleOpenModal : undefined}
-            onDesvincular={
-              !isAdmin ? (id) => setPacienteToUnlink(id) : undefined
-            }
-            isAdmin={isAdmin}
-          />
+          <>
+            <PatientList
+              pacientes={currentPacientes}
+              onEdit={isAdmin ? handleOpenModal : undefined}
+
+              isAdmin={isAdmin}
+            />
+            {totalPages > 1 && (
+              <Pagination
+                currentPage={page}
+                totalPages={totalPages}
+                onPageChange={setPage}
+              />
+            )}
+          </>
         )}
       </div>
 
@@ -249,43 +235,6 @@ export const PacientesPage: React.FC = () => {
         paciente={selectedPaciente}
         isSubmitting={isCreating || isUpdating}
       />
-
-      <Modal
-        isOpen={pacienteToUnlink !== null}
-        onClose={() => setPacienteToUnlink(null)}
-        title="Confirmar Desvinculación"
-      >
-        <div
-          style={{
-            padding: '20px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '20px',
-          }}
-        >
-          <p>
-            ¿Está seguro que desea desvincular a este paciente? Ya no aparecerá
-            en su lista de pacientes.
-          </p>
-          <div
-            style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}
-          >
-            <Button
-              onClick={() => setPacienteToUnlink(null)}
-              variant="secondary"
-            >
-              Cancelar
-            </Button>
-            <Button
-              onClick={confirmDesvincular}
-              variant="primary"
-              disabled={isDesvinculando}
-            >
-              {isDesvinculando ? 'Desvinculando...' : 'Sí, desvincular'}
-            </Button>
-          </div>
-        </div>
-      </Modal>
     </div>
   )
 }
