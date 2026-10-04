@@ -107,15 +107,33 @@
   }
 
   .dashboardGrid {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: minmax(320px, 1fr) 1fr;
+  }
+
+  .statCardsWrapper {
+    grid-column: 1 / -1;
   }
 
   .calendarWrapper {
+    grid-column: 1 / 2;
     min-height: 350px;
   }
 
+  .actionsWrapper {
+    grid-column: 2 / 3;
+    grid-row: 2;
+  }
+
   .agendaWrapper {
+    grid-column: 1 / -1;
     min-height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboardGrid {
+    display: flex;
+    flex-direction: column;
   }
 }
