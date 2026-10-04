@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useAuth } from '@/features/auth/hooks/useAuth'
+import { useAuth, ROLES } from '@/features/auth/hooks/useAuth'
 import { usePacientes } from '../../features/pacientes/hooks/usePacientes'
 import { useProfesionales } from '../../features/pacientes/hooks/useProfesionales'
 import { PatientList } from '../../features/pacientes/components/PatientList'
@@ -10,19 +10,34 @@ import type { PacienteFormData } from '../../features/pacientes/schemas/paciente
 import styles from './PacientesPage.module.css'
 import { Plus, Search } from 'lucide-react'
 import { Button } from '@/shared/components/Button/Button'
+import { Modal } from '@/shared/components/Modal/Modal'
 
 export const PacientesPage: React.FC = () => {
   const { user } = useAuth()
+  const isAdmin = user?.role === ROLES.ADMIN
   const profesionalId = user?.id ? Number(user.id) : undefined
 
+  // Admins always see 'todos', Profesionales always see 'mis-pacientes'
   const [activeTab, setActiveTab] = useState<'mis-pacientes' | 'todos'>(
-    'mis-pacientes'
+    isAdmin ? 'todos' : 'mis-pacientes'
   )
+
+  useEffect(() => {
+    if (isAdmin) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setActiveTab('todos')
+    } else {
+      setActiveTab('mis-pacientes')
+    }
+  }, [isAdmin])
+
   const [searchDni, setSearchDni] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedPaciente, setSelectedPaciente] = useState<Paciente | null>(
     null
   )
+
+  const [pacienteToUnlink, setPacienteToUnlink] = useState<number | null>(null)
 
   // Hooks
   const {
@@ -36,7 +51,8 @@ export const PacientesPage: React.FC = () => {
     isUpdating,
   } = usePacientes(undefined, { page: 1, pageSize: 100 })
 
-  const { vincularPaciente, isVinculando } = useProfesionales(profesionalId)
+  const { desvincularPaciente, isDesvinculando } =
+    useProfesionales(profesionalId)
 
   const handleOpenModal = (paciente?: Paciente) => {
     setSelectedPaciente(paciente || null)
@@ -66,7 +82,7 @@ export const PacientesPage: React.FC = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (location.state?.openNewModal) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       handleOpenModal()
@@ -93,9 +109,14 @@ export const PacientesPage: React.FC = () => {
     location.pathname,
   ])
 
-  const handleVincular = (pacienteId: number) => {
-    if (profesionalId) {
-      vincularPaciente({ id: profesionalId, pacienteId })
+  const confirmDesvincular = () => {
+    if (profesionalId && pacienteToUnlink !== null) {
+      desvincularPaciente(
+        { id: profesionalId, pacienteId: pacienteToUnlink },
+        {
+          onSuccess: () => setPacienteToUnlink(null),
+        }
+      )
     }
   }
 
@@ -117,26 +138,6 @@ export const PacientesPage: React.FC = () => {
         <h2 className={styles.title}>Pacientes</h2>
 
         <div className={styles.controlsSection}>
-          <div className={styles.filterGroup}>
-            <label className={styles.label}>
-              <span>Vista</span>
-            </label>
-            <div className={styles.tabs}>
-              <button
-                className={`${styles.tab} ${activeTab === 'mis-pacientes' ? styles.activeTab : ''}`}
-                onClick={() => setActiveTab('mis-pacientes')}
-              >
-                Mis Pacientes
-              </button>
-              <button
-                className={`${styles.tab} ${activeTab === 'todos' ? styles.activeTab : ''}`}
-                onClick={() => setActiveTab('todos')}
-              >
-                Todos
-              </button>
-            </div>
-          </div>
-
           <div className={styles.filterGroup}>
             <label className={styles.label}>
               <Search size={16} />
@@ -169,10 +170,11 @@ export const PacientesPage: React.FC = () => {
         ) : (
           <PatientList
             pacientes={filteredPacientes || []}
-            modo={activeTab}
-            onEdit={activeTab === 'mis-pacientes' ? handleOpenModal : undefined}
-            onVincular={activeTab === 'todos' ? handleVincular : undefined}
-            isVinculando={isVinculando}
+            onEdit={isAdmin ? handleOpenModal : undefined}
+            onDesvincular={
+              !isAdmin ? (id) => setPacienteToUnlink(id) : undefined
+            }
+            isAdmin={isAdmin}
           />
         )}
       </div>
@@ -184,6 +186,43 @@ export const PacientesPage: React.FC = () => {
         paciente={selectedPaciente}
         isSubmitting={isCreating || isUpdating}
       />
+
+      <Modal
+        isOpen={pacienteToUnlink !== null}
+        onClose={() => setPacienteToUnlink(null)}
+        title="Confirmar Desvinculación"
+      >
+        <div
+          style={{
+            padding: '20px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '20px',
+          }}
+        >
+          <p>
+            ¿Está seguro que desea desvincular a este paciente? Ya no aparecerá
+            en su lista de pacientes.
+          </p>
+          <div
+            style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}
+          >
+            <Button
+              onClick={() => setPacienteToUnlink(null)}
+              variant="secondary"
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={confirmDesvincular}
+              variant="primary"
+              disabled={isDesvinculando}
+            >
+              {isDesvinculando ? 'Desvinculando...' : 'Sí, desvincular'}
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

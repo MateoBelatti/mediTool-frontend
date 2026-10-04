@@ -6,17 +6,15 @@ import { User, Calendar, Phone, Mail } from 'lucide-react'
 interface PatientListProps {
   pacientes: Paciente[]
   onEdit?: (paciente: Paciente) => void
-  onVincular?: (pacienteId: number) => void
-  isVinculando?: boolean
-  modo: 'todos' | 'mis-pacientes'
+  onDesvincular?: (pacienteId: number) => void
+  isAdmin?: boolean
 }
 
 export const PatientList: React.FC<PatientListProps> = ({
   pacientes,
   onEdit,
-  onVincular,
-  isVinculando,
-  modo,
+  onDesvincular,
+  isAdmin,
 }) => {
   if (pacientes.length === 0) {
     return (
@@ -68,22 +66,26 @@ export const PatientList: React.FC<PatientListProps> = ({
           </div>
 
           <div className={styles.footer}>
-            {modo === 'mis-pacientes' && onEdit && (
+            {isAdmin && onEdit && (
               <button
                 className={styles.editBtn}
                 onClick={() => onEdit(paciente)}
               >
-                Ver / Editar
+                Administrar
               </button>
             )}
 
-            {modo === 'todos' && onVincular && (
+            {!isAdmin && onDesvincular && (
               <button
-                className={styles.vincularBtn}
-                onClick={() => onVincular(paciente.id)}
-                disabled={isVinculando}
+                className={styles.cancelBtn}
+                style={{
+                  backgroundColor: '#fee2e2',
+                  color: '#dc2626',
+                  border: '1px solid #fca5a5',
+                }}
+                onClick={() => onDesvincular(paciente.id)}
               >
-                {isVinculando ? 'Vinculando...' : 'Vincular a mis pacientes'}
+                Desvincular
               </button>
             )}
           </div>

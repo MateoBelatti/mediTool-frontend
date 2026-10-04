@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -7,7 +7,10 @@ import {
 } from '../schemas/paciente.schema'
 import type { Paciente } from '../types/paciente.types'
 import styles from './PatientFormModal.module.css'
-import { X } from 'lucide-react'
+import { X, Trash2, Plus } from 'lucide-react'
+import { useAuth, ROLES } from '@/features/auth/hooks/useAuth'
+import { usePacientes } from '../hooks/usePacientes'
+import { useProfesionales } from '../hooks/useProfesionales'
 
 interface PatientFormModalProps {
   isOpen: boolean
@@ -24,6 +27,24 @@ export const PatientFormModal: React.FC<PatientFormModalProps> = ({
   paciente,
   isSubmitting,
 }) => {
+  const { user } = useAuth()
+  const isAdmin = user?.role === ROLES.ADMIN
+
+  const { profesionalesVinculados } = usePacientes(paciente?.id)
+  const { profesionales, vincularPaciente, desvincularPaciente } =
+    useProfesionales()
+  const [selectedProfToLink, setSelectedProfToLink] = useState<number | ''>('')
+
+  const handleLinkProf = () => {
+    if (selectedProfToLink && paciente) {
+      vincularPaciente({
+        id: Number(selectedProfToLink),
+        pacienteId: paciente.id,
+      })
+      setSelectedProfToLink('')
+    }
+  }
+
   const {
     register,
     handleSubmit,
@@ -192,6 +213,140 @@ export const PatientFormModal: React.FC<PatientFormModalProps> = ({
               )}
             </div>
           </div>
+
+          {isAdmin && paciente && (
+            <div
+              style={{
+                marginTop: '30px',
+                borderTop: '1px solid #e5e7eb',
+                paddingTop: '20px',
+              }}
+            >
+              <h3
+                style={{
+                  fontSize: '1rem',
+                  fontWeight: 600,
+                  marginBottom: '15px',
+                  color: '#374151',
+                }}
+              >
+                Profesionales Asociados
+              </h3>
+
+              <div
+                style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}
+              >
+                <select
+                  value={selectedProfToLink}
+                  onChange={(e) =>
+                    setSelectedProfToLink(Number(e.target.value) || '')
+                  }
+                  style={{
+                    flex: 1,
+                    padding: '8px',
+                    borderRadius: '6px',
+                    border: '1px solid #d1d5db',
+                  }}
+                >
+                  <option value="">
+                    Seleccione un profesional para vincular...
+                  </option>
+                  {profesionales
+                    ?.filter(
+                      (p) =>
+                        !profesionalesVinculados?.some((pv) => pv.id === p.id)
+                    )
+                    .map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.nombre} {p.apellido} (
+                        {p.matricula || 'Sin matrícula'})
+                      </option>
+                    ))}
+                </select>
+                <button
+                  type="button"
+                  onClick={handleLinkProf}
+                  disabled={!selectedProfToLink}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    padding: '8px 16px',
+                    backgroundColor: '#3b82f6',
+                    color: 'white',
+                    borderRadius: '6px',
+                    border: 'none',
+                    cursor: selectedProfToLink ? 'pointer' : 'not-allowed',
+                    opacity: selectedProfToLink ? 1 : 0.5,
+                  }}
+                >
+                  <Plus size={16} /> Vincular
+                </button>
+              </div>
+
+              {profesionalesVinculados && profesionalesVinculados.length > 0 ? (
+                <ul
+                  style={{
+                    listStyle: 'none',
+                    padding: 0,
+                    margin: 0,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '8px',
+                  }}
+                >
+                  {profesionalesVinculados.map((p) => (
+                    <li
+                      key={p.id}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        padding: '10px',
+                        backgroundColor: '#f9fafb',
+                        borderRadius: '6px',
+                        border: '1px solid #e5e7eb',
+                      }}
+                    >
+                      <span>
+                        {p.nombre} {p.apellido}{' '}
+                        <span
+                          style={{ color: '#6b7280', fontSize: '0.875rem' }}
+                        >
+                          - {p.matricula || p.email}
+                        </span>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          desvincularPaciente({
+                            id: p.id,
+                            pacienteId: paciente.id,
+                          })
+                        }
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: '#ef4444',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          padding: '4px',
+                        }}
+                        title="Desvincular"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p style={{ color: '#6b7280', fontSize: '0.875rem' }}>
+                  No hay profesionales vinculados a este paciente.
+                </p>
+              )}
+            </div>
+          )}
 
           <div className={styles.footer}>
             <button
