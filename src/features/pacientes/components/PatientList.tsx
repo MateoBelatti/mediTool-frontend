@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { Paciente } from '../types/paciente.types'
 import styles from './PatientList.module.css'
-import { User, Calendar, Phone, Mail } from 'lucide-react'
+import { User, Phone, Mail } from 'lucide-react'
 
 interface PatientListProps {
   pacientes: Paciente[]
@@ -56,12 +56,6 @@ export const PatientList: React.FC<PatientListProps> = ({
               <div className={styles.row}>
                 <Phone size={16} />
                 <span>{paciente.telefono}</span>
-              </div>
-            )}
-            {paciente.fechaNacimiento && (
-              <div className={styles.row}>
-                <Calendar size={16} />
-                <span>{paciente.fechaNacimiento}</span>
               </div>
             )}
           </div>

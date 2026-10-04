@@ -210,23 +210,21 @@ export const PacientesPage: React.FC = () => {
         {isLoading ? (
           <div className={styles.loading}>Cargando pacientes...</div>
         ) : (
-          <>
-            <PatientList
-              pacientes={currentPacientes}
-              onEdit={isAdmin ? handleOpenModal : undefined}
-
-              isAdmin={isAdmin}
-            />
-            {totalPages > 1 && (
-              <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                onPageChange={setPage}
-              />
-            )}
-          </>
+          <PatientList
+            pacientes={currentPacientes}
+            onEdit={isAdmin ? handleOpenModal : undefined}
+            isAdmin={isAdmin}
+          />
         )}
       </div>
+
+      {!isLoading && totalPages > 1 && (
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+        />
+      )}
 
       <PatientFormModal
         isOpen={isModalOpen}
