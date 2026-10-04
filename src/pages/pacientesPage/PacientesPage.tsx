@@ -31,7 +31,12 @@ export const PacientesPage: React.FC = () => {
     }
   }, [isAdmin])
 
-  const [searchDni, setSearchDni] = useState('')
+  type SortField = 'nombre' | 'apellido' | 'obraSocial' | 'dni'
+  type SortOrder = 'asc' | 'desc'
+
+  const [searchTerm, setSearchTerm] = useState('')
+  const [sortField, setSortField] = useState<SortField>('nombre')
+  const [sortOrder, setSortOrder] = useState<SortOrder>('asc')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedPaciente, setSelectedPaciente] = useState<Paciente | null>(
     null
@@ -127,10 +132,27 @@ export const PacientesPage: React.FC = () => {
       ? pacientesVinculadosPage?.items
       : todosLosPacientesPage?.items
 
-  const filteredPacientes = currentPacientes?.filter(
-    (p) =>
-      searchDni.trim() === '' || (p.dni && p.dni.includes(searchDni.trim()))
-  )
+  const filteredPacientes = currentPacientes
+    ?.filter((p) => {
+      const term = searchTerm.toLowerCase().trim()
+      if (!term) return true
+      return (
+        p.nombre.toLowerCase().includes(term) ||
+        p.apellido.toLowerCase().includes(term) ||
+        (p.dni && p.dni.includes(term)) ||
+        (p.email && p.email.toLowerCase().includes(term)) ||
+        (p.obraSocial && p.obraSocial.toLowerCase().includes(term))
+      )
+    })
+    .sort((a, b) => {
+      let valA = a[sortField] || ''
+      let valB = b[sortField] || ''
+      valA = valA.toString().toLowerCase()
+      valB = valB.toString().toLowerCase()
+      if (valA < valB) return sortOrder === 'asc' ? -1 : 1
+      if (valA > valB) return sortOrder === 'asc' ? 1 : -1
+      return 0
+    })
 
   return (
     <div className={styles.pageContainer}>
@@ -138,7 +160,10 @@ export const PacientesPage: React.FC = () => {
         <h2 className={styles.title}>Pacientes</h2>
 
         <div className={styles.controlsSection}>
-          <div className={styles.filterGroup}>
+          <div
+            className={styles.filterGroup}
+            style={{ flex: 1, minWidth: '250px' }}
+          >
             <label className={styles.label}>
               <Search size={16} />
               <span>Buscar Paciente</span>
@@ -146,12 +171,50 @@ export const PacientesPage: React.FC = () => {
             <div className={styles.searchContainer}>
               <input
                 type="text"
-                placeholder="DNI..."
-                value={searchDni}
-                onChange={(e) => setSearchDni(e.target.value)}
+                placeholder="Buscar por nombre, apellido, DNI, email u obra social..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className={styles.searchInput}
               />
             </div>
+          </div>
+
+          <div className={styles.filterGroup}>
+            <label className={styles.label}>
+              <span>Ordenar por</span>
+            </label>
+            <select
+              value={sortField}
+              onChange={(e) => setSortField(e.target.value as SortField)}
+              style={{
+                padding: '8px',
+                borderRadius: '4px',
+                border: '1px solid #ddd',
+              }}
+            >
+              <option value="nombre">Nombre</option>
+              <option value="apellido">Apellido</option>
+              <option value="dni">DNI</option>
+              <option value="obraSocial">Obra Social</option>
+            </select>
+          </div>
+
+          <div className={styles.filterGroup}>
+            <label className={styles.label}>
+              <span>Orden</span>
+            </label>
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value as SortOrder)}
+              style={{
+                padding: '8px',
+                borderRadius: '4px',
+                border: '1px solid #ddd',
+              }}
+            >
+              <option value="asc">Ascendente</option>
+              <option value="desc">Descendente</option>
+            </select>
           </div>
         </div>
 
