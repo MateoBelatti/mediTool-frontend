@@ -10,6 +10,11 @@ import type {
   User,
 } from '../types/auth.types'
 
+export const ROLES = {
+  ADMIN: 'Admin',
+  PROFESIONAL: 'Profesional',
+} as const
+
 const getUserFromToken = (): User | null => {
   const token = localStorage.getItem('token')
   if (!token) return null
@@ -33,6 +38,12 @@ const getUserFromToken = (): User | null => {
       name:
         decoded.name ||
         decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] ||
+        '',
+      role:
+        decoded.role ||
+        decoded[
+          'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+        ] ||
         '',
     }
   } catch (error) {
