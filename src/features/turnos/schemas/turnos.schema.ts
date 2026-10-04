@@ -10,6 +10,19 @@ export const CrearTurnoSchema = z.object({
   estado: z.nativeEnum(EstadoTurno).optional(),
 })
 
+export const PacienteBasicoSchema = z.object({
+  id: z.number(),
+  nombre: z.string(),
+  apellido: z.string(),
+  dni: z.string().optional(),
+})
+
+export const ProfesionalBasicoSchema = z.object({
+  id: z.number(),
+  nombre: z.string(),
+  apellido: z.string(),
+})
+
 export const TurnoSchema = z.object({
   id: z.number(),
   turnoFijoId: z.number().nullable().optional(),
@@ -23,8 +36,8 @@ export const TurnoSchema = z.object({
   fechaRegistro: z.string().optional(),
   fechaRegistroAsistencia: z.string().nullable().optional(),
   observaciones: z.string().nullable().optional(),
-  paciente: z.any().optional(), // Using any/optional for now for simplicity, ideally define PacienteResumenDto
-  profesional: z.any().optional(),
+  paciente: PacienteBasicoSchema.optional(),
+  profesional: ProfesionalBasicoSchema.optional(),
 })
 
 export type CrearTurnoDto = z.infer<typeof CrearTurnoSchema>
