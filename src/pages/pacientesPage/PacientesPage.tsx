@@ -1,28 +1,54 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useAuth } from '@/features/auth/hooks/useAuth'
+import { useAuth, ROLES } from '@/features/auth/hooks/useAuth'
 import { usePacientes } from '../../features/pacientes/hooks/usePacientes'
-import { useProfesionales } from '../../features/pacientes/hooks/useProfesionales'
 import { PatientList } from '../../features/pacientes/components/PatientList'
 import { PatientFormModal } from '../../features/pacientes/components/PatientFormModal'
 import type { Paciente } from '../../features/pacientes/types/paciente.types'
 import type { PacienteFormData } from '../../features/pacientes/schemas/paciente.schema'
 import styles from './PacientesPage.module.css'
-import { Plus, Search } from 'lucide-react'
+import { Plus, Search, Menu } from 'lucide-react'
 import { Button } from '@/shared/components/Button/Button'
+import { Pagination } from '@/shared/components/Pagination/Pagination'
 
 export const PacientesPage: React.FC = () => {
   const { user } = useAuth()
-  const profesionalId = user?.id ? Number(user.id) : undefined
+  const isAdmin = user?.role === ROLES.ADMIN
 
+  // Admins always see 'todos', Profesionales always see 'mis-pacientes'
   const [activeTab, setActiveTab] = useState<'mis-pacientes' | 'todos'>(
-    'mis-pacientes'
+    isAdmin ? 'todos' : 'mis-pacientes'
   )
-  const [searchDni, setSearchDni] = useState('')
+
+  useEffect(() => {
+    if (isAdmin) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setActiveTab('todos')
+    } else {
+      setActiveTab('mis-pacientes')
+    }
+  }, [isAdmin])
+
+  type SortField = 'nombre' | 'apellido' | 'obraSocial' | 'dni'
+  type SortOrder = 'asc' | 'desc'
+
+  const [searchTerm, setSearchTerm] = useState('')
+  const [sortField, setSortField] = useState<SortField>('nombre')
+  const [sortOrder, setSortOrder] = useState<SortOrder>('asc')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedPaciente, setSelectedPaciente] = useState<Paciente | null>(
     null
   )
+
+  const [page, setPage] = useState(1)
+  const pageSize = 12 // Using 12 for grid
+  const [showFilters, setShowFilters] = useState(false)
+
+  // Reset page when filters change
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPage(1)
+  }, [searchTerm, sortField, sortOrder, activeTab])
 
   // Hooks
   const {
@@ -34,9 +60,13 @@ export const PacientesPage: React.FC = () => {
     isCreating,
     update: updatePaciente,
     isUpdating,
-  } = usePacientes(undefined, { page: 1, pageSize: 100 })
-
-  const { vincularPaciente, isVinculando } = useProfesionales(profesionalId)
+  } = usePacientes(undefined, {
+    page,
+    pageSize,
+    searchTerm,
+    sortBy: sortField,
+    sortOrder,
+  })
 
   const handleOpenModal = (paciente?: Paciente) => {
     setSelectedPaciente(paciente || null)
@@ -66,7 +96,7 @@ export const PacientesPage: React.FC = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (location.state?.openNewModal) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       handleOpenModal()
@@ -93,51 +123,46 @@ export const PacientesPage: React.FC = () => {
     location.pathname,
   ])
 
-  const handleVincular = (pacienteId: number) => {
-    if (profesionalId) {
-      vincularPaciente({ id: profesionalId, pacienteId })
-    }
-  }
-
   const isLoading =
     activeTab === 'mis-pacientes' ? isLoadingMisPacientes : isLoadingTodos
-  const currentPacientes =
-    activeTab === 'mis-pacientes'
-      ? pacientesVinculadosPage?.items
-      : todosLosPacientesPage?.items
 
-  const filteredPacientes = currentPacientes?.filter(
-    (p) =>
-      searchDni.trim() === '' || (p.dni && p.dni.includes(searchDni.trim()))
-  )
+  const currentPageResult =
+    activeTab === 'mis-pacientes'
+      ? pacientesVinculadosPage
+      : todosLosPacientesPage
+
+  const currentPacientes = currentPageResult?.items || []
+  const totalPages = currentPageResult?.totalPages || 1
 
   return (
     <div className={styles.pageContainer}>
       <div className={styles.filtersContainer}>
-        <h2 className={styles.title}>Pacientes</h2>
-
-        <div className={styles.controlsSection}>
-          <div className={styles.filterGroup}>
-            <label className={styles.label}>
-              <span>Vista</span>
-            </label>
-            <div className={styles.tabs}>
-              <button
-                className={`${styles.tab} ${activeTab === 'mis-pacientes' ? styles.activeTab : ''}`}
-                onClick={() => setActiveTab('mis-pacientes')}
-              >
-                Mis Pacientes
-              </button>
-              <button
-                className={`${styles.tab} ${activeTab === 'todos' ? styles.activeTab : ''}`}
-                onClick={() => setActiveTab('todos')}
-              >
-                Todos
-              </button>
-            </div>
+        <div className={styles.headerTop}>
+          <h2 className={styles.title}>Pacientes</h2>
+          <div className={styles.headerActions}>
+            <Button
+              onClick={() => handleOpenModal()}
+              leftIcon={<Plus size={18} />}
+              size="sm"
+            >
+              Nuevo Paciente
+            </Button>
+            <button
+              className={styles.mobileMenuBtn}
+              onClick={() => setShowFilters(!showFilters)}
+            >
+              <Menu size={24} />
+            </button>
           </div>
+        </div>
 
-          <div className={styles.filterGroup}>
+        <div
+          className={`${styles.controlsSection} ${showFilters ? styles.showControls : ''}`}
+        >
+          <div
+            className={styles.filterGroup}
+            style={{ flex: 1, minWidth: '250px' }}
+          >
             <label className={styles.label}>
               <Search size={16} />
               <span>Buscar Paciente</span>
@@ -145,22 +170,52 @@ export const PacientesPage: React.FC = () => {
             <div className={styles.searchContainer}>
               <input
                 type="text"
-                placeholder="DNI..."
-                value={searchDni}
-                onChange={(e) => setSearchDni(e.target.value)}
+                placeholder="Buscar por nombre, apellido o DNI..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className={styles.searchInput}
               />
             </div>
           </div>
-        </div>
 
-        <Button
-          onClick={() => handleOpenModal()}
-          leftIcon={<Plus size={18} />}
-          size="sm"
-        >
-          Nuevo Paciente
-        </Button>
+          <div className={styles.filterGroup}>
+            <label className={styles.label}>
+              <span>Ordenar por</span>
+            </label>
+            <select
+              value={sortField}
+              onChange={(e) => setSortField(e.target.value as SortField)}
+              style={{
+                padding: '8px',
+                borderRadius: '4px',
+                border: '1px solid #ddd',
+              }}
+            >
+              <option value="nombre">Nombre</option>
+              <option value="apellido">Apellido</option>
+              <option value="dni">DNI</option>
+              <option value="obraSocial">Obra Social</option>
+            </select>
+          </div>
+
+          <div className={styles.filterGroup}>
+            <label className={styles.label}>
+              <span>Orden</span>
+            </label>
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value as SortOrder)}
+              style={{
+                padding: '8px',
+                borderRadius: '4px',
+                border: '1px solid #ddd',
+              }}
+            >
+              <option value="asc">Ascendente</option>
+              <option value="desc">Descendente</option>
+            </select>
+          </div>
+        </div>
       </div>
 
       <div className={styles.content}>
@@ -168,14 +223,20 @@ export const PacientesPage: React.FC = () => {
           <div className={styles.loading}>Cargando pacientes...</div>
         ) : (
           <PatientList
-            pacientes={filteredPacientes || []}
-            modo={activeTab}
-            onEdit={activeTab === 'mis-pacientes' ? handleOpenModal : undefined}
-            onVincular={activeTab === 'todos' ? handleVincular : undefined}
-            isVinculando={isVinculando}
+            pacientes={currentPacientes}
+            onEdit={isAdmin ? handleOpenModal : undefined}
+            isAdmin={isAdmin}
           />
         )}
       </div>
+
+      {!isLoading && totalPages > 1 && (
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+        />
+      )}
 
       <PatientFormModal
         isOpen={isModalOpen}

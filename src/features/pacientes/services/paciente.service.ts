@@ -4,6 +4,7 @@ import type {
   PacienteCreateDto,
   PacienteUpdateDto,
 } from '../types/paciente.types'
+import type { Profesional } from '../types/profesional.types'
 import type {
   PageResult,
   PaginationParams,
@@ -29,6 +30,13 @@ export const pacienteService = {
 
   async getById(id: number): Promise<Paciente> {
     const response = await apiClient.get<Paciente>(`/Paciente/${id}`)
+    return response.data
+  },
+
+  async getProfesionalesVinculados(id: number): Promise<Profesional[]> {
+    const response = await apiClient.get<Profesional[]>(
+      `/Paciente/${id}/profesionales`
+    )
     return response.data
   },
 

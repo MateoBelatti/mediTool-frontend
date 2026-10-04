@@ -6,6 +6,11 @@ import type {
 } from '../types/profesional.types'
 
 export const profesionalService = {
+  async getAll(): Promise<Profesional[]> {
+    const response = await apiClient.get<Profesional[]>('/Profesional')
+    return response.data
+  },
+
   async getById(id: number): Promise<Profesional> {
     const response = await apiClient.get<Profesional>(`/Profesional/${id}`)
     return response.data
@@ -30,5 +35,9 @@ export const profesionalService = {
 
   async vincularPaciente(id: number, pacienteId: number): Promise<void> {
     await apiClient.post(`/Profesional/${id}/pacientes/${pacienteId}`)
+  },
+
+  async desvincularPaciente(id: number, pacienteId: number): Promise<void> {
+    await apiClient.delete(`/Profesional/${id}/pacientes/${pacienteId}`)
   },
 }

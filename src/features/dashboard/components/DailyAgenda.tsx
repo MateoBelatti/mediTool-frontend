@@ -123,9 +123,7 @@ export const DailyAgenda = ({
                     <button
                       onClick={(e) => {
                         e.stopPropagation()
-                        handleAction('/pacientes', {
-                          openPacienteId: turno.pacienteId,
-                        })
+                        handleAction(`/pacientes/${turno.pacienteId}`)
                       }}
                     >
                       <User size={16} /> Perfil

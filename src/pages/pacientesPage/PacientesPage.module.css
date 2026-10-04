@@ -1,15 +1,23 @@
 .pageContainer {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
   width: 100%;
+  height: calc(100vh - 64px); /* Adjusted to show pagination clearly */
+  overflow: hidden;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 0.5rem;
 }
 
 .filtersContainer {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   gap: 1.5rem;
   background-color: var(--surface-color);
   padding: 1.5rem;
@@ -19,13 +27,37 @@
   flex-shrink: 0;
 }
 
+.headerTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.mobileMenuBtn {
+  display: none;
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  align-items: center;
+  justify-content: center;
+}
+
 .title {
   margin: 0;
   font-size: var(--text-2xl);
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.025em;
-  margin-bottom: 6px;
 }
 
 .controlsSection {
@@ -34,7 +66,7 @@
   gap: 1.5rem;
   align-items: flex-end;
   flex: 1;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 .filterGroup {
@@ -123,13 +155,41 @@
   font-weight: 500;
 }
 
-@media (max-width: 640px) {
-  .header {
+@media (max-width: 1024px) {
+  .filtersContainer {
     flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
   }
 
-  .addBtn {
+  .headerTop {
     width: 100%;
-    justify-content: center;
+  }
+
+  .mobileMenuBtn {
+    display: flex;
+  }
+
+  .controlsSection {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .controlsSection.showControls {
+    display: flex;
+  }
+
+  .searchContainer {
+    width: 100%;
+  }
+
+  .filterGroup {
+    width: 100%;
+  }
+
+  .title {
+    text-align: left;
   }
 }

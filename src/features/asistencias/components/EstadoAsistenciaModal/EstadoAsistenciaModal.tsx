@@ -42,7 +42,7 @@ export const EstadoAsistenciaModal: React.FC<EstadoAsistenciaModalProps> = ({
 
   if (!isOpen || !turno) return null
 
-  const getAllowedStates = (currentState: string) => {
+  const getAllowedStates = (currentState: string): EstadoTurno[] => {
     switch (currentState) {
       case 'Pendiente':
       case 'Reprogramado':
@@ -99,7 +99,7 @@ export const EstadoAsistenciaModal: React.FC<EstadoAsistenciaModalProps> = ({
       icon: <Ban size={20} />,
       colorClass: styles.optCancelado,
     },
-  ].filter((opt) => allowedStates.includes(opt.value as any))
+  ].filter((opt) => allowedStates.includes(opt.value as EstadoTurno))
 
   const dateStr = new Date(turno.fechaHora).toLocaleDateString('es-AR', {
     weekday: 'long',

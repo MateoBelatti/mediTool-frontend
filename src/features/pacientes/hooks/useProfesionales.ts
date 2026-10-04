@@ -8,6 +8,11 @@ import type {
 export const useProfesionales = (id?: number) => {
   const queryClient = useQueryClient()
 
+  const getProfesionales = useQuery({
+    queryKey: ['profesionales'],
+    queryFn: () => profesionalService.getAll(),
+  })
+
   // Obtener datos del profesional
   const getProfesional = useQuery({
     queryKey: ['profesional', id],
@@ -44,6 +49,22 @@ export const useProfesionales = (id?: number) => {
     },
   })
 
+  const desvincularPaciente = useMutation({
+    mutationFn: ({ id, pacienteId }: { id: number; pacienteId: number }) =>
+      profesionalService.desvincularPaciente(id, pacienteId),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ['pacientes'],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['profesional', variables.id, 'pacientes'],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['paciente', variables.pacienteId, 'profesionales'],
+      })
+    },
+  })
+
   return {
     // Queries
     profesional: getProfesional.data,
@@ -62,5 +83,11 @@ export const useProfesionales = (id?: number) => {
 
     vincularPaciente: vincularPaciente.mutate,
     isVinculando: vincularPaciente.isPending,
+
+    desvincularPaciente: desvincularPaciente.mutate,
+    isDesvinculando: desvincularPaciente.isPending,
+
+    profesionales: getProfesionales.data,
+    isLoadingProfesionales: getProfesionales.isLoading,
   }
 }

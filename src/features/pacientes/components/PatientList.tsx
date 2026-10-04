@@ -1,23 +1,22 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import type { Paciente } from '../types/paciente.types'
 import styles from './PatientList.module.css'
-import { User, Calendar, Phone, Mail } from 'lucide-react'
+import { User, Phone, Mail } from 'lucide-react'
 
 interface PatientListProps {
   pacientes: Paciente[]
   onEdit?: (paciente: Paciente) => void
-  onVincular?: (pacienteId: number) => void
-  isVinculando?: boolean
-  modo: 'todos' | 'mis-pacientes'
+  isAdmin?: boolean
 }
 
 export const PatientList: React.FC<PatientListProps> = ({
   pacientes,
   onEdit,
-  onVincular,
-  isVinculando,
-  modo,
+  isAdmin,
 }) => {
+  const navigate = useNavigate()
+
   if (pacientes.length === 0) {
     return (
       <div className={styles.emptyState}>
@@ -59,31 +58,23 @@ export const PatientList: React.FC<PatientListProps> = ({
                 <span>{paciente.telefono}</span>
               </div>
             )}
-            {paciente.fechaNacimiento && (
-              <div className={styles.row}>
-                <Calendar size={16} />
-                <span>{paciente.fechaNacimiento}</span>
-              </div>
-            )}
           </div>
 
           <div className={styles.footer}>
-            {modo === 'mis-pacientes' && onEdit && (
+            <button
+              className={styles.editBtn}
+              onClick={() => navigate(`/pacientes/${paciente.id}`)}
+              style={{ flex: 1, backgroundColor: '#f1f5f9', color: '#0f172a' }}
+            >
+              Ver Perfil
+            </button>
+
+            {isAdmin && onEdit && (
               <button
                 className={styles.editBtn}
                 onClick={() => onEdit(paciente)}
               >
-                Ver / Editar
-              </button>
-            )}
-
-            {modo === 'todos' && onVincular && (
-              <button
-                className={styles.vincularBtn}
-                onClick={() => onVincular(paciente.id)}
-                disabled={isVinculando}
-              >
-                {isVinculando ? 'Vinculando...' : 'Vincular a mis pacientes'}
+                Administrar
               </button>
             )}
           </div>

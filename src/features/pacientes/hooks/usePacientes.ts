@@ -25,6 +25,12 @@ export const usePacientes = (id?: number, params?: PaginationParams) => {
     enabled: !!id,
   })
 
+  const getProfesionalesVinculados = useQuery({
+    queryKey: ['paciente', id, 'profesionales'],
+    queryFn: () => pacienteService.getProfesionalesVinculados(id!),
+    enabled: !!id,
+  })
+
   const createPaciente = useMutation({
     mutationFn: (data: PacienteCreateDto) => pacienteService.create(data),
     onSuccess: () => {
@@ -56,6 +62,8 @@ export const usePacientes = (id?: number, params?: PaginationParams) => {
     paciente: getPaciente.data,
     isLoading: getPaciente.isLoading,
     error: getPaciente.error,
+    profesionalesVinculados: getProfesionalesVinculados.data,
+    isLoadingProfesionales: getProfesionalesVinculados.isLoading,
     create: createPaciente.mutate,
     isCreating: createPaciente.isPending,
     update: updatePaciente.mutate,

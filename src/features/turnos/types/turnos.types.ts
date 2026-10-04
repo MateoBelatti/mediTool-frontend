@@ -24,12 +24,19 @@ export interface PacienteBasico {
   dni?: string
 }
 
+export interface ProfesionalBasico {
+  id: number
+  nombre: string
+  apellido: string
+}
+
 export interface Turno {
   id: number
   turnoFijoId?: number | null
   pacienteId: number
   paciente?: PacienteBasico
   profesionalId: number
+  profesional?: ProfesionalBasico
   fechaHora: string
   duracionMin: number
   estado: EstadoTurno
