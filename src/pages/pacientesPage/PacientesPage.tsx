@@ -7,7 +7,7 @@ import { PatientFormModal } from '../../features/pacientes/components/PatientFor
 import type { Paciente } from '../../features/pacientes/types/paciente.types'
 import type { PacienteFormData } from '../../features/pacientes/schemas/paciente.schema'
 import styles from './PacientesPage.module.css'
-import { Plus, Search } from 'lucide-react'
+import { Plus, Search, Menu } from 'lucide-react'
 import { Button } from '@/shared/components/Button/Button'
 import { Pagination } from '@/shared/components/Pagination/Pagination'
 
@@ -42,6 +42,7 @@ export const PacientesPage: React.FC = () => {
 
   const [page, setPage] = useState(1)
   const pageSize = 12 // Using 12 for grid
+  const [showFilters, setShowFilters] = useState(false)
 
   // Reset page when filters change
   useEffect(() => {
@@ -136,9 +137,28 @@ export const PacientesPage: React.FC = () => {
   return (
     <div className={styles.pageContainer}>
       <div className={styles.filtersContainer}>
-        <h2 className={styles.title}>Pacientes</h2>
+        <div className={styles.headerTop}>
+          <h2 className={styles.title}>Pacientes</h2>
+          <div className={styles.headerActions}>
+            <Button
+              onClick={() => handleOpenModal()}
+              leftIcon={<Plus size={18} />}
+              size="sm"
+            >
+              Nuevo Paciente
+            </Button>
+            <button
+              className={styles.mobileMenuBtn}
+              onClick={() => setShowFilters(!showFilters)}
+            >
+              <Menu size={24} />
+            </button>
+          </div>
+        </div>
 
-        <div className={styles.controlsSection}>
+        <div
+          className={`${styles.controlsSection} ${showFilters ? styles.showControls : ''}`}
+        >
           <div
             className={styles.filterGroup}
             style={{ flex: 1, minWidth: '250px' }}
@@ -196,14 +216,6 @@ export const PacientesPage: React.FC = () => {
             </select>
           </div>
         </div>
-
-        <Button
-          onClick={() => handleOpenModal()}
-          leftIcon={<Plus size={18} />}
-          size="sm"
-        >
-          Nuevo Paciente
-        </Button>
       </div>
 
       <div className={styles.content}>

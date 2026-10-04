@@ -17,7 +17,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   gap: 1.5rem;
   background-color: var(--surface-color);
   padding: 1.5rem;
@@ -27,13 +27,37 @@
   flex-shrink: 0;
 }
 
+.headerTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.mobileMenuBtn {
+  display: none;
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  align-items: center;
+  justify-content: center;
+}
+
 .title {
   margin: 0;
   font-size: var(--text-2xl);
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.025em;
-  margin-bottom: 6px;
 }
 
 .controlsSection {
@@ -42,7 +66,7 @@
   gap: 1.5rem;
   align-items: flex-end;
   flex: 1;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 .filterGroup {
@@ -138,10 +162,23 @@
     gap: 1rem;
   }
 
+  .headerTop {
+    width: 100%;
+  }
+
+  .mobileMenuBtn {
+    display: flex;
+  }
+
   .controlsSection {
+    display: none;
     flex-direction: column;
     align-items: stretch;
     gap: 1rem;
+  }
+
+  .controlsSection.showControls {
+    display: flex;
   }
 
   .searchContainer {
@@ -153,6 +190,6 @@
   }
 
   .title {
-    text-align: center;
+    text-align: left;
   }
 }
