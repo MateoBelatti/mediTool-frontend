@@ -144,3 +144,38 @@
     transform: rotate(360deg);
   }
 }
+
+@media (max-width: 992px) {
+  .listItem {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .itemMainInfo {
+    flex-wrap: wrap;
+    gap: 1rem;
+    min-width: 100%;
+  }
+
+  .datetimeInfo {
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .pacienteInfo {
+    min-width: unset;
+  }
+}
+
+@media (max-width: 576px) {
+  .itemMainInfo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .datetimeInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

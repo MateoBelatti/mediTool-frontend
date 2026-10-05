@@ -5,7 +5,7 @@ export interface CrearTurnoFijoDto {
   hora: string
   duracionMin: number
   fechaInicio: string
-  fechaFin?: string
+  fechaFin?: string | null
   activo?: boolean
 }
 
@@ -13,7 +13,7 @@ export interface EditarTurnoFijoDto {
   diaSemana: number
   hora: string
   duracionMin: number
-  fechaFin?: string
+  fechaFin?: string | null
   activo: boolean
 }
 
@@ -24,12 +24,13 @@ export interface TurnoFijo {
     id: number
     nombre: string
     apellido: string
+    dni?: string
   }
   profesionalId: number
   diaSemana: number
   hora: string
   duracionMin: number
   fechaInicio: string
-  fechaFin?: string
+  fechaFin?: string | null
   activo: boolean
 }
