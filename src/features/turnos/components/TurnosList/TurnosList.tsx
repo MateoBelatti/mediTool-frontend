@@ -9,7 +9,6 @@ interface TurnosListProps {
   isLoading: boolean
   onTurnoClick: (turno: Turno) => void
   pacienteSearch: string
-  hideFijoBadge?: boolean
 }
 
 const ESTADO_LABELS: Record<EstadoTurno, string> = {
@@ -28,7 +27,12 @@ const ESTADO_COLORS: Record<EstadoTurno, string> = {
   [EstadoTurno.Ausente]: styles.estadoAusente,
 }
 
-export const TurnosList = ({ turnos, isLoading, onTurnoClick, pacienteSearch, hideFijoBadge }: TurnosListProps) => {
+export const TurnosList = ({
+  turnos,
+  isLoading,
+  onTurnoClick,
+  pacienteSearch,
+}: TurnosListProps) => {
   if (isLoading) {
     return (
       <div className={styles.loadingContainer}>
@@ -109,7 +113,7 @@ export const TurnosList = ({ turnos, isLoading, onTurnoClick, pacienteSearch, hi
           </div>
 
           <div className={styles.itemBadges}>
-            {turno.turnoFijoId && !hideFijoBadge && (
+            {turno.turnoFijoId && (
               <span className={styles.fijoBadge}>Turno Fijo</span>
             )}
             <span
