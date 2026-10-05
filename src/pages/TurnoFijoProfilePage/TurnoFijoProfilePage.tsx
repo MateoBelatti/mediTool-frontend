@@ -28,7 +28,7 @@ export const TurnoFijoProfilePage = () => {
 
   const { pacientes: pacientesPage, pacientesVinculados } = usePacientes(undefined, { page: 1, pageSize: 100 })
   const pacientes = pacientesPage?.items || pacientesVinculados?.items
-  const paciente = pacientes?.find(p => p.id === turnoFijo?.pacienteId) || (turnoFijo as any)?.paciente
+  const paciente = pacientes?.find(p => p.id === turnoFijo?.pacienteId) || (turnoFijo as unknown as { paciente: { nombre: string; apellido: string } })?.paciente
 
   const { data: historial, isLoading: isLoadingHistorial } = useHistorialTurnoFijo(turnoFijoId)
 

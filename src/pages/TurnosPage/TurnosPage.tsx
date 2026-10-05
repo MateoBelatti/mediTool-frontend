@@ -81,6 +81,7 @@ export const TurnosPage = () => {
 
   React.useEffect(() => {
     if (location.state?.openNewModal) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsFormModalOpen(true)
       navigate(location.pathname, { replace: true, state: {} })
       return
@@ -105,7 +106,8 @@ export const TurnosPage = () => {
         onFechaHastaChange={setFechaHasta}
         pacienteSearch={pacienteSearch}
         onPacienteSearchChange={setPacienteSearch}
-        onNewTurnoClick={() => setIsFormModalOpen(true)}
+        onNewTurnoClick={() => // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsFormModalOpen(true)}
       />
 
       <div className={styles.tabsContainer}>
