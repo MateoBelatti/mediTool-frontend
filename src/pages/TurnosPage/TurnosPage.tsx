@@ -8,24 +8,27 @@ import { useAgendaTurnos } from '@/features/turnos/hooks/useTurnos'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { usePacientes } from '@/features/pacientes/hooks/usePacientes'
 import type { Turno } from '@/features/turnos/types/turnos.types'
+import { useTurnosFijosByProfesional } from '@/features/turnos-fijos/hooks/useTurnosFijos'
+import { TurnosFijosList } from '@/features/turnos-fijos/components/TurnosFijosList/TurnosFijosList'
+import type { TurnoFijo } from '@/features/turnos-fijos/types/turnos-fijos.types'
 import styles from './TurnosPage.module.css'
 
 export const TurnosPage = () => {
   const { user } = useAuth()
   const profesionalId = user?.id ? parseInt(user.id) : undefined
 
-  // Default dates: From beginning of month to end of month (or just 30 days)
+  const [activeTab, setActiveTab] = useState<'sueltos' | 'fijos'>('sueltos')
+
   const today = new Date()
   const nextMonth = new Date(today)
   nextMonth.setMonth(nextMonth.getMonth() + 1)
-
   const formatDate = (d: Date) => d.toISOString().split('T')[0]
 
   const [fechaDesde, setFechaDesde] = useState(formatDate(today))
   const [fechaHasta, setFechaHasta] = useState(formatDate(nextMonth))
   const [pacienteSearch, setPacienteSearch] = useState('')
 
-  const { data: turnosDataPage, isLoading } = useAgendaTurnos({
+  const { data: turnosDataPage, isLoading: isLoadingTurnos } = useAgendaTurnos({
     desde: fechaDesde,
     hasta: fechaHasta,
     profesionalId: profesionalId!,
@@ -33,18 +36,13 @@ export const TurnosPage = () => {
     pageSize: 100,
   })
 
-  const { pacientes: pacientesPage, pacientesVinculados } = usePacientes(
-    undefined,
-    {
-      page: 1,
-      pageSize: 100,
-    }
-  )
+  const { data: turnosFijosData, isLoading: isLoadingFijos } = useTurnosFijosByProfesional(profesionalId!)
+
+  const { pacientes: pacientesPage, pacientesVinculados } = usePacientes(undefined, { page: 1, pageSize: 100 })
 
   const turnosData = turnosDataPage?.items
   const pacientes = pacientesPage?.items || pacientesVinculados?.items
 
-  // Enrich turnos with paciente data if it's null from the backend
   const turnos = React.useMemo(() => {
     if (!turnosData || !pacientes) return turnosData
     return turnosData.map((turno: Turno) => {
@@ -57,6 +55,23 @@ export const TurnosPage = () => {
       return turno
     })
   }, [turnosData, pacientes])
+
+  const turnosSueltos = React.useMemo(() => {
+    return turnos?.filter(t => t.turnoFijoId == null) || []
+  }, [turnos])
+
+  const turnosFijos = React.useMemo(() => {
+    if (!turnosFijosData || !pacientes) return turnosFijosData
+    return turnosFijosData.map((turnoFijo: TurnoFijo) => {
+      if (!turnoFijo.paciente && turnoFijo.pacienteId) {
+        const foundPaciente = pacientes.find((p) => p.id === turnoFijo.pacienteId)
+        if (foundPaciente) {
+          return { ...turnoFijo, paciente: foundPaciente }
+        }
+      }
+      return turnoFijo
+    })
+  }, [turnosFijosData, pacientes])
 
   const [selectedTurno, setSelectedTurno] = useState<Turno | null>(null)
   const [isFormModalOpen, setIsFormModalOpen] = useState(false)
@@ -91,16 +106,43 @@ export const TurnosPage = () => {
         onFechaHastaChange={setFechaHasta}
         pacienteSearch={pacienteSearch}
         onPacienteSearchChange={setPacienteSearch}
-        onNewTurnoClick={() => setIsFormModalOpen(true)}
+        onNewTurnoClick={() => // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsFormModalOpen(true)}
       />
 
+      <div className={styles.tabsContainer}>
+        <div className={styles.tabs}>
+          <button
+            className={`${styles.tab} ${activeTab === 'sueltos' ? styles.activeTab : ''}`}
+            onClick={() => setActiveTab('sueltos')}
+          >
+            Turnos Sueltos
+          </button>
+          <button
+            className={`${styles.tab} ${activeTab === 'fijos' ? styles.activeTab : ''}`}
+            onClick={() => setActiveTab('fijos')}
+          >
+            Turnos Fijos (Reglas)
+          </button>
+        </div>
+      </div>
+
       <div className={styles.listContainer}>
-        <TurnosList
-          turnos={turnos || []}
-          isLoading={isLoading}
-          onTurnoClick={setSelectedTurno}
-          pacienteSearch={pacienteSearch}
-        />
+        {activeTab === 'sueltos' ? (
+          <TurnosList
+            turnos={turnosSueltos}
+            isLoading={isLoadingTurnos}
+            onTurnoClick={setSelectedTurno}
+            pacienteSearch={pacienteSearch}
+          />
+        ) : (
+          <TurnosFijosList
+            turnosFijos={turnosFijos || []}
+            isLoading={isLoadingFijos}
+            onTurnoFijoClick={(t) => navigate('/turnos-fijos/' + t.id)}
+            pacienteSearch={pacienteSearch}
+          />
+        )}
       </div>
 
       {/* Modals */}
@@ -117,3 +159,4 @@ export const TurnosPage = () => {
     </div>
   )
 }
+

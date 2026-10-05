@@ -51,12 +51,10 @@
   margin: 0.5em;
 }
 
-:global(
-  .react-calendar,
-  .react-calendar *,
-  .react-calendar *:before,
-  .react-calendar *:after
-) {
+:global(.react-calendar),
+:global(.react-calendar *),
+:global(.react-calendar *:before),
+:global(.react-calendar *:after) {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
