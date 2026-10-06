@@ -1,8 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { LoginForm } from '../../features/auth/components/LoginForm/LoginForm'
+import { useAuth } from '@/features/auth/hooks/useAuth'
 import styles from './LoginPage.module.css'
 
 export const LoginPage: React.FC = () => {
+  const { user } = useAuth()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (user) {
+      navigate('/', { replace: true })
+    }
+  }, [user, navigate])
+
   return (
     <div className={styles.pageContainer}>
       <div className={styles.card}>

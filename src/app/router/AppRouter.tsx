@@ -9,6 +9,8 @@ import { AsistenciasPage } from '@/pages/AsistenciasPage/AsistenciasPage'
 import { InformesPage } from '@/pages/InformesPage/InformesPage'
 import { ReunionesPage } from '@/pages/ReunionesPage/ReunionesPage'
 
+import { ProtectedRoute } from './ProtectedRoute'
+
 const router = createBrowserRouter([
   {
     path: '/login',
@@ -16,7 +18,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/',
-    element: <MainLayout />,
+    element: (
+      <ProtectedRoute>
+        <MainLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         index: true,
