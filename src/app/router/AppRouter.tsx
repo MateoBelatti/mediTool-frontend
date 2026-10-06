@@ -5,6 +5,7 @@ import { LoginPage } from '@/pages/LoginPage/LoginPage'
 import { PacientesPage } from '@/pages/pacientesPage/PacientesPage'
 import { PacienteProfilePage } from '@/pages/pacienteProfilePage/PacienteProfilePage'
 import { TurnosPage } from '@/pages/TurnosPage/TurnosPage'
+import { TurnoFijoProfilePage } from '@/pages/TurnoFijoProfilePage/TurnoFijoProfilePage'
 import { AsistenciasPage } from '@/pages/AsistenciasPage/AsistenciasPage'
 import { InformesPage } from '@/pages/InformesPage/InformesPage'
 import { ReunionesPage } from '@/pages/ReunionesPage/ReunionesPage'
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: 'turnos',
         element: <TurnosPage />,
+      },
+      {
+        path: 'turnos-fijos/:id',
+        element: <TurnoFijoProfilePage />,
       },
       {
         path: 'asistencia',

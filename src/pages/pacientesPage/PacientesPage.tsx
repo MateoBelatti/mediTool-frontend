@@ -159,25 +159,6 @@ export const PacientesPage: React.FC = () => {
         <div
           className={`${styles.controlsSection} ${showFilters ? styles.showControls : ''}`}
         >
-          <div
-            className={styles.filterGroup}
-            style={{ flex: 1, minWidth: '250px' }}
-          >
-            <label className={styles.label}>
-              <Search size={16} />
-              <span>Buscar Paciente</span>
-            </label>
-            <div className={styles.searchContainer}>
-              <input
-                type="text"
-                placeholder="Buscar por nombre, apellido o DNI..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className={styles.searchInput}
-              />
-            </div>
-          </div>
-
           <div className={styles.filterGroup}>
             <label className={styles.label}>
               <span>Ordenar por</span>
@@ -214,6 +195,25 @@ export const PacientesPage: React.FC = () => {
               <option value="asc">Ascendente</option>
               <option value="desc">Descendente</option>
             </select>
+          </div>
+
+          <div
+            className={styles.filterGroup}
+            style={{ flex: 1, minWidth: '250px' }}
+          >
+            <label className={styles.label}>
+              <Search size={16} />
+              <span>Buscar Paciente</span>
+            </label>
+            <div className={styles.searchContainer}>
+              <input
+                type="text"
+                placeholder="Buscar por nombre, apellido o DNI..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className={styles.searchInput}
+              />
+            </div>
           </div>
         </div>
       </div>
