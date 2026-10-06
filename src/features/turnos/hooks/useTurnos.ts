@@ -91,3 +91,49 @@ export const useGenerarMasivoTurnos = () => {
     },
   })
 }
+
+export const ASISTENCIAS_KEYS = {
+  all: ['asistencias'] as const,
+  facturables: (params: { pacienteId: number; desde: string; hasta: string }) =>
+    [...ASISTENCIAS_KEYS.all, 'facturables', params] as const,
+  resumenPorTurnoFijo: (turnoFijoId: number) =>
+    [...ASISTENCIAS_KEYS.all, 'resumen', turnoFijoId] as const,
+}
+
+export const useTurnosFacturables = (params: {
+  pacienteId: number
+  desde: string
+  hasta: string
+}) =>
+  useQuery({
+    queryKey: ASISTENCIAS_KEYS.facturables(params),
+    queryFn: () => turnosService.getFacturables(params),
+    enabled: !!params.pacienteId && !!params.desde && !!params.hasta,
+  })
+
+export const useResumenPorTurnoFijo = (turnoFijoId: number) =>
+  useQuery({
+    queryKey: ASISTENCIAS_KEYS.resumenPorTurnoFijo(turnoFijoId),
+    queryFn: () => turnosService.getResumenPorTurnoFijo(turnoFijoId),
+    enabled: !!turnoFijoId,
+  })
+
+export const useRegistrarActualizarAsistencia = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({
+      turnoId,
+      data,
+    }: {
+      turnoId: number
+      data: import('../types/turnos.types').ActualizarAsistenciaDto
+    }) => turnosService.registrarActualizarAsistencia(turnoId, data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ASISTENCIAS_KEYS.all })
+      queryClient.invalidateQueries({
+        queryKey: TURNOS_KEYS.detail(variables.turnoId),
+      })
+      queryClient.invalidateQueries({ queryKey: TURNOS_KEYS.all })
+    },
+  })
+}

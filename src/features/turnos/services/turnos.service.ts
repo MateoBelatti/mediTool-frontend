@@ -50,4 +50,32 @@ export const turnosService = {
       params: { hastaFecha },
     })
   },
+  getFacturables: async (params: {
+    pacienteId: number
+    desde: string
+    hasta: string
+  }): Promise<Turno[]> => {
+    const response = await apiClient.get<Turno[]>('/Turno/facturables', {
+      params,
+    })
+    return response.data
+  },
+  getResumenPorTurnoFijo: async (
+    turnoFijoId: number
+  ): Promise<import('../types/turnos.types').ResumenAsistenciaDto> => {
+    const response = await apiClient.get<
+      import('../types/turnos.types').ResumenAsistenciaDto
+    >(`/Turno/turnofijo/${turnoFijoId}/resumen-asistencia`)
+    return response.data
+  },
+  registrarActualizarAsistencia: async (
+    turnoId: number,
+    data: import('../types/turnos.types').ActualizarAsistenciaDto
+  ): Promise<Turno> => {
+    const response = await apiClient.patch<Turno>(
+      `/Turno/${turnoId}/asistencia`,
+      data
+    )
+    return response.data
+  },
 }

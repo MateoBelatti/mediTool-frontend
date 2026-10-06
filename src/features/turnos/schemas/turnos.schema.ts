@@ -42,3 +42,24 @@ export const TurnoSchema = z.object({
 
 export type CrearTurnoDto = z.infer<typeof CrearTurnoSchema>
 export type Turno = z.infer<typeof TurnoSchema>
+
+export const ActualizarAsistenciaSchema = z.object({
+  asistio: z.boolean(),
+  justificada: z.boolean(),
+  observaciones: z
+    .string()
+    .max(500, 'Máximo 500 caracteres')
+    .optional()
+    .nullable(),
+})
+
+export const ResumenAsistenciaSchema = z.object({
+  turnoFijoId: z.number(),
+  totalTurnos: z.number(),
+  totalAsistencias: z.number(),
+  totalAusenciasJustificadas: z.number(),
+  totalAusenciasInjustificadas: z.number(),
+})
+
+export type ActualizarAsistenciaDto = z.infer<typeof ActualizarAsistenciaSchema>
+export type ResumenAsistenciaDto = z.infer<typeof ResumenAsistenciaSchema>

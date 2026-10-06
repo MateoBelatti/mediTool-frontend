@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import type { Turno } from '@/features/turnos/types/turnos.types'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { AsistenciasGrid } from '@/features/asistencias/components/AsistenciasGrid/AsistenciasGrid'
+import { AsistenciasGrid } from '@/features/turnos/components/AsistenciasGrid/AsistenciasGrid'
 import { useAgendaTurnos } from '@/features/turnos/hooks/useTurnos'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { usePacientes } from '@/features/pacientes/hooks/usePacientes'

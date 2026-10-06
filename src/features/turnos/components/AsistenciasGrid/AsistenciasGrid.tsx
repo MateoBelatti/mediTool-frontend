@@ -4,7 +4,7 @@ import { type Turno, EstadoTurno } from '@/features/turnos/types/turnos.types'
 import { EstadoAsistenciaModal } from '../EstadoAsistenciaModal/EstadoAsistenciaModal'
 import { turnosService } from '@/features/turnos/services/turnos.service'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useRegistrarActualizarAsistencia } from '../../hooks/useAsistencias'
+import { useRegistrarActualizarAsistencia } from '../../hooks/useTurnos'
 import styles from './AsistenciasGrid.module.css'
 
 interface AsistenciasGridProps {

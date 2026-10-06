@@ -45,3 +45,17 @@ export interface Turno {
   fechaRegistroAsistencia?: string | null
   observaciones?: string | null
 }
+
+export interface ActualizarAsistenciaDto {
+  asistio: boolean
+  justificada: boolean
+  observaciones?: string | null
+}
+
+export interface ResumenAsistenciaDto {
+  turnoFijoId: number
+  totalTurnos: number
+  totalAsistencias: number
+  totalAusenciasJustificadas: number
+  totalAusenciasInjustificadas: number
+}
