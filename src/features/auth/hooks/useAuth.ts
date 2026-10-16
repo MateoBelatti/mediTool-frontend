@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { jwtDecode } from 'jwt-decode'
@@ -56,6 +56,7 @@ const getUserFromToken = (): User | null => {
 
 export const useAuth = () => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const [user, setUser] = useState<User | null>(getUserFromToken())
 
   const loginMutation = useMutation<AuthResponseDto, Error, LoginRequestDto>({
@@ -74,8 +75,9 @@ export const useAuth = () => {
 
   const logout = () => {
     authService.logout()
+    queryClient.clear()
     setUser(null)
-    navigate('/login')
+    navigate('/login', { replace: true })
   }
 
   return {

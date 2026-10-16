@@ -124,6 +124,12 @@
   transition: all 0.2s ease-in-out;
   position: relative;
   overflow: hidden;
+  background: transparent;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
 }
 
 .sidebarItem::before {

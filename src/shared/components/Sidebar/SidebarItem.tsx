@@ -6,7 +6,7 @@ import styles from './Sidebar.module.css'
 interface SidebarItemProps {
   icon: LucideIcon
   label: string
-  path: string
+  path?: string
   onClick?: () => void
 }
 
@@ -16,6 +16,15 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
   path,
   onClick,
 }) => {
+  if (!path) {
+    return (
+      <button type="button" onClick={onClick} className={styles.sidebarItem}>
+        <Icon className={styles.icon} size={20} />
+        <span className={styles.label}>{label}</span>
+      </button>
+    )
+  }
+
   return (
     <NavLink
       to={path}

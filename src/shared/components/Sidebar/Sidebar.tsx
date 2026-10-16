@@ -15,19 +15,15 @@ import {
 } from 'lucide-react'
 import { SidebarItem } from './SidebarItem'
 import styles from './Sidebar.module.css'
+import { useAuth } from '@/features/auth/hooks/useAuth'
 
 const GENERAL_ITEMS = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
   { icon: Users, label: 'Pacientes', path: '/pacientes' },
   { icon: CalendarDays, label: 'Turnos', path: '/turnos' },
-  { icon: StickyNote, label: 'Reuniones', path: '/Reuniones' },
+  { icon: StickyNote, label: 'Reuniones', path: '/reuniones' },
   { icon: ClipboardCheck, label: 'Asistencia', path: '/asistencia' },
   { icon: BarChart2, label: 'Informes', path: '/informes' },
-]
-
-const TOOLS_ITEMS = [
-  { icon: Settings, label: 'Configuración', path: '/configuracion' },
-  { icon: LogOut, label: 'Salir', path: '/login' },
 ]
 
 interface SidebarProps {
@@ -37,6 +33,7 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
   const location = useLocation()
+  const { logout } = useAuth()
 
   // Close sidebar on route change for mobile only
   useEffect(() => {
@@ -48,6 +45,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
   const toggleSidebar = () => {
     setIsOpen(!isOpen)
   }
+
+  const handleLogout = () => {
+    if (window.innerWidth <= 768) {
+      setIsOpen(false)
+    }
+    logout()
+  }
+
+  const toolsItems = [
+    { icon: Settings, label: 'Configuración', path: '/configuracion' },
+    { icon: LogOut, label: 'Salir', onClick: handleLogout },
+  ]
 
   return (
     <>
@@ -84,8 +93,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
           <div className={styles.section}>
             <h3 className={styles.sectionTitle}>Herramientas</h3>
             <div className={styles.itemsContainer}>
-              {TOOLS_ITEMS.map((item) => (
-                <SidebarItem key={item.path} {...item} />
+              {toolsItems.map((item) => (
+                <SidebarItem key={item.path || item.label} {...item} />
               ))}
             </div>
           </div>
