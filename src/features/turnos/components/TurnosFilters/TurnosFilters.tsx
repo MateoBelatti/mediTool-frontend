@@ -1,4 +1,3 @@
-
 import { Search, Calendar as CalendarIcon, Plus } from 'lucide-react'
 import { Button } from '@/shared/components/Button/Button'
 import styles from './TurnosFilters.module.css'
@@ -24,7 +23,17 @@ export const TurnosFilters = ({
 }: TurnosFiltersProps) => {
   return (
     <div className={styles.filtersContainer}>
-      <h2 className={styles.title}>Turnos</h2>
+      <div className={styles.headerTop}>
+        <h2 className={styles.title}>Turnos</h2>
+        <Button
+          onClick={onNewTurnoClick}
+          leftIcon={<Plus size={18} />}
+          size="sm"
+          className={styles.newButton}
+        >
+          Nuevo Turno
+        </Button>
+      </div>
 
       <div className={styles.controlsSection}>
         <div className={styles.filterGroup}>
@@ -65,10 +74,6 @@ export const TurnosFilters = ({
           </div>
         </div>
       </div>
-
-      <Button onClick={onNewTurnoClick} leftIcon={<Plus size={18} />} size="sm">
-        Nuevo Turno
-      </Button>
     </div>
   )
 }

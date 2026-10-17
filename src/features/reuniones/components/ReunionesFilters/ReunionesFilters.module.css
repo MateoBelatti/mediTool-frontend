@@ -10,9 +10,13 @@
   box-shadow: var(--shadow-sm);
   margin-bottom: 1.5rem;
   flex-shrink: 0;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
-/* Removed topSection */
+.headerTop {
+  display: contents;
+}
 
 .title {
   margin: 0;
@@ -21,6 +25,7 @@
   color: var(--text-primary);
   letter-spacing: -0.025em;
   margin-bottom: 6px;
+  order: 1;
 }
 
 .controlsSection {
@@ -30,12 +35,21 @@
   align-items: flex-end;
   flex: 1;
   justify-content: center;
+  order: 2;
+  min-width: 0;
+}
+
+.newButton {
+  order: 3;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .filterGroup {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  min-width: 0;
 }
 
 .label {
@@ -45,12 +59,14 @@
   font-size: var(--text-sm);
   font-weight: 500;
   color: var(--text-secondary);
+  white-space: nowrap;
 }
 
 .dateInputs {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  min-width: 0;
 }
 
 .input,
@@ -65,6 +81,11 @@
     border-color 0.2s,
     box-shadow 0.2s;
   background-color: var(--bg-color);
+  box-sizing: border-box;
+}
+
+.input {
+  min-width: 120px;
 }
 
 .input:focus,
@@ -77,13 +98,94 @@
 .separator {
   color: var(--text-muted);
   font-size: var(--text-sm);
+  flex-shrink: 0;
 }
 
 .searchContainer {
   position: relative;
   width: 250px;
+  min-width: 0;
 }
 
 .searchInput {
   width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .filtersContainer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+    padding: 1.25rem;
+  }
+
+  .headerTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    order: unset;
+  }
+
+  .title {
+    order: unset;
+    margin-bottom: 0;
+    font-size: 1.5rem;
+  }
+
+  .newButton {
+    order: unset;
+  }
+
+  .controlsSection {
+    order: unset;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .filterGroup {
+    flex: 1 1 220px;
+    min-width: 0;
+  }
+
+  .dateInputs {
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .input {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .searchContainer {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .filtersContainer {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .headerTop {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .dateInputs {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .separator {
+    text-align: center;
+  }
 }

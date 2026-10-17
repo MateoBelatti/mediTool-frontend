@@ -3,6 +3,7 @@
   flex-direction: column;
   height: 100%;
   gap: 1.5rem;
+  min-width: 0;
 }
 
 .header {
@@ -67,10 +68,6 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .pageContainer {
-    padding: 1rem;
-  }
-
   .header {
     flex-direction: column;
     align-items: flex-start;
@@ -82,6 +79,8 @@
   justify-content: center;
   margin-top: -0.5rem;
   margin-bottom: 0;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .tabs {
@@ -93,6 +92,7 @@
   height: 40px;
   align-items: center;
   box-sizing: border-box;
+  max-width: 100%;
 }
 
 .tab {

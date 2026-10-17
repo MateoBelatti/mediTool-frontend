@@ -30,9 +30,21 @@
   overflow-y: auto;
 }
 
+@media (max-width: 1024px) {
+  .main {
+    padding: 1.25rem;
+  }
+}
+
 @media (max-width: 768px) {
   .contentWrapper.sidebarOpen {
     margin-left: 0;
     width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .main {
+    padding: 1rem;
   }
 }

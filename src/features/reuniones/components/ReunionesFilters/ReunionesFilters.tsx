@@ -1,4 +1,3 @@
-
 import { Search, Calendar as CalendarIcon, Plus } from 'lucide-react'
 import { Button } from '@/shared/components/Button/Button'
 import styles from './ReunionesFilters.module.css'
@@ -24,7 +23,17 @@ export const ReunionesFilters = ({
 }: ReunionesFiltersProps) => {
   return (
     <div className={styles.filtersContainer}>
-      <h2 className={styles.title}>Reuniones</h2>
+      <div className={styles.headerTop}>
+        <h2 className={styles.title}>Reuniones</h2>
+        <Button
+          onClick={onNewReunionClick}
+          leftIcon={<Plus size={18} />}
+          size="sm"
+          className={styles.newButton}
+        >
+          Nueva Reunión
+        </Button>
+      </div>
 
       <div className={styles.controlsSection}>
         <div className={styles.filterGroup}>
@@ -65,14 +74,6 @@ export const ReunionesFilters = ({
           </div>
         </div>
       </div>
-
-      <Button
-        onClick={onNewReunionClick}
-        leftIcon={<Plus size={18} />}
-        size="sm"
-      >
-        Nueva Reunión
-      </Button>
     </div>
   )
 }

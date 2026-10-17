@@ -15,6 +15,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .listItem:hover {
@@ -28,19 +30,21 @@
   align-items: center;
   gap: 2rem;
   flex: 1;
+  min-width: 0;
 }
 
 .pacienteInfo {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  min-width: 250px;
+  min-width: 200px;
 }
 
 .pacienteName {
   font-weight: 600;
   color: var(--text-primary);
   font-size: var(--text-base);
+  min-width: 0;
 }
 
 .datetimeInfo {
@@ -55,16 +59,52 @@
   gap: 0.5rem;
   color: var(--text-secondary);
   font-size: var(--text-sm);
+  white-space: nowrap;
 }
 
 .icon {
   color: var(--border-color);
+  flex-shrink: 0;
 }
 
 .itemBadges {
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex-shrink: 0;
+}
+
+@media (max-width: 1024px) {
+  .listItem {
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .itemMainInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .pacienteInfo {
+    min-width: 0;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .datetimeInfo {
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    width: 100%;
+  }
+
+  .itemBadges {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    max-width: 180px;
+  }
 }
 
 .estadoBadge {
