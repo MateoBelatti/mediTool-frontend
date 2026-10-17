@@ -18,6 +18,12 @@
   color: var(--text-primary);
 }
 
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
 .nextAppointment {
   background-color: var(--accent-bg);
   color: var(--accent);
