@@ -1,0 +1,130 @@
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--surface-color);
+  transition:
+    background-color 0.15s ease,
+    border-left-color 0.15s ease;
+  cursor: pointer;
+  position: relative;
+  text-align: left;
+  width: 100%;
+  border-left: 3px solid transparent;
+}
+
+.item:hover {
+  background-color: var(--surface-alt);
+}
+
+.unread {
+  background-color: rgba(74, 107, 92, 0.08);
+  border-left: 3px solid var(--accent);
+}
+
+.unread:hover {
+  background-color: rgba(74, 107, 92, 0.12);
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.iconTurnosSinAsistencia {
+  background-color: rgba(192, 138, 62, 0.15);
+  color: var(--warning);
+}
+
+.iconSistema {
+  background-color: rgba(74, 107, 92, 0.15);
+  color: var(--accent);
+}
+
+.iconRecordatorioEnviado {
+  background-color: rgba(76, 122, 91, 0.15);
+  color: var(--success);
+}
+
+.iconErrorRecordatorio {
+  background-color: rgba(180, 72, 59, 0.15);
+  color: var(--danger);
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.unread .title {
+  font-weight: 700;
+}
+
+.unreadDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  flex-shrink: 0;
+}
+
+.message {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.unread .message {
+  color: var(--text-primary);
+}
+
+.footerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.time {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.actionHint {
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
