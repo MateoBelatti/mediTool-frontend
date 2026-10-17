@@ -57,8 +57,9 @@ export const PacienteProfilePage: React.FC = () => {
         desde: '2000-01-01',
         hasta: '2100-01-01',
         profesionalId: Number(user?.id),
+        pacienteId: Number(id),
         page: 1,
-        pageSize: 50,
+        pageSize: 1000,
       }),
     enabled: !!id && !!user?.id && !isAdmin,
   })
@@ -228,35 +229,44 @@ export const PacienteProfilePage: React.FC = () => {
                 </p>
               ) : isLoadingTurnos ? (
                 <p>Cargando turnos...</p>
-              ) : turnosResult?.items && turnosResult.items.length > 0 ? (
-                <ul className={styles.turnosList}>
-                  {turnosResult.items
-                    .filter((t) => t.pacienteId === paciente.id)
-                    .map((turno) => (
-                      <li key={turno.id} className={styles.turnoItem}>
-                        <div className={styles.turnoHeader}>
-                          <Clock size={16} />
-                          <strong>
-                            {new Date(turno.fechaHora).toLocaleDateString()}{' '}
-                            {new Date(turno.fechaHora).toLocaleTimeString([], {
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })}
-                          </strong>
-                        </div>
-                        <div className={styles.turnoDetails}>
-                          <span
-                            className={`${styles.statusBadge} ${styles[turno.estado.toLowerCase()] || ''}`}
-                          >
-                            {turno.estado}
-                          </span>
-                          <span>{turno.duracionMin} min</span>
-                        </div>
-                      </li>
-                    ))}
-                </ul>
               ) : (
-                <p>No hay turnos registrados con este profesional.</p>
+                (() => {
+                  const turnosDelPaciente =
+                    turnosResult?.items?.filter(
+                      (t) => t.pacienteId === paciente.id
+                    ) || []
+                  return turnosDelPaciente.length > 0 ? (
+                    <ul className={styles.turnosList}>
+                      {turnosDelPaciente.map((turno) => (
+                        <li key={turno.id} className={styles.turnoItem}>
+                          <div className={styles.turnoHeader}>
+                            <Clock size={16} />
+                            <strong>
+                              {new Date(turno.fechaHora).toLocaleDateString()}{' '}
+                              {new Date(turno.fechaHora).toLocaleTimeString(
+                                [],
+                                {
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                }
+                              )}
+                            </strong>
+                          </div>
+                          <div className={styles.turnoDetails}>
+                            <span
+                              className={`${styles.statusBadge} ${styles[turno.estado.toLowerCase()] || ''}`}
+                            >
+                              {turno.estado}
+                            </span>
+                            <span>{turno.duracionMin} min</span>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No hay turnos registrados con este profesional.</p>
+                  )
+                })()
               )}
             </div>
           )}

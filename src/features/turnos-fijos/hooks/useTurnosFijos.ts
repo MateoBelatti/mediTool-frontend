@@ -24,6 +24,7 @@ export const useCreateTurnoFijo = () => {
     mutationFn: (data: CrearTurnoFijoDto) => turnosFijosService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: TURNOS_FIJOS_KEYS.all })
+      queryClient.invalidateQueries({ queryKey: ['turnos'] })
     },
   })
 }
@@ -35,6 +36,7 @@ export const useUpdateTurnoFijo = () => {
       turnosFijosService.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: TURNOS_FIJOS_KEYS.all })
+      queryClient.invalidateQueries({ queryKey: ['turnos'] })
     },
   })
 }
@@ -45,6 +47,7 @@ export const useDeleteTurnoFijo = () => {
     mutationFn: (id: number) => turnosFijosService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: TURNOS_FIJOS_KEYS.all })
+      queryClient.invalidateQueries({ queryKey: ['turnos'] })
     },
   })
 }

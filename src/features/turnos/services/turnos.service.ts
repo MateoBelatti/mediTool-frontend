@@ -15,6 +15,7 @@ export const turnosService = {
       desde: string
       hasta: string
       profesionalId: number
+      pacienteId?: number
     } & PaginationParams
   ): Promise<PageResult<Turno>> => {
     const { profesionalId, ...queryParams } = params
@@ -58,6 +59,12 @@ export const turnosService = {
     const response = await apiClient.get<Turno[]>('/Turno/facturables', {
       params,
     })
+    return response.data
+  },
+  getHistorialByTurnoFijo: async (turnoFijoId: number): Promise<Turno[]> => {
+    const response = await apiClient.get<Turno[]>(
+      `/Turno/turnofijo/${turnoFijoId}/historial`
+    )
     return response.data
   },
   getResumenPorTurnoFijo: async (
