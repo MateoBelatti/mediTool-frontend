@@ -12,6 +12,7 @@ import { useReunionesByProfesionalId } from '../../features/reuniones/hooks/useR
 import { isSameDay, format, isTomorrow, isYesterday } from 'date-fns'
 import { es } from 'date-fns/locale'
 
+import { NotificationBell } from '@/features/notificaciones'
 import 'react-calendar/dist/Calendar.css'
 
 export const HomePage = () => {
@@ -107,9 +108,12 @@ export const HomePage = () => {
     <div className={styles.container}>
       <header className={styles.header}>
         <h2>Bienvenido, {user?.name || 'Doctor'}</h2>
-        <div className={styles.nextAppointment}>
-          <Clock size={18} />
-          <span>{nextAppointmentText}</span>
+        <div className={styles.headerActions}>
+          <div className={styles.nextAppointment}>
+            <Clock size={18} />
+            <span>{nextAppointmentText}</span>
+          </div>
+          <NotificationBell />
         </div>
       </header>
 
