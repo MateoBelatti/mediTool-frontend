@@ -1,5 +1,10 @@
-
-import { FileText, User as UserIcon, Calendar, Pencil } from 'lucide-react'
+import {
+  FileText,
+  User as UserIcon,
+  Calendar,
+  Pencil,
+  Clock,
+} from 'lucide-react'
 import type { InformeResponseDto } from '../../schemas/informes.schema'
 import styles from './InformesGrid.module.css'
 
@@ -97,6 +102,20 @@ export const InformesGrid = ({
           </div>
 
           <div className={styles.itemBadges}>
+            {informe.turnoId && (
+              <span
+                className={styles.estadoBadge}
+                title={`Turno #${informe.turnoId}`}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                }}
+              >
+                <Clock size={12} />
+                Turno #{informe.turnoId}
+              </span>
+            )}
             {informe.estado && (
               <span className={styles.estadoBadge}>{informe.estado}</span>
             )}

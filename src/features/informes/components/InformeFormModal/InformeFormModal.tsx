@@ -1,10 +1,15 @@
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import React, { useEffect, useMemo } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Modal } from '@/shared/components/Modal/Modal'
 import { Button } from '@/shared/components/Button/Button'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { usePacientes } from '@/features/pacientes/hooks/usePacientes'
+import {
+  useAgendaTurnos,
+  useTurnoById,
+} from '@/features/turnos/hooks/useTurnos'
+import type { Turno } from '@/features/turnos/types/turnos.types'
 import {
   InformeCreateSchema,
   type InformeCreateDto,
@@ -18,6 +23,8 @@ interface InformeFormModalProps {
   onClose: () => void
   informeToEdit?: InformeWithPaciente | null
   initialPacienteId?: number
+  initialTurnoId?: number
+  initialFecha?: string
 }
 
 export const InformeFormModal = ({
@@ -25,6 +32,8 @@ export const InformeFormModal = ({
   onClose,
   informeToEdit,
   initialPacienteId,
+  initialTurnoId,
+  initialFecha,
 }: InformeFormModalProps) => {
   const { user } = useAuth()
   const profesionalId = user?.id ? parseInt(user.id) : 0
@@ -38,19 +47,67 @@ export const InformeFormModal = ({
     resolver: zodResolver(InformeCreateSchema),
     defaultValues: {
       profesionalId,
-      fecha: new Date().toISOString().split('T')[0], // YYYY-MM-DD
+      fecha: initialFecha || new Date().toISOString().split('T')[0],
       tipo: '',
       contenido: '',
       estado: 'Pendiente',
       pacienteId: initialPacienteId,
+      turnoId: initialTurnoId || null,
     },
   })
+
+  const watchedPacienteId = useWatch({
+    control: form.control,
+    name: 'pacienteId',
+  })
+  const watchedTurnoId = useWatch({
+    control: form.control,
+    name: 'turnoId',
+  })
+  const selectedPacienteId = watchedPacienteId
+    ? Number(watchedPacienteId)
+    : undefined
+
+  // Rango de fechas para listar turnos (6 meses hacia atrás y 1 mes hacia adelante)
+  const fechaDesde = useMemo(() => {
+    const d = new Date()
+    d.setMonth(d.getMonth() - 6)
+    return d.toISOString().split('T')[0]
+  }, [])
+
+  const fechaHasta = useMemo(() => {
+    const d = new Date()
+    d.setMonth(d.getMonth() + 1)
+    return d.toISOString().split('T')[0]
+  }, [])
+
+  const { data: turnosData, isLoading: isLoadingTurnos } = useAgendaTurnos({
+    desde: fechaDesde,
+    hasta: fechaHasta,
+    profesionalId,
+    pacienteId: selectedPacienteId,
+    page: 1,
+    pageSize: 100,
+  })
+
+  // Cargar turno inicial o de edición si no estuviese en la lista de la agenda
+  const extraTurnoId = initialTurnoId || informeToEdit?.turnoId || 0
+  const { data: extraTurno } = useTurnoById(extraTurnoId)
+
+  const turnosDisponibles = useMemo(() => {
+    const items = turnosData?.items ? [...turnosData.items] : []
+    if (extraTurno && !items.some((t) => t.id === extraTurno.id)) {
+      items.unshift(extraTurno)
+    }
+    return items
+  }, [turnosData, extraTurno])
 
   useEffect(() => {
     if (informeToEdit) {
       form.reset({
         pacienteId: informeToEdit.pacienteId || undefined,
         profesionalId: informeToEdit.profesionalId,
+        turnoId: informeToEdit.turnoId || null,
         fecha: informeToEdit.fecha.split('T')[0],
         tipo: informeToEdit.tipo || '',
         contenido: informeToEdit.contenido || '',
@@ -59,19 +116,59 @@ export const InformeFormModal = ({
     } else {
       form.reset({
         profesionalId,
-        fecha: new Date().toISOString().split('T')[0],
+        fecha: initialFecha || new Date().toISOString().split('T')[0],
         tipo: '',
         contenido: '',
         estado: 'Pendiente',
         pacienteId: initialPacienteId,
+        turnoId: initialTurnoId || null,
       })
     }
-  }, [informeToEdit, isOpen, form, profesionalId, initialPacienteId])
+  }, [
+    informeToEdit,
+    isOpen,
+    form,
+    profesionalId,
+    initialPacienteId,
+    initialTurnoId,
+    initialFecha,
+  ])
+
+  const formatTurnoOption = (t: Turno) => {
+    const d = new Date(t.fechaHora)
+    const fecha = d.toLocaleDateString()
+    const hora = d.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+    return `${fecha} ${hora} (${t.duracionMin}m) - Estado: ${t.estado}`
+  }
+
+  const handleTurnoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value ? Number(e.target.value) : null
+    form.setValue('turnoId', value)
+
+    if (value) {
+      const selected = turnosDisponibles.find((t) => t.id === value)
+      if (selected) {
+        form.setValue('fecha', selected.fechaHora.split('T')[0])
+      }
+    }
+  }
 
   const onSubmit = (data: InformeCreateDto) => {
     const formattedData = {
       ...data,
-      pacienteId: data.pacienteId ? Number(data.pacienteId) : undefined,
+      pacienteId: data.pacienteId
+        ? Number(data.pacienteId)
+        : initialPacienteId
+          ? Number(initialPacienteId)
+          : undefined,
+      turnoId: data.turnoId
+        ? Number(data.turnoId)
+        : initialTurnoId
+          ? Number(initialTurnoId)
+          : null,
       profesionalId,
     }
 
@@ -101,24 +198,57 @@ export const InformeFormModal = ({
     >
       <div className={styles.formContainer}>
         <form onSubmit={form.handleSubmit(onSubmit)} className={styles.form}>
-          <div className={styles.field}>
-            <label>Paciente (Opcional)</label>
-            <select
-              {...form.register('pacienteId', { valueAsNumber: true })}
-              className={styles.input}
-            >
-              <option value="">Seleccione un paciente...</option>
-              {pacientes?.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.nombre} {p.apellido} {p.dni && `(${p.dni})`}
+          <div className={styles.fieldRow}>
+            <div className={styles.field}>
+              <label>Paciente (Opcional)</label>
+              <select
+                {...form.register('pacienteId', {
+                  setValueAs: (v) => (v === '' ? undefined : Number(v)),
+                })}
+                className={styles.input}
+                disabled={!!initialTurnoId}
+              >
+                <option value="">Seleccione un paciente...</option>
+                {pacientes?.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.nombre} {p.apellido} {p.dni && `(${p.dni})`}
+                  </option>
+                ))}
+              </select>
+              {form.formState.errors.pacienteId && (
+                <span className={styles.error}>
+                  {form.formState.errors.pacienteId.message}
+                </span>
+              )}
+            </div>
+
+            <div className={styles.field}>
+              <label>Turno Asignado (Opcional)</label>
+              <select
+                value={watchedTurnoId ?? ''}
+                onChange={handleTurnoChange}
+                className={styles.input}
+                disabled={!!initialTurnoId || !selectedPacienteId}
+              >
+                <option value="">
+                  {!selectedPacienteId
+                    ? 'Seleccione primero un paciente'
+                    : isLoadingTurnos
+                      ? 'Cargando turnos...'
+                      : 'Sin turno asignado'}
                 </option>
-              ))}
-            </select>
-            {form.formState.errors.pacienteId && (
-              <span className={styles.error}>
-                {form.formState.errors.pacienteId.message}
-              </span>
-            )}
+                {turnosDisponibles.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {formatTurnoOption(t)}
+                  </option>
+                ))}
+              </select>
+              {form.formState.errors.turnoId && (
+                <span className={styles.error}>
+                  {form.formState.errors.turnoId.message}
+                </span>
+              )}
+            </div>
           </div>
 
           <div className={styles.fieldRow}>

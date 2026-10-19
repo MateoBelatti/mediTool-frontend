@@ -3,13 +3,15 @@ import { turnosService } from '../services/turnos.service'
 import { type CrearTurnoDto, EstadoTurno } from '../types/turnos.types'
 
 export const TURNOS_KEYS = {
-  historialFijo: (turnoFijoId: number) => [...TURNOS_KEYS.all, 'historial', turnoFijoId] as const,
+  historialFijo: (turnoFijoId: number) =>
+    [...TURNOS_KEYS.all, 'historial', turnoFijoId] as const,
   all: ['turnos'] as const,
   detail: (id: number) => [...TURNOS_KEYS.all, 'detail', id] as const,
   agenda: (params: {
     desde: string
     hasta: string
     profesionalId: number
+    pacienteId?: number
     page?: number
     pageSize?: number
   }) => [...TURNOS_KEYS.all, 'agenda', params] as const,
@@ -19,6 +21,7 @@ export const useAgendaTurnos = (params: {
   desde: string
   hasta: string
   profesionalId: number
+  pacienteId?: number
   page?: number
   pageSize?: number
 }) =>

@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { usePacientes } from '@/features/pacientes/hooks/usePacientes'
@@ -30,7 +30,6 @@ export const InformesPage = () => {
   const [fechaHasta, setFechaHasta] = useState('')
   const [pacienteSearch, setPacienteSearch] = useState('')
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const [informeToEdit, setInformeToEdit] =
     useState<InformeWithPaciente | null>(null)
 
@@ -75,34 +74,50 @@ export const InformesPage = () => {
     return filtered
   }, [informes, fechaDesde, fechaHasta])
 
-  const handleNewInforme = () => {
-    setInformeToEdit(null)
-    setIsModalOpen(true)
-  }
-
-  const handleEditInforme = (informe: InformeWithPaciente) => {
-    setInformeToEdit(informe)
-    setIsModalOpen(true)
-  }
+  const [isModalOpenState, setIsModalOpenState] = useState(false)
+  const [initialModalData, setInitialModalData] = useState<{
+    pacienteId?: number
+    turnoId?: number
+    fecha?: string
+  }>({})
 
   const location = useLocation()
   const navigate = useNavigate()
 
-  useEffect(() => {
-    if (location.state?.openNewModal) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setInformeToEdit(null)
-      setIsModalOpen(true)
-      navigate(location.pathname, { replace: true, state: {} })
-      return
-    }
+  const hasNavigationState = Boolean(
+    location.state?.openNewModal ||
+    location.state?.newInformeForPacienteId ||
+    location.state?.turnoId
+  )
 
-    if (location.state?.newInformeForPacienteId) {
-      setInformeToEdit(null)
-      setIsModalOpen(true)
+  const isModalOpen = isModalOpenState || hasNavigationState
+  const effectivePacienteId =
+    initialModalData.pacienteId ??
+    location.state?.newInformeForPacienteId ??
+    location.state?.pacienteId
+  const effectiveTurnoId = initialModalData.turnoId ?? location.state?.turnoId
+  const effectiveFecha = initialModalData.fecha ?? location.state?.fecha
+
+  const handleNewInforme = () => {
+    setInformeToEdit(null)
+    setInitialModalData({})
+    setIsModalOpenState(true)
+  }
+
+  const handleEditInforme = (informe: InformeWithPaciente) => {
+    setInformeToEdit(informe)
+    setInitialModalData({})
+    setIsModalOpenState(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpenState(false)
+    setInformeToEdit(null)
+    setInitialModalData({})
+    if (hasNavigationState) {
       navigate(location.pathname, { replace: true, state: {} })
     }
-  }, [location.state, navigate, location.pathname])
+  }
 
   return (
     <div className={styles.pageContainer}>
@@ -127,9 +142,11 @@ export const InformesPage = () => {
 
       <InformeFormModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
         informeToEdit={informeToEdit}
-        initialPacienteId={location.state?.newInformeForPacienteId}
+        initialPacienteId={effectivePacienteId}
+        initialTurnoId={effectiveTurnoId}
+        initialFecha={effectiveFecha}
       />
     </div>
   )
