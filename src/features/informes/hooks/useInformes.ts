@@ -10,6 +10,8 @@ export const INFORMES_KEYS = {
   detail: (id: number) => [...INFORMES_KEYS.all, 'detail', id] as const,
   byProfesional: (profesionalId: number) =>
     [...INFORMES_KEYS.all, 'profesional', profesionalId] as const,
+  byTurno: (turnoId: number) =>
+    [...INFORMES_KEYS.all, 'turno', turnoId] as const,
 }
 
 export const useInformes = () =>
@@ -23,6 +25,13 @@ export const useInformeById = (id: number) =>
     queryKey: INFORMES_KEYS.detail(id),
     queryFn: () => informesService.getById(id),
     enabled: !!id,
+  })
+
+export const useInformeByTurnoId = (turnoId?: number | null) =>
+  useQuery({
+    queryKey: INFORMES_KEYS.byTurno(turnoId!),
+    queryFn: () => informesService.getByTurnoId(turnoId!),
+    enabled: !!turnoId,
   })
 
 export const useInformesByProfesionalId = (profesionalId: number) =>
