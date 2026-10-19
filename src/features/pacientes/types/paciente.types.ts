@@ -9,6 +9,7 @@ export interface Paciente {
   email?: string
   obraSocial?: string
   nroAfiliado?: string
+  escuela?: string
 }
 
 export type PacienteCreateDto = Omit<Paciente, 'id'>
