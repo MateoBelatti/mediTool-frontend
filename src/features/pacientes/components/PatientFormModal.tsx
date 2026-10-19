@@ -62,6 +62,7 @@ export const PatientFormModal: React.FC<PatientFormModalProps> = ({
       email: '',
       obraSocial: '',
       nroAfiliado: '',
+      escuela: '',
     },
   })
 
@@ -77,6 +78,7 @@ export const PatientFormModal: React.FC<PatientFormModalProps> = ({
         email: paciente.email || '',
         obraSocial: paciente.obraSocial || '',
         nroAfiliado: paciente.nroAfiliado || '',
+        escuela: paciente.escuela || '',
       })
     } else if (isOpen && !paciente) {
       reset({
@@ -89,6 +91,7 @@ export const PatientFormModal: React.FC<PatientFormModalProps> = ({
         email: '',
         obraSocial: '',
         nroAfiliado: '',
+        escuela: '',
       })
     }
   }, [paciente, isOpen, reset])
@@ -210,6 +213,18 @@ export const PatientFormModal: React.FC<PatientFormModalProps> = ({
                 <span className={styles.error}>
                   {errors.nroAfiliado.message}
                 </span>
+              )}
+            </div>
+
+            <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
+              <label>Escuela</label>
+              <input
+                type="text"
+                {...register('escuela')}
+                placeholder="Ej. Escuela Primaria N° 12"
+              />
+              {errors.escuela && (
+                <span className={styles.error}>{errors.escuela.message}</span>
               )}
             </div>
           </div>

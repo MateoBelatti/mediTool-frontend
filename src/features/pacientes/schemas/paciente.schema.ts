@@ -44,6 +44,11 @@ export const pacienteSchema = z.object({
     .max(50, 'El número de afiliado no puede superar los 50 caracteres')
     .optional()
     .or(z.literal('')),
+  escuela: z
+    .string()
+    .max(100, 'La escuela no puede superar los 100 caracteres')
+    .optional()
+    .or(z.literal('')),
 })
 
 export type PacienteFormData = z.infer<typeof pacienteSchema>

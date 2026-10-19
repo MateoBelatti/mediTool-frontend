@@ -29,7 +29,7 @@ export const PacientesPage: React.FC = () => {
     }
   }, [isAdmin])
 
-  type SortField = 'nombre' | 'apellido' | 'obraSocial' | 'dni'
+  type SortField = 'nombre' | 'apellido' | 'obraSocial' | 'dni' | 'escuela'
   type SortOrder = 'asc' | 'desc'
 
   const [searchTerm, setSearchTerm] = useState('')
@@ -176,6 +176,7 @@ export const PacientesPage: React.FC = () => {
               <option value="apellido">Apellido</option>
               <option value="dni">DNI</option>
               <option value="obraSocial">Obra Social</option>
+              <option value="escuela">Escuela</option>
             </select>
           </div>
 

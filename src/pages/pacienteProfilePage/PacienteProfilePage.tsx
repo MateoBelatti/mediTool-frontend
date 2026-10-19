@@ -11,6 +11,7 @@ import {
   CreditCard,
   Clock,
   Edit,
+  GraduationCap,
 } from 'lucide-react'
 import { pacienteService } from '@/features/pacientes/services/paciente.service'
 import { turnosService } from '@/features/turnos/services/turnos.service'
@@ -216,6 +217,10 @@ export const PacienteProfilePage: React.FC = () => {
                   <span>
                     Nro Afiliado: {paciente.nroAfiliado || 'No registrado'}
                   </span>
+                </div>
+                <div className={styles.infoRow}>
+                  <GraduationCap size={18} />
+                  <span>Escuela: {paciente.escuela || 'No registrado'}</span>
                 </div>
               </div>
             </div>
