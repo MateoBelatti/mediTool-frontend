@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { informesService } from '../services/informes.service'
+import { TURNOS_KEYS } from '@/features/turnos/hooks/useTurnos'
 import type {
   InformeCreateDto,
   InformeUpdateDto,
@@ -47,6 +48,7 @@ export const useCreateInforme = () => {
     mutationFn: (data: InformeCreateDto) => informesService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: INFORMES_KEYS.all })
+      queryClient.invalidateQueries({ queryKey: TURNOS_KEYS.all })
     },
   })
 }

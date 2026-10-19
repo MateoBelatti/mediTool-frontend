@@ -115,6 +115,8 @@ export const DailyAgenda = ({
                         e.stopPropagation()
                         handleAction('/informes', {
                           newInformeForPacienteId: turno.pacienteId,
+                          turnoId: turno.id,
+                          fecha: turno.fechaHora.split('T')[0],
                         })
                       }}
                     >
