@@ -89,6 +89,13 @@ export const TurnoDetailModal = ({
     onClose()
   }
 
+  const handleVerInforme = () => {
+    navigate('/informes', {
+      state: { viewInformeForTurnoId: turno.id },
+    })
+    onClose()
+  }
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Detalles del Turno">
       <div className={styles.container}>
@@ -199,6 +206,15 @@ export const TurnoDetailModal = ({
                   leftIcon={<FileText size={16} />}
                 >
                   Crear informe
+                </Button>
+              )}
+              {turno.informeId && (
+                <Button
+                  variant="secondary"
+                  onClick={handleVerInforme}
+                  leftIcon={<FileText size={16} />}
+                >
+                  Ver informe
                 </Button>
               )}
             </div>

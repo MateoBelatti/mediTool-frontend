@@ -113,14 +113,21 @@ export const DailyAgenda = ({
                     <button
                       onClick={(e) => {
                         e.stopPropagation()
-                        handleAction('/informes', {
-                          newInformeForPacienteId: turno.pacienteId,
-                          turnoId: turno.id,
-                          fecha: turno.fechaHora.split('T')[0],
-                        })
+                        if (turno.informeId) {
+                          handleAction('/informes', {
+                            viewInformeForTurnoId: turno.id,
+                          })
+                        } else {
+                          handleAction('/informes', {
+                            newInformeForPacienteId: turno.pacienteId,
+                            turnoId: turno.id,
+                            fecha: turno.fechaHora.split('T')[0],
+                          })
+                        }
                       }}
                     >
-                      <FileText size={16} /> Informe
+                      <FileText size={16} />{' '}
+                      {turno.informeId ? 'Ver informe' : 'Informe'}
                     </button>
                     <button
                       onClick={(e) => {

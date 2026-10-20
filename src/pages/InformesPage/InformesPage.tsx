@@ -9,6 +9,7 @@ import {
   type InformeWithPaciente,
 } from '@/features/informes/components/InformesGrid/InformesGrid'
 import { InformeFormModal } from '@/features/informes/components/InformeFormModal/InformeFormModal'
+import { InformeDetailModal } from '@/features/informes/components/InformeDetailModal/InformeDetailModal'
 import styles from './InformesPage.module.css'
 
 export const InformesPage = () => {
@@ -87,10 +88,22 @@ export const InformesPage = () => {
   const hasNavigationState = Boolean(
     location.state?.openNewModal ||
     location.state?.newInformeForPacienteId ||
-    location.state?.turnoId
+    location.state?.turnoId ||
+    location.state?.viewInformeForTurnoId
   )
 
-  const isModalOpen = isModalOpenState || hasNavigationState
+  const viewInformeForTurnoId = location.state?.viewInformeForTurnoId as
+    number | undefined
+  const informeByTurno = useMemo(
+    () =>
+      viewInformeForTurnoId
+        ? (informes?.find((i) => i.turnoId === viewInformeForTurnoId) ?? null)
+        : null,
+    [informes, viewInformeForTurnoId]
+  )
+
+  const isModalOpen =
+    isModalOpenState || (hasNavigationState && !viewInformeForTurnoId)
   const effectivePacienteId =
     initialModalData.pacienteId ??
     location.state?.newInformeForPacienteId ??
@@ -108,6 +121,17 @@ export const InformesPage = () => {
     setInformeToEdit(informe)
     setInitialModalData({})
     setIsModalOpenState(true)
+  }
+
+  const handleEditFromDetail = (informe: InformeWithPaciente) => {
+    navigate(location.pathname, { replace: true, state: {} })
+    handleEditInforme(informe)
+  }
+
+  const handleCloseDetail = () => {
+    if (viewInformeForTurnoId) {
+      navigate(location.pathname, { replace: true, state: {} })
+    }
   }
 
   const handleCloseModal = () => {
@@ -147,6 +171,13 @@ export const InformesPage = () => {
         initialPacienteId={effectivePacienteId}
         initialTurnoId={effectiveTurnoId}
         initialFecha={effectiveFecha}
+      />
+
+      <InformeDetailModal
+        isOpen={!!viewInformeForTurnoId}
+        onClose={handleCloseDetail}
+        informe={informeByTurno}
+        onEdit={handleEditFromDetail}
       />
     </div>
   )
