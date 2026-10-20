@@ -36,9 +36,13 @@ export const TurnosPage = () => {
     pageSize: 100,
   })
 
-  const { data: turnosFijosData, isLoading: isLoadingFijos } = useTurnosFijosByProfesional(profesionalId!)
+  const { data: turnosFijosData, isLoading: isLoadingFijos } =
+    useTurnosFijosByProfesional(profesionalId!)
 
-  const { pacientes: pacientesPage, pacientesVinculados } = usePacientes(undefined, { page: 1, pageSize: 100 })
+  const { pacientes: pacientesPage, pacientesVinculados } = usePacientes(
+    undefined,
+    { page: 1, pageSize: 100 }
+  )
 
   const turnosData = turnosDataPage?.items
   const pacientes = pacientesPage?.items || pacientesVinculados?.items
@@ -57,14 +61,16 @@ export const TurnosPage = () => {
   }, [turnosData, pacientes])
 
   const turnosSueltos = React.useMemo(() => {
-    return turnos?.filter(t => t.turnoFijoId == null) || []
+    return turnos?.filter((t) => t.turnoFijoId == null) || []
   }, [turnos])
 
   const turnosFijos = React.useMemo(() => {
     if (!turnosFijosData || !pacientes) return turnosFijosData
     return turnosFijosData.map((turnoFijo: TurnoFijo) => {
       if (!turnoFijo.paciente && turnoFijo.pacienteId) {
-        const foundPaciente = pacientes.find((p) => p.id === turnoFijo.pacienteId)
+        const foundPaciente = pacientes.find(
+          (p) => p.id === turnoFijo.pacienteId
+        )
         if (foundPaciente) {
           return { ...turnoFijo, paciente: foundPaciente }
         }
@@ -106,8 +112,7 @@ export const TurnosPage = () => {
         onFechaHastaChange={setFechaHasta}
         pacienteSearch={pacienteSearch}
         onPacienteSearchChange={setPacienteSearch}
-        onNewTurnoClick={() => // eslint-disable-next-line react-hooks/set-state-in-effect
-      setIsFormModalOpen(true)}
+        onNewTurnoClick={() => setIsFormModalOpen(true)}
       />
 
       <div className={styles.tabsContainer}>
@@ -159,4 +164,3 @@ export const TurnosPage = () => {
     </div>
   )
 }
-

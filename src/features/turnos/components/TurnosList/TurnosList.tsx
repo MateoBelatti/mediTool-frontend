@@ -1,4 +1,3 @@
-
 import { CalendarClock, User as UserIcon, Clock } from 'lucide-react'
 import type { Turno } from '../../types/turnos.types'
 import { EstadoTurno } from '../../types/turnos.types'
@@ -9,6 +8,7 @@ interface TurnosListProps {
   isLoading: boolean
   onTurnoClick: (turno: Turno) => void
   pacienteSearch: string
+  hideFijoBadge?: boolean
 }
 
 const ESTADO_LABELS: Record<EstadoTurno, string> = {
@@ -32,6 +32,7 @@ export const TurnosList = ({
   isLoading,
   onTurnoClick,
   pacienteSearch,
+  hideFijoBadge,
 }: TurnosListProps) => {
   if (isLoading) {
     return (
@@ -113,7 +114,7 @@ export const TurnosList = ({
           </div>
 
           <div className={styles.itemBadges}>
-            {turno.turnoFijoId && (
+            {turno.turnoFijoId && !hideFijoBadge && (
               <span className={styles.fijoBadge}>Turno Fijo</span>
             )}
             <span

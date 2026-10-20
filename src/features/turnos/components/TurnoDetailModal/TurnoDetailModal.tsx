@@ -1,5 +1,12 @@
-import {  useState  } from 'react'
-import { CalendarClock, User as UserIcon, Clock, Edit2 } from 'lucide-react'
+import { useState } from 'react'
+import {
+  CalendarClock,
+  User as UserIcon,
+  Clock,
+  Edit2,
+  FileText,
+} from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { Modal } from '@/shared/components/Modal/Modal'
 import { Button } from '@/shared/components/Button/Button'
 import { type Turno, EstadoTurno } from '../../types/turnos.types'
@@ -28,6 +35,7 @@ export const TurnoDetailModal = ({
   isOpen,
   onClose,
 }: TurnoDetailModalProps) => {
+  const navigate = useNavigate()
   const cambiarEstadoMutation = useCambiarEstadoTurno()
   const reprogramarMutation = useReprogramarTurno()
 
@@ -68,6 +76,24 @@ export const TurnoDetailModal = ({
   const formatFecha = (fechaString: string) => {
     const date = new Date(fechaString)
     return date.toLocaleDateString()
+  }
+
+  const handleCrearInforme = () => {
+    navigate('/informes', {
+      state: {
+        newInformeForPacienteId: turno.pacienteId,
+        turnoId: turno.id,
+        fecha: turno.fechaHora.split('T')[0],
+      },
+    })
+    onClose()
+  }
+
+  const handleVerInforme = () => {
+    navigate('/informes', {
+      state: { viewInformeForTurnoId: turno.id },
+    })
+    onClose()
   }
 
   return (
@@ -172,6 +198,24 @@ export const TurnoDetailModal = ({
                     Marcar Ausente
                   </Button>
                 </>
+              )}
+              {turno.estado === EstadoTurno.Presente && !turno.informeId && (
+                <Button
+                  variant="secondary"
+                  onClick={handleCrearInforme}
+                  leftIcon={<FileText size={16} />}
+                >
+                  Crear informe
+                </Button>
+              )}
+              {turno.informeId && (
+                <Button
+                  variant="secondary"
+                  onClick={handleVerInforme}
+                  leftIcon={<FileText size={16} />}
+                >
+                  Ver informe
+                </Button>
               )}
             </div>
           </div>

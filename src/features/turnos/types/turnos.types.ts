@@ -44,6 +44,7 @@ export interface Turno {
   facturable?: boolean
   fechaRegistroAsistencia?: string | null
   observaciones?: string | null
+  informeId?: number | null
 }
 
 export interface ActualizarAsistenciaDto {

@@ -24,12 +24,13 @@ export interface TurnoFijo {
     id: number
     nombre: string
     apellido: string
+    dni?: string
   }
   profesionalId: number
   diaSemana: number
   hora: string
   duracionMin: number
   fechaInicio: string
-  fechaFin?: string
+  fechaFin?: string | null
   activo: boolean
 }

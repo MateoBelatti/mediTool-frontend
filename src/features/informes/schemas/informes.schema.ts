@@ -1,8 +1,9 @@
 import { z } from 'zod'
 
 export const InformeCreateSchema = z.object({
-  pacienteId: z.number().optional(),
+  pacienteId: z.number().nullable().optional(),
   profesionalId: z.number(),
+  turnoId: z.number().nullable().optional(),
   fecha: z.string(),
   tipo: z
     .string()
@@ -21,6 +22,7 @@ export const InformeResponseSchema = z.object({
   id: z.number(),
   pacienteId: z.number().nullable().optional(),
   profesionalId: z.number(),
+  turnoId: z.number().nullable().optional(),
   fecha: z.string(),
   tipo: z.string().nullable().optional(),
   contenido: z.string().nullable().optional(),
