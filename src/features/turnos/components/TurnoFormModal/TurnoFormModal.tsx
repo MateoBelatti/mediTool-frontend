@@ -102,6 +102,7 @@ interface TurnoFormModalProps {
   isOpen: boolean
   onClose: () => void
   defaultFecha?: Date
+  initialTab?: TabType
 }
 
 type TabType = 'suelto' | 'fijo'
@@ -110,8 +111,18 @@ export const TurnoFormModal = ({
   isOpen,
   onClose,
   defaultFecha,
+  initialTab = 'fijo',
 }: TurnoFormModalProps) => {
-  const [activeTab, setActiveTab] = useState<TabType>('suelto')
+  const [activeTab, setActiveTab] = useState<TabType>(initialTab)
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen)
+
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen)
+    if (isOpen) {
+      setActiveTab(initialTab)
+    }
+  }
+
   const { user } = useAuth()
   const profesionalId = user?.id ? parseInt(user.id) : 0
   const { data: pacientesVinculadosData } = usePacientesVinculados({

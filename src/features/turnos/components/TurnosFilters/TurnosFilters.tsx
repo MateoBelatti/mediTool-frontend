@@ -1,22 +1,18 @@
-import { Search, Calendar as CalendarIcon, Plus } from 'lucide-react'
+import { Search, Calendar as CalendarIcon, Plus, X } from 'lucide-react'
 import { Button } from '@/shared/components/Button/Button'
 import styles from './TurnosFilters.module.css'
 
 interface TurnosFiltersProps {
-  fechaDesde: string
-  fechaHasta: string
-  onFechaDesdeChange: (date: string) => void
-  onFechaHastaChange: (date: string) => void
+  fecha: string
+  onFechaChange: (date: string) => void
   pacienteSearch: string
   onPacienteSearchChange: (search: string) => void
   onNewTurnoClick: () => void
 }
 
 export const TurnosFilters = ({
-  fechaDesde,
-  fechaHasta,
-  onFechaDesdeChange,
-  onFechaHastaChange,
+  fecha,
+  onFechaChange,
   pacienteSearch,
   onPacienteSearchChange,
   onNewTurnoClick,
@@ -37,25 +33,29 @@ export const TurnosFilters = ({
 
       <div className={styles.controlsSection}>
         <div className={styles.filterGroup}>
-          <label className={styles.label}>
-            <CalendarIcon size={16} />
-            <span>Rango de Fechas</span>
-          </label>
-          <div className={styles.dateInputs}>
-            <input
-              type="date"
-              value={fechaDesde}
-              onChange={(e) => onFechaDesdeChange(e.target.value)}
-              className={styles.input}
-            />
-            <span className={styles.separator}>hasta</span>
-            <input
-              type="date"
-              value={fechaHasta}
-              onChange={(e) => onFechaHastaChange(e.target.value)}
-              className={styles.input}
-            />
+          <div className={styles.labelRow}>
+            <label className={styles.label}>
+              <CalendarIcon size={16} />
+              <span>Fecha</span>
+            </label>
+            {fecha && (
+              <button
+                type="button"
+                onClick={() => onFechaChange('')}
+                className={styles.clearDateBtn}
+                title="Mostrar todos los turnos"
+              >
+                <X size={12} />
+                <span>Ver todos</span>
+              </button>
+            )}
           </div>
+          <input
+            type="date"
+            value={fecha}
+            onChange={(e) => onFechaChange(e.target.value)}
+            className={styles.input}
+          />
         </div>
 
         <div className={styles.filterGroup}>

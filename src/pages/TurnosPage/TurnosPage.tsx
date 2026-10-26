@@ -13,24 +13,23 @@ import { TurnosFijosList } from '@/features/turnos-fijos/components/TurnosFijosL
 import type { TurnoFijo } from '@/features/turnos-fijos/types/turnos-fijos.types'
 import styles from './TurnosPage.module.css'
 
+const DESDE_TODOS = '2000-01-01T00:00:00'
+const HASTA_TODOS = '2099-12-31T23:59:59'
+
 export const TurnosPage = () => {
   const { user } = useAuth()
   const profesionalId = user?.id ? parseInt(user.id) : undefined
 
-  const [activeTab, setActiveTab] = useState<'sueltos' | 'fijos'>('sueltos')
-
-  const today = new Date()
-  const nextMonth = new Date(today)
-  nextMonth.setMonth(nextMonth.getMonth() + 1)
-  const formatDate = (d: Date) => d.toISOString().split('T')[0]
-
-  const [fechaDesde, setFechaDesde] = useState(formatDate(today))
-  const [fechaHasta, setFechaHasta] = useState(formatDate(nextMonth))
+  const [activeTab, setActiveTab] = useState<'sueltos' | 'fijos'>('fijos')
+  const [fecha, setFecha] = useState('')
   const [pacienteSearch, setPacienteSearch] = useState('')
 
+  const desde = fecha ? `${fecha}T00:00:00` : DESDE_TODOS
+  const hasta = fecha ? `${fecha}T23:59:59` : HASTA_TODOS
+
   const { data: turnosDataPage, isLoading: isLoadingTurnos } = useAgendaTurnos({
-    desde: fechaDesde,
-    hasta: fechaHasta,
+    desde,
+    hasta,
     profesionalId: profesionalId!,
     page: 1,
     pageSize: 100,
@@ -106,10 +105,8 @@ export const TurnosPage = () => {
   return (
     <div className={styles.pageContainer}>
       <TurnosFilters
-        fechaDesde={fechaDesde}
-        fechaHasta={fechaHasta}
-        onFechaDesdeChange={setFechaDesde}
-        onFechaHastaChange={setFechaHasta}
+        fecha={fecha}
+        onFechaChange={setFecha}
         pacienteSearch={pacienteSearch}
         onPacienteSearchChange={setPacienteSearch}
         onNewTurnoClick={() => setIsFormModalOpen(true)}
@@ -160,6 +157,8 @@ export const TurnosPage = () => {
       <TurnoFormModal
         isOpen={isFormModalOpen}
         onClose={() => setIsFormModalOpen(false)}
+        defaultFecha={fecha ? new Date(`${fecha}T00:00:00`) : undefined}
+        initialTab={activeTab === 'fijos' ? 'fijo' : 'suelto'}
       />
     </div>
   )

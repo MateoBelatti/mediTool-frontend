@@ -11,7 +11,7 @@ import styles from './NotificationBell.module.css'
 
 export const NotificationBell: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [activeTab, setActiveTab] = useState<'todas' | 'no-leidas'>('todas')
+  const [activeTab, setActiveTab] = useState<'todas' | 'no-leidas'>('no-leidas')
   const containerRef = useRef<HTMLDivElement>(null)
 
   const { data: unreadCount = 0 } = useNotificacionesCount()
