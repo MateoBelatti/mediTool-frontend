@@ -17,9 +17,11 @@
   width: 100%;
 }
 
-.contentWrapper.sidebarOpen {
-  margin-left: 260px;
-  width: calc(100% - 260px);
+@media (min-width: 1201px) {
+  .contentWrapper.sidebarOpen {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+  }
 }
 
 .main {
@@ -33,13 +35,6 @@
 @media (max-width: 1024px) {
   .main {
     padding: 1.25rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .contentWrapper.sidebarOpen {
-    margin-left: 0;
-    width: 100%;
   }
 }
 

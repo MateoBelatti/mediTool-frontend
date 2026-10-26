@@ -16,6 +16,7 @@ import {
 import { SidebarItem } from './SidebarItem'
 import styles from './Sidebar.module.css'
 import { useAuth } from '@/features/auth/hooks/useAuth'
+import { useMediaQuery } from '@/shared/hooks/useMediaQuery'
 
 const GENERAL_ITEMS = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
@@ -34,20 +35,21 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
   const location = useLocation()
   const { logout } = useAuth()
+  const isCompact = useMediaQuery('(max-width: 1200px)')
 
-  // Close sidebar on route change for mobile only
+  // Close sidebar on route change for compact screens
   useEffect(() => {
-    if (window.innerWidth <= 768) {
+    if (isCompact) {
       setIsOpen(false)
     }
-  }, [location.pathname, setIsOpen])
+  }, [location.pathname, setIsOpen, isCompact])
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen)
   }
 
   const handleLogout = () => {
-    if (window.innerWidth <= 768) {
+    if (isCompact) {
       setIsOpen(false)
     }
     logout()
@@ -68,8 +70,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
         {isOpen ? <ChevronLeft size={24} /> : <ChevronRight size={24} />}
       </button>
 
-      {/* Overlay for mobile when sidebar is open */}
-      {isOpen && <div className={styles.overlay} onClick={toggleSidebar} />}
+      {/* Overlay for compact when sidebar is open */}
+      {isOpen && (
+        <div className={styles.overlay} onClick={() => setIsOpen(false)} />
+      )}
 
       <aside className={`${styles.sidebar} ${isOpen ? styles.open : ''}`}>
         <div className={styles.logoContainer}>
