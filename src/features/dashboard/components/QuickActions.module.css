@@ -102,3 +102,47 @@
   font-size: 12px;
   color: var(--text-secondary);
 }
+
+@media (max-width: 1200px) and (orientation: landscape) {
+  .container {
+    padding: var(--space-2) var(--space-3);
+    height: auto;
+  }
+
+  .header {
+    display: none;
+  }
+
+  .actionsGrid {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-2);
+    width: 100%;
+  }
+
+  .actionBtn {
+    flex: 1;
+    padding: var(--space-2) var(--space-3);
+    gap: var(--space-2);
+    min-height: auto;
+  }
+
+  .iconWrapper {
+    width: 32px;
+    height: 32px;
+  }
+
+  .iconWrapper svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .btnSubtitle {
+    display: none;
+  }
+
+  .btnTitle {
+    font-size: var(--text-sm);
+    white-space: nowrap;
+  }
+}

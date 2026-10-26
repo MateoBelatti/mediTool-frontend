@@ -9,6 +9,7 @@ import { DailyAgenda } from '../../features/dashboard/components/DailyAgenda'
 import { useAuth } from '../../features/auth/hooks/useAuth'
 import { useAgendaTurnos } from '../../features/turnos/hooks/useTurnos'
 import { useReunionesByProfesionalId } from '../../features/reuniones/hooks/useReuniones'
+import { TurnoFormModal } from '@/features/turnos/components/TurnoFormModal/TurnoFormModal'
 import { isSameDay, format, isTomorrow, isYesterday } from 'date-fns'
 import { es } from 'date-fns/locale'
 
@@ -20,6 +21,7 @@ export const HomePage = () => {
   const profesionalId = user?.id ? parseInt(user.id) : undefined
 
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+  const [isTurnoModalOpen, setIsTurnoModalOpen] = useState(false)
 
   const handleDateChange = (date: Date) => {
     setSelectedDate(date)
@@ -36,17 +38,9 @@ export const HomePage = () => {
     0
   )
 
-  const formatDate = (d: Date) => {
-    const tzOffset = d.getTimezoneOffset() * 60000
-    const localISOTime = new Date(d.getTime() - tzOffset)
-      .toISOString()
-      .slice(0, 10)
-    return localISOTime
-  }
-
   const { data: agendaTurnosData } = useAgendaTurnos({
-    desde: formatDate(currentMonthStart),
-    hasta: formatDate(currentMonthEnd),
+    desde: `${format(currentMonthStart, 'yyyy-MM-dd')}T00:00:00`,
+    hasta: `${format(currentMonthEnd, 'yyyy-MM-dd')}T23:59:59`,
     profesionalId: profesionalId!,
     page: 1,
     pageSize: 1000,
@@ -107,13 +101,15 @@ export const HomePage = () => {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h2>Bienvenido, {user?.name || 'Doctor'}</h2>
-        <div className={styles.headerActions}>
-          <div className={styles.nextAppointment}>
-            <Clock size={18} />
-            <span>{nextAppointmentText}</span>
-          </div>
+        <h2 className={styles.headerTitle}>
+          Bienvenido, {user?.name || 'Doctor'}
+        </h2>
+        <div className={styles.bellWrapper}>
           <NotificationBell />
+        </div>
+        <div className={styles.nextAppointment}>
+          <Clock size={18} />
+          <span>{nextAppointmentText}</span>
         </div>
       </header>
 
@@ -138,6 +134,7 @@ export const HomePage = () => {
           <DailyAgenda
             selectedDate={selectedDate}
             turnosDelDia={turnosDelDia}
+            onAddTurno={() => setIsTurnoModalOpen(true)}
           />
         </div>
 
@@ -145,6 +142,12 @@ export const HomePage = () => {
           <QuickActions />
         </div>
       </div>
+
+      <TurnoFormModal
+        isOpen={isTurnoModalOpen}
+        onClose={() => setIsTurnoModalOpen(false)}
+        defaultFecha={selectedDate}
+      />
     </div>
   )
 }

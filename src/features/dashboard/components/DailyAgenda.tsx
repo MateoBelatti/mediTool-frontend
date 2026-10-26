@@ -6,21 +6,25 @@ import {
   FileText,
   User,
   Calendar,
+  Plus,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
+import { Button } from '@/shared/components/Button/Button'
 import styles from './DailyAgenda.module.css'
 import type { Turno } from '../../turnos/types/turnos.types'
 
 interface DailyAgendaProps {
   selectedDate: Date
   turnosDelDia?: Turno[]
+  onAddTurno?: () => void
 }
 
 export const DailyAgenda = ({
   selectedDate,
   turnosDelDia = [],
+  onAddTurno,
 }: DailyAgendaProps) => {
   const navigate = useNavigate()
   const [activeMenuId, setActiveMenuId] = useState<number | null>(null)
@@ -50,13 +54,20 @@ export const DailyAgenda = ({
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <div className={styles.headerTitle}>
-          <ListTodo size={20} className={styles.icon} />
-          <h3>Agenda Diaria</h3>
+        <div className={styles.headerTitleGroup}>
+          <div className={styles.headerTitle}>
+            <ListTodo size={20} className={styles.icon} />
+            <h3>Agenda Diaria</h3>
+          </div>
+          <span className={styles.selectedDateText}>
+            {fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1)}
+          </span>
         </div>
-        <span className={styles.selectedDateText}>
-          {fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1)}
-        </span>
+        {onAddTurno && (
+          <Button size="sm" leftIcon={<Plus size={16} />} onClick={onAddTurno}>
+            Nuevo turno
+          </Button>
+        )}
       </div>
 
       {turnosDelDia.length > 0 ? (
@@ -155,6 +166,17 @@ export const DailyAgenda = ({
         <div className={styles.emptyState}>
           <CalendarX2 size={48} strokeWidth={1} />
           <p>No hay turnos programados para este día.</p>
+          {onAddTurno && (
+            <Button
+              size="sm"
+              variant="outline"
+              leftIcon={<Plus size={16} />}
+              onClick={onAddTurno}
+              style={{ marginTop: 'var(--space-3)' }}
+            >
+              Nuevo turno
+            </Button>
+          )}
         </div>
       )}
     </div>

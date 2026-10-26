@@ -1,4 +1,4 @@
-import {  useState  } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Modal } from '@/shared/components/Modal/Modal'
@@ -20,11 +20,17 @@ import styles from './TurnoFormModal.module.css'
 interface TurnoFormModalProps {
   isOpen: boolean
   onClose: () => void
+  defaultFecha?: Date
 }
 
 type TabType = 'suelto' | 'fijo'
 
-export const TurnoFormModal = ({ isOpen, onClose }: TurnoFormModalProps) => {
+export const TurnoFormModal = ({
+  isOpen,
+  onClose,
+  defaultFecha,
+}: TurnoFormModalProps) => {
+  void defaultFecha
   const [activeTab, setActiveTab] = useState<TabType>('suelto')
   const { user } = useAuth()
   const profesionalId = user?.id ? parseInt(user.id) : 0
