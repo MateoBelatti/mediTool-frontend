@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
 import {
   ListTodo,
   CalendarX2,
@@ -14,17 +14,36 @@ import { es } from 'date-fns/locale'
 import { Button } from '@/shared/components/Button/Button'
 import styles from './DailyAgenda.module.css'
 import type { Turno } from '../../turnos/types/turnos.types'
+import type { ReunionResponseDto } from '../../reuniones/schemas/reuniones.schema'
 
 interface DailyAgendaProps {
   selectedDate: Date
   turnosDelDia?: Turno[]
+  reunionesDelDia?: ReunionResponseDto[]
   onAddTurno?: () => void
+  onReunionClick?: (reunion: ReunionResponseDto) => void
 }
+
+interface TurnoAgendaItem {
+  kind: 'turno'
+  fechaHora: string
+  turno: Turno
+}
+
+interface ReunionAgendaItem {
+  kind: 'reunion'
+  fechaHora: string
+  reunion: ReunionResponseDto
+}
+
+type AgendaItem = TurnoAgendaItem | ReunionAgendaItem
 
 export const DailyAgenda = ({
   selectedDate,
   turnosDelDia = [],
+  reunionesDelDia = [],
   onAddTurno,
+  onReunionClick,
 }: DailyAgendaProps) => {
   const navigate = useNavigate()
   const [activeMenuId, setActiveMenuId] = useState<number | null>(null)
@@ -33,6 +52,24 @@ export const DailyAgenda = ({
   const fechaFormateada = format(selectedDate, "EEEE d 'de' MMMM", {
     locale: es,
   })
+
+  const agendaItems = useMemo<AgendaItem[]>(() => {
+    const turnos: AgendaItem[] = turnosDelDia.map((turno) => ({
+      kind: 'turno',
+      fechaHora: turno.fechaHora,
+      turno,
+    }))
+    const reuniones: AgendaItem[] = reunionesDelDia.map((reunion) => ({
+      kind: 'reunion',
+      fechaHora: reunion.fechaHora,
+      reunion,
+    }))
+
+    return [...turnos, ...reuniones].sort(
+      (a, b) =>
+        new Date(a.fechaHora).getTime() - new Date(b.fechaHora).getTime()
+    )
+  }, [turnosDelDia, reunionesDelDia])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -70,24 +107,60 @@ export const DailyAgenda = ({
         )}
       </div>
 
-      {turnosDelDia.length > 0 ? (
+      {agendaItems.length > 0 ? (
         <div className={styles.agendaList}>
-          {turnosDelDia.map((turno, index) => {
-            const time = new Date(turno.fechaHora).toLocaleTimeString([], {
+          {agendaItems.map((item, index) => {
+            const time = new Date(item.fechaHora).toLocaleTimeString([], {
               hour: '2-digit',
               minute: '2-digit',
             })
+
+            if (item.kind === 'reunion') {
+              const { reunion } = item
+
+              return (
+                <div
+                  key={`reunion-${reunion.id}`}
+                  className={`${styles.agendaItem} ${styles.reunionItem}`}
+                  onClick={() => {
+                    setActiveMenuId(null)
+                    onReunionClick?.(reunion)
+                  }}
+                >
+                  <div className={styles.timeColumn}>
+                    <span className={styles.timeText}>{time}</span>
+                  </div>
+                  <div className={styles.detailsColumn}>
+                    <p className={styles.patientName}>{reunion.titulo}</p>
+                    <div className={styles.reunionMeta}>
+                      <span
+                        className={`${styles.appointmentType} ${styles.reunionTag}`}
+                      >
+                        Reunión
+                      </span>
+                      {reunion.modalidad && (
+                        <span className={styles.reunionModality}>
+                          {reunion.modalidad}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )
+            }
+
+            const { turno } = item
             const isFijo = !!turno.turnoFijoId
             const patientName = turno.paciente
               ? `${turno.paciente.nombre} ${turno.paciente.apellido}`
               : `Paciente ${turno.pacienteId}`
             const isActive = activeMenuId === turno.id
             const openUpwards =
-              index >= turnosDelDia.length - 2 && turnosDelDia.length > 2
+              index >= agendaItems.length - 2 && agendaItems.length > 2
 
             return (
               <div
-                key={turno.id}
+                key={`turno-${turno.id}`}
                 className={`${styles.agendaItem} ${isFijo ? styles.fijo : ''}`}
                 onClick={() => setActiveMenuId(isActive ? null : turno.id)}
                 style={{ cursor: 'pointer', zIndex: isActive ? 20 : 1 }}
@@ -165,7 +238,7 @@ export const DailyAgenda = ({
       ) : (
         <div className={styles.emptyState}>
           <CalendarX2 size={48} strokeWidth={1} />
-          <p>No hay turnos programados para este día.</p>
+          <p>No hay turnos ni reuniones programadas para este día.</p>
           {onAddTurno && (
             <Button
               size="sm"

@@ -194,18 +194,32 @@
   background-color: var(--surface-alt);
 }
 
-/* Dot indicator for appointments */
-.hasAppointmentDot {
+/* Dot indicators for appointments and meetings */
+.dots {
   position: absolute;
   bottom: 2px;
   left: 50%;
   transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.hasTurnoDot,
+.hasReunionDot {
   width: 4px;
   height: 4px;
-  background-color: var(--accent);
   border-radius: 50%;
 }
 
-:global(.react-calendar__tile--active) .hasAppointmentDot {
+.hasTurnoDot {
+  background-color: var(--accent);
+}
+
+.hasReunionDot {
+  background-color: var(--danger);
+}
+
+:global(.react-calendar__tile--active) .hasTurnoDot {
   background-color: white;
 }

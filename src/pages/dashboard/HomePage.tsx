@@ -9,9 +9,18 @@ import { DailyAgenda } from '../../features/dashboard/components/DailyAgenda'
 import { useAuth } from '../../features/auth/hooks/useAuth'
 import { useAgendaTurnos } from '../../features/turnos/hooks/useTurnos'
 import { useReunionesByProfesionalId } from '../../features/reuniones/hooks/useReuniones'
+import { ReunionDetailModal } from '@/features/reuniones/components/ReunionDetailModal/ReunionDetailModal'
 import { TurnoFormModal } from '@/features/turnos/components/TurnoFormModal/TurnoFormModal'
-import { isSameDay, format, isTomorrow, isYesterday } from 'date-fns'
+import {
+  isSameDay,
+  format,
+  isTomorrow,
+  isYesterday,
+  startOfWeek,
+  endOfWeek,
+} from 'date-fns'
 import { es } from 'date-fns/locale'
+import type { ReunionResponseDto } from '@/features/reuniones/schemas/reuniones.schema'
 
 import { NotificationBell } from '@/features/notificaciones'
 import 'react-calendar/dist/Calendar.css'
@@ -22,6 +31,8 @@ export const HomePage = () => {
 
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [isTurnoModalOpen, setIsTurnoModalOpen] = useState(false)
+  const [reunionSeleccionada, setReunionSeleccionada] =
+    useState<ReunionResponseDto | null>(null)
 
   const handleDateChange = (date: Date) => {
     setSelectedDate(date)
@@ -59,6 +70,23 @@ export const HomePage = () => {
       return isSameDay(turnoDate, selectedDate)
     })
   }, [turnosDelMes, selectedDate])
+
+  const reunionesDelDia = useMemo(() => {
+    return (reunionesData || []).filter((r) =>
+      isSameDay(new Date(r.fechaHora), selectedDate)
+    )
+  }, [reunionesData, selectedDate])
+
+  const reunionesSemanales = useMemo(() => {
+    const now = new Date()
+    const weekStart = startOfWeek(now, { locale: es })
+    const weekEnd = endOfWeek(now, { locale: es })
+
+    return (reunionesData || []).filter((r) => {
+      const fecha = new Date(r.fechaHora)
+      return fecha >= weekStart && fecha <= weekEnd
+    })
+  }, [reunionesData])
 
   const nextTurno = useMemo(() => {
     const now = new Date()
@@ -117,7 +145,7 @@ export const HomePage = () => {
         <div className={styles.statCardsWrapper}>
           <StatCards
             turnosHoy={turnosDelDia.length}
-            reunionesSemanales={reunionesData?.length || 0}
+            reunionesSemanales={reunionesSemanales.length}
             turnosLabel={turnosLabel}
           />
         </div>
@@ -127,6 +155,7 @@ export const HomePage = () => {
             selectedDate={selectedDate}
             onDateChange={handleDateChange}
             turnosDelMes={turnosDelMes}
+            reunionesDelMes={reunionesData}
           />
         </div>
 
@@ -134,7 +163,9 @@ export const HomePage = () => {
           <DailyAgenda
             selectedDate={selectedDate}
             turnosDelDia={turnosDelDia}
+            reunionesDelDia={reunionesDelDia}
             onAddTurno={() => setIsTurnoModalOpen(true)}
+            onReunionClick={setReunionSeleccionada}
           />
         </div>
 
@@ -147,6 +178,12 @@ export const HomePage = () => {
         isOpen={isTurnoModalOpen}
         onClose={() => setIsTurnoModalOpen(false)}
         defaultFecha={selectedDate}
+      />
+
+      <ReunionDetailModal
+        isOpen={reunionSeleccionada !== null}
+        onClose={() => setReunionSeleccionada(null)}
+        reunion={reunionSeleccionada}
       />
     </div>
   )
