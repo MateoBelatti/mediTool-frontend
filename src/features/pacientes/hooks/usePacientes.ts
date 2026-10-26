@@ -6,6 +6,13 @@ import type {
 } from '../types/paciente.types'
 import type { PaginationParams } from '@/shared/types/pagination.types'
 
+export const usePacientesVinculados = (params?: PaginationParams) => {
+  return useQuery({
+    queryKey: ['pacientes', 'vinculados', params],
+    queryFn: () => pacienteService.getVinculados(params),
+  })
+}
+
 export const usePacientes = (id?: number, params?: PaginationParams) => {
   const queryClient = useQueryClient()
 

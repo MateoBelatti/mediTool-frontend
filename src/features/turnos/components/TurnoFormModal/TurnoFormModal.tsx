@@ -1,12 +1,14 @@
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useState, useEffect } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { format } from 'date-fns'
 import { Modal } from '@/shared/components/Modal/Modal'
 import { Button } from '@/shared/components/Button/Button'
 import { useAuth } from '@/features/auth/hooks/useAuth'
-import { usePacientes } from '@/features/pacientes/hooks/usePacientes'
+import { usePacientesVinculados } from '@/features/pacientes/hooks/usePacientes'
 import {
-  CrearTurnoSchema,
+  CrearTurnoFormSchema,
+  type CrearTurnoFormDto,
   type CrearTurnoDto,
 } from '../../schemas/turnos.schema'
 import {
@@ -16,6 +18,85 @@ import {
 import { useCreateTurnoSuelto } from '../../hooks/useTurnos'
 import { useCreateTurnoFijo } from '@/features/turnos-fijos/hooks/useTurnosFijos'
 import styles from './TurnoFormModal.module.css'
+
+const HORA_INICIO = '07'
+const HORA_FIN = '21'
+const MINUTOS = ['00', '15', '30', '45'] as const
+
+const generarOpcionesHoras = (inicio: string, fin: string): string[] => {
+  const start = parseInt(inicio, 10)
+  const end = parseInt(fin, 10)
+  const horas: string[] = []
+  for (let h = start; h <= end; h++) {
+    horas.push(String(h).padStart(2, '0'))
+  }
+  return horas
+}
+
+const OPCIONES_HORAS = generarOpcionesHoras(HORA_INICIO, HORA_FIN)
+
+interface TimePickerProps {
+  value?: string
+  onChange: (val: string) => void
+  hasError?: boolean
+}
+
+const TimePicker = ({ value = '', onChange, hasError }: TimePickerProps) => {
+  const [hh, mm] = value && value.includes(':') ? value.split(':') : ['', '']
+
+  const handleHourChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newHour = e.target.value
+    if (!newHour) {
+      onChange('')
+    } else {
+      onChange(`${newHour}:${mm || '00'}`)
+    }
+  }
+
+  const handleMinuteChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newMinute = e.target.value
+    if (!newMinute) {
+      if (hh) onChange(`${hh}:00`)
+      else onChange('')
+    } else {
+      onChange(`${hh || '09'}:${newMinute}`)
+    }
+  }
+
+  return (
+    <div
+      className={`${styles.timePicker} ${hasError ? styles.inputError : ''}`}
+    >
+      <select
+        value={hh}
+        onChange={handleHourChange}
+        className={styles.timeSelect}
+        aria-label="Hora"
+      >
+        <option value="">HH</option>
+        {OPCIONES_HORAS.map((h) => (
+          <option key={h} value={h}>
+            {h}
+          </option>
+        ))}
+      </select>
+      <span className={styles.timeSeparator}>:</span>
+      <select
+        value={mm}
+        onChange={handleMinuteChange}
+        className={styles.timeSelect}
+        aria-label="Minutos"
+      >
+        <option value="">MM</option>
+        {MINUTOS.map((m) => (
+          <option key={m} value={m}>
+            {m}
+          </option>
+        ))}
+      </select>
+    </div>
+  )
+}
 
 interface TurnoFormModalProps {
   isOpen: boolean
@@ -30,63 +111,87 @@ export const TurnoFormModal = ({
   onClose,
   defaultFecha,
 }: TurnoFormModalProps) => {
-  void defaultFecha
   const [activeTab, setActiveTab] = useState<TabType>('suelto')
   const { user } = useAuth()
   const profesionalId = user?.id ? parseInt(user.id) : 0
-  const { pacientes: pacientesPage, pacientesVinculados } = usePacientes()
-  const pacientes = pacientesPage?.items || pacientesVinculados?.items
+  const { data: pacientesVinculadosData } = usePacientesVinculados({
+    page: 1,
+    pageSize: 100,
+  })
+  const pacientes = pacientesVinculadosData?.items
 
   const createSueltoMutation = useCreateTurnoSuelto()
   const createFijoMutation = useCreateTurnoFijo()
 
-  const formSuelto = useForm<CrearTurnoDto>({
-    resolver: zodResolver(CrearTurnoSchema),
-    defaultValues: {
+  const getValoresDefaultSuelto = (fecha?: Date): CrearTurnoFormDto => ({
+    profesionalId,
+    pacienteId: '' as unknown as number,
+    fecha: format(fecha || new Date(), 'yyyy-MM-dd'),
+    hora: '',
+    duracionMin: 60,
+  })
+
+  const getValoresDefaultFijo = (fecha?: Date): CrearTurnoFijoDto => {
+    const d = fecha || new Date()
+    return {
       profesionalId,
-      duracionMin: 30,
-    },
+      pacienteId: '' as unknown as number,
+      fechaInicio: format(d, 'yyyy-MM-dd'),
+      fechaFin: '',
+      diaSemana: d.getDay(),
+      hora: '',
+      duracionMin: 60,
+      activo: true,
+    }
+  }
+
+  const formSuelto = useForm<CrearTurnoFormDto>({
+    resolver: zodResolver(CrearTurnoFormSchema),
+    defaultValues: getValoresDefaultSuelto(defaultFecha),
   })
 
   const formFijo = useForm<CrearTurnoFijoDto>({
     resolver: zodResolver(CrearTurnoFijoSchema),
-    defaultValues: {
-      profesionalId,
-      duracionMin: 30,
-      activo: true,
-      diaSemana: 1, // Lunes
-    },
+    defaultValues: getValoresDefaultFijo(defaultFecha),
   })
 
-  const onSubmitSuelto = (data: CrearTurnoDto) => {
-    // Check missing fields correctly formatted
-    const formattedData = {
-      ...data,
+  useEffect(() => {
+    if (isOpen) {
+      formSuelto.reset(getValoresDefaultSuelto(defaultFecha))
+      formFijo.reset(getValoresDefaultFijo(defaultFecha))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, defaultFecha, profesionalId])
+
+  const onSubmitSuelto = (data: CrearTurnoFormDto) => {
+    const formattedData: CrearTurnoDto = {
       pacienteId: Number(data.pacienteId),
       profesionalId,
+      fechaHora: `${data.fecha}T${data.hora}:00`,
       duracionMin: Number(data.duracionMin),
     }
 
     createSueltoMutation.mutate(formattedData, {
       onSuccess: () => {
-        formSuelto.reset()
+        formSuelto.reset(getValoresDefaultSuelto(defaultFecha))
         onClose()
       },
     })
   }
 
   const onSubmitFijo = (data: CrearTurnoFijoDto) => {
-    const formattedData = {
+    const formattedData: CrearTurnoFijoDto = {
       ...data,
       pacienteId: Number(data.pacienteId),
       profesionalId,
       diaSemana: Number(data.diaSemana),
       duracionMin: Number(data.duracionMin),
+      fechaFin: data.fechaFin || undefined,
     }
 
     createFijoMutation.mutate(formattedData, {
       onSuccess: () => {
-        formFijo.reset()
+        formFijo.reset(getValoresDefaultFijo(defaultFecha))
         onClose()
       },
     })
@@ -135,18 +240,39 @@ export const TurnoFormModal = ({
               )}
             </div>
 
-            <div className={styles.field}>
-              <label>Fecha y Hora</label>
-              <input
-                type="datetime-local"
-                {...formSuelto.register('fechaHora')}
-                className={styles.input}
-              />
-              {formSuelto.formState.errors.fechaHora && (
-                <span className={styles.error}>
-                  {formSuelto.formState.errors.fechaHora.message}
-                </span>
-              )}
+            <div className={styles.fieldRow}>
+              <div className={styles.field}>
+                <label>Fecha</label>
+                <input
+                  type="date"
+                  {...formSuelto.register('fecha')}
+                  className={styles.input}
+                />
+                {formSuelto.formState.errors.fecha && (
+                  <span className={styles.error}>
+                    {formSuelto.formState.errors.fecha.message}
+                  </span>
+                )}
+              </div>
+              <div className={styles.field}>
+                <label>Hora</label>
+                <Controller
+                  control={formSuelto.control}
+                  name="hora"
+                  render={({ field }) => (
+                    <TimePicker
+                      value={field.value}
+                      onChange={field.onChange}
+                      hasError={!!formSuelto.formState.errors.hora}
+                    />
+                  )}
+                />
+                {formSuelto.formState.errors.hora && (
+                  <span className={styles.error}>
+                    {formSuelto.formState.errors.hora.message}
+                  </span>
+                )}
+              </div>
             </div>
 
             <div className={styles.field}>
@@ -212,14 +338,30 @@ export const TurnoFormModal = ({
                   <option value={5}>Viernes</option>
                   <option value={6}>Sábado</option>
                 </select>
+                {formFijo.formState.errors.diaSemana && (
+                  <span className={styles.error}>
+                    {formFijo.formState.errors.diaSemana.message}
+                  </span>
+                )}
               </div>
               <div className={styles.field}>
                 <label>Hora</label>
-                <input
-                  type="time"
-                  {...formFijo.register('hora')}
-                  className={styles.input}
+                <Controller
+                  control={formFijo.control}
+                  name="hora"
+                  render={({ field }) => (
+                    <TimePicker
+                      value={field.value}
+                      onChange={field.onChange}
+                      hasError={!!formFijo.formState.errors.hora}
+                    />
+                  )}
                 />
+                {formFijo.formState.errors.hora && (
+                  <span className={styles.error}>
+                    {formFijo.formState.errors.hora.message}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -231,6 +373,11 @@ export const TurnoFormModal = ({
                   {...formFijo.register('fechaInicio')}
                   className={styles.input}
                 />
+                {formFijo.formState.errors.fechaInicio && (
+                  <span className={styles.error}>
+                    {formFijo.formState.errors.fechaInicio.message}
+                  </span>
+                )}
               </div>
               <div className={styles.field}>
                 <label>Fecha de Fin (Opcional)</label>
@@ -249,13 +396,18 @@ export const TurnoFormModal = ({
                 {...formFijo.register('duracionMin', { valueAsNumber: true })}
                 className={styles.input}
               />
+              {formFijo.formState.errors.duracionMin && (
+                <span className={styles.error}>
+                  {formFijo.formState.errors.duracionMin.message}
+                </span>
+              )}
             </div>
 
             <div className={styles.actions}>
               <Button type="button" variant="ghost" onClick={onClose}>
                 Cancelar
               </Button>
-              <Button type="submit" isLoading={formFijo.formState.isSubmitting}>
+              <Button type="submit" isLoading={createFijoMutation.isPending}>
                 Crear Turno Fijo
               </Button>
             </div>
