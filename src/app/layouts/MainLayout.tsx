@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Sidebar } from '@/shared/components/Sidebar'
-import { useMediaQuery } from '@/shared/hooks/useMediaQuery'
+import {
+  COMPACT_LAYOUT_QUERY,
+  useMediaQuery,
+} from '@/shared/hooks/useMediaQuery'
 import styles from './MainLayout.module.css'
 
 export const MainLayout = () => {
-  const isCompact = useMediaQuery('(max-width: 1200px)')
+  const isCompact = useMediaQuery(COMPACT_LAYOUT_QUERY)
   const [isSidebarOpen, setIsSidebarOpen] = useState(!isCompact)
   const [prevIsCompact, setPrevIsCompact] = useState(isCompact)
 

@@ -4,6 +4,8 @@ import { HomePage } from '@/pages/dashboard/HomePage'
 import { LoginPage } from '@/pages/LoginPage/LoginPage'
 import { PacientesPage } from '@/pages/pacientesPage/PacientesPage'
 import { PacienteProfilePage } from '@/pages/pacienteProfilePage/PacienteProfilePage'
+import { ProfesionalesPage } from '@/pages/ProfesionalesPage/ProfesionalesPage'
+import { ROLES } from '@/features/auth/hooks/useAuth'
 import { TurnosPage } from '@/pages/TurnosPage/TurnosPage'
 import { TurnoFijoProfilePage } from '@/pages/TurnoFijoProfilePage/TurnoFijoProfilePage'
 import { AsistenciasPage } from '@/pages/AsistenciasPage/AsistenciasPage'
@@ -36,6 +38,14 @@ const router = createBrowserRouter([
       {
         path: 'pacientes/:id',
         element: <PacienteProfilePage />,
+      },
+      {
+        path: 'profesionales',
+        element: (
+          <ProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+            <ProfesionalesPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: 'turnos',

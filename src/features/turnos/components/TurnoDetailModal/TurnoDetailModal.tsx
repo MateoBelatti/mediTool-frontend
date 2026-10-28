@@ -12,6 +12,7 @@ import { Button } from '@/shared/components/Button/Button'
 import { type Turno, EstadoTurno } from '../../types/turnos.types'
 import {
   useCambiarEstadoTurno,
+  useRegistrarActualizarAsistencia,
   useReprogramarTurno,
 } from '../../hooks/useTurnos'
 import styles from './TurnoDetailModal.module.css'
@@ -37,6 +38,7 @@ export const TurnoDetailModal = ({
 }: TurnoDetailModalProps) => {
   const navigate = useNavigate()
   const cambiarEstadoMutation = useCambiarEstadoTurno()
+  const asistenciaMutation = useRegistrarActualizarAsistencia()
   const reprogramarMutation = useReprogramarTurno()
 
   const [isReprogramando, setIsReprogramando] = useState(false)
@@ -47,6 +49,20 @@ export const TurnoDetailModal = ({
   const handleEstadoChange = (nuevoEstado: EstadoTurno) => {
     cambiarEstadoMutation.mutate(
       { id: turno.id, nuevoEstado },
+      {
+        onSuccess: () => {
+          onClose()
+        },
+      }
+    )
+  }
+
+  const handleRegistrarAsistencia = (asistio: boolean) => {
+    asistenciaMutation.mutate(
+      {
+        turnoId: turno.id,
+        data: { asistio, justificada: false },
+      },
       {
         onSuccess: () => {
           onClose()
@@ -171,8 +187,8 @@ export const TurnoDetailModal = ({
                 <>
                   <Button
                     variant="primary"
-                    onClick={() => handleEstadoChange(EstadoTurno.Presente)}
-                    isLoading={cambiarEstadoMutation.isPending}
+                    onClick={() => handleRegistrarAsistencia(true)}
+                    isLoading={asistenciaMutation.isPending}
                   >
                     Marcar Presente
                   </Button>
@@ -192,8 +208,8 @@ export const TurnoDetailModal = ({
                   </Button>
                   <Button
                     variant="outline"
-                    onClick={() => handleEstadoChange(EstadoTurno.Ausente)}
-                    isLoading={cambiarEstadoMutation.isPending}
+                    onClick={() => handleRegistrarAsistencia(false)}
+                    isLoading={asistenciaMutation.isPending}
                   >
                     Marcar Ausente
                   </Button>

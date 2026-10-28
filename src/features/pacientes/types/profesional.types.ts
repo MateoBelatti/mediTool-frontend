@@ -10,7 +10,7 @@ export interface Profesional {
 }
 
 export interface ProfesionalCreateDto extends Omit<Profesional, 'id'> {
-  password?: string
+  password: string
 }
 
 export type ProfesionalUpdateDto = Omit<Profesional, 'id'>

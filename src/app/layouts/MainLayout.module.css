@@ -17,7 +17,7 @@
   width: 100%;
 }
 
-@media (min-width: 1201px) {
+@media (min-width: 1201px) and (hover: hover) and (pointer: fine) {
   .contentWrapper.sidebarOpen {
     margin-left: 260px;
     width: calc(100% - 260px);

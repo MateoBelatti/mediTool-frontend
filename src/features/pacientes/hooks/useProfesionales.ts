@@ -22,6 +22,9 @@ export const useProfesionales = (id?: number) => {
 
   const createProfesional = useMutation({
     mutationFn: (data: ProfesionalCreateDto) => profesionalService.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['profesionales'] })
+    },
   })
 
   const updateProfesional = useMutation({
@@ -89,5 +92,7 @@ export const useProfesionales = (id?: number) => {
 
     profesionales: getProfesionales.data,
     isLoadingProfesionales: getProfesionales.isLoading,
+    errorProfesionales: getProfesionales.error,
+    refetchProfesionales: getProfesionales.refetch,
   }
 }
