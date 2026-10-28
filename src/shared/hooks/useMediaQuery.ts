@@ -1,5 +1,8 @@
 import { useSyncExternalStore } from 'react'
 
+export const COMPACT_LAYOUT_QUERY =
+  '(max-width: 1200px), (hover: none), (pointer: coarse)'
+
 export const useMediaQuery = (query: string): boolean => {
   return useSyncExternalStore(
     (callback) => {

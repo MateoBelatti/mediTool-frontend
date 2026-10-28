@@ -12,15 +12,33 @@ import {
   ChevronRight,
   ChevronLeft,
   Activity,
+  Stethoscope,
 } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { SidebarItem } from './SidebarItem'
 import styles from './Sidebar.module.css'
-import { useAuth } from '@/features/auth/hooks/useAuth'
-import { useMediaQuery } from '@/shared/hooks/useMediaQuery'
+import { useAuth, ROLES } from '@/features/auth/hooks/useAuth'
+import {
+  COMPACT_LAYOUT_QUERY,
+  useMediaQuery,
+} from '@/shared/hooks/useMediaQuery'
 
-const GENERAL_ITEMS = [
+interface GeneralItem {
+  icon: LucideIcon
+  label: string
+  path: string
+  adminOnly?: boolean
+}
+
+const GENERAL_ITEMS: GeneralItem[] = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
   { icon: Users, label: 'Pacientes', path: '/pacientes' },
+  {
+    icon: Stethoscope,
+    label: 'Profesionales',
+    path: '/profesionales',
+    adminOnly: true,
+  },
   { icon: CalendarDays, label: 'Turnos', path: '/turnos' },
   { icon: StickyNote, label: 'Reuniones', path: '/reuniones' },
   { icon: ClipboardCheck, label: 'Asistencia', path: '/asistencia' },
@@ -34,8 +52,9 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
   const location = useLocation()
-  const { logout } = useAuth()
-  const isCompact = useMediaQuery('(max-width: 1200px)')
+  const { user, logout } = useAuth()
+  const isAdmin = user?.role === ROLES.ADMIN
+  const isCompact = useMediaQuery(COMPACT_LAYOUT_QUERY)
 
   // Close sidebar on route change for compact screens
   useEffect(() => {
@@ -71,7 +90,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
       </button>
 
       {/* Overlay for compact when sidebar is open */}
-      {isOpen && (
+      {isOpen && isCompact && (
         <div className={styles.overlay} onClick={() => setIsOpen(false)} />
       )}
 
@@ -88,9 +107,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
           <div className={styles.section}>
             <h3 className={styles.sectionTitle}>General</h3>
             <div className={styles.itemsContainer}>
-              {GENERAL_ITEMS.map((item) => (
-                <SidebarItem key={item.path} {...item} />
-              ))}
+              {GENERAL_ITEMS.filter((item) => !item.adminOnly || isAdmin).map(
+                (item) => (
+                  <SidebarItem
+                    key={item.path}
+                    icon={item.icon}
+                    label={item.label}
+                    path={item.path}
+                  />
+                )
+              )}
             </div>
           </div>
 
