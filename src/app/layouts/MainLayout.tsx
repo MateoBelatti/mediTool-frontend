@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Sidebar } from '@/shared/components/Sidebar'
 import {
@@ -26,7 +26,11 @@ export const MainLayout = () => {
         className={`${styles.contentWrapper} ${isSidebarOpen ? styles.sidebarOpen : ''}`}
       >
         <main className={styles.main}>
-          <Outlet />
+          <Suspense
+            fallback={<div className={styles.pageLoading}>Cargando...</div>}
+          >
+            <Outlet />
+          </Suspense>
         </main>
       </div>
     </div>

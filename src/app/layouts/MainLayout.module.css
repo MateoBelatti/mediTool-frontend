@@ -32,6 +32,15 @@
   overflow-y: auto;
 }
 
+.pageLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  color: var(--text-secondary);
+  font-size: var(--text-base);
+}
+
 @media (max-width: 1024px) {
   .main {
     padding: 1.25rem;

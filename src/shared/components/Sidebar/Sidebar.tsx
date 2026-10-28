@@ -7,7 +7,6 @@ import {
   StickyNote,
   ClipboardCheck,
   BarChart2,
-  Settings,
   LogOut,
   ChevronRight,
   ChevronLeft,
@@ -74,10 +73,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
     logout()
   }
 
-  const toolsItems = [
-    { icon: Settings, label: 'Configuración', path: '/configuracion' },
-    { icon: LogOut, label: 'Salir', onClick: handleLogout },
-  ]
+  const toolsItems = [{ icon: LogOut, label: 'Salir', onClick: handleLogout }]
 
   return (
     <>
@@ -100,7 +96,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
             <Activity className={styles.logoIcon} size={28} />
             <h2>MediTool</h2>
           </div>
-          <span className={styles.badge}>3</span>
         </div>
 
         <nav className={styles.navigation}>
@@ -124,7 +119,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
             <h3 className={styles.sectionTitle}>Herramientas</h3>
             <div className={styles.itemsContainer}>
               {toolsItems.map((item) => (
-                <SidebarItem key={item.path || item.label} {...item} />
+                <SidebarItem key={item.label} {...item} />
               ))}
             </div>
           </div>

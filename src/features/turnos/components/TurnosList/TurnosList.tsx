@@ -84,11 +84,7 @@ export const TurnosList = ({
         <div
           key={turno.id}
           className={styles.listItem}
-          onClick={() => {
-            console.log('Turno clickeado:', turno)
-            console.log('Paciente del turno:', turno.paciente)
-            onTurnoClick(turno)
-          }}
+          onClick={() => onTurnoClick(turno)}
         >
           <div className={styles.itemMainInfo}>
             <div className={styles.pacienteInfo}>

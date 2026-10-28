@@ -67,10 +67,6 @@ export const useAuth = () => {
       // Redirigir al usuario al dashboard o página principal después de un login exitoso
       navigate('/')
     },
-    onError: (error) => {
-      console.error('Error en el login:', error)
-      // Aquí puedes agregar lógica adicional como mostrar un toast de error
-    },
   })
 
   const logout = () => {

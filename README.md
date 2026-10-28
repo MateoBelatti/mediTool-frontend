@@ -1,32 +1,29 @@
-# React + TypeScript + Vite
+# mediTool — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Aplicación web de **mediTool** para la gestión de turnos, pacientes, informes y reuniones de profesionales de la salud. Construida con React 19, TypeScript y Vite, con CSS Modules y React Query.
 
-Currently, two official plugins are available:
+## Scripts
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Comando              | Descripción                                                    |
+| -------------------- | -------------------------------------------------------------- |
+| `npm run dev`        | Levanta el servidor de desarrollo de Vite                      |
+| `npm run build`      | Compila TypeScript y genera el bundle de producción en `dist/` |
+| `npm run lint`       | Ejecuta ESLint sobre el proyecto                               |
+| `npm run type-check` | Verifica los tipos con TypeScript                              |
 
-## React Compiler
+## Variables de entorno
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+La aplicación necesita `VITE_API_URL` con la URL base de la API, incluyendo el sufijo `/api` y usando `https` en producción:
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+VITE_API_URL=https://tu-api.up.railway.app/api
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Vite incrusta esta variable en el bundle al compilar, por lo que si cambia hay que volver a buildear y redeployar. Para desarrollo local, copiá `.env.example` a `.env.development` y ajustá el valor.
+
+## Deploy en Vercel
+
+1. Importá el repositorio en Vercel y seleccioná el framework **Vite**.
+2. Configurá el build command `npm run build` y el output directory `dist`.
+3. Definí la variable `VITE_API_URL` en el entorno **Production**.
+4. El archivo `vercel.json` incluye el rewrite de SPA hacia `/index.html`, necesario para que las rutas del router funcionen al entrar directo o refrescar.

@@ -63,20 +63,6 @@
   margin: 0;
 }
 
-.badge {
-  background-color: var(--accent-color);
-  color: var(--surface-color);
-  font-size: var(--text-xs);
-  font-weight: 700;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px var(--shadow-sm);
-}
-
 .navigation {
   display: flex;
   flex-direction: column;
