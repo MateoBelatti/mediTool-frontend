@@ -6,7 +6,10 @@ export const CrearTurnoFijoSchema = z.object({
     .refine((val) => !isNaN(val) && val > 0, {
       message: 'El paciente es requerido',
     }),
-  profesionalId: z.number(),
+  profesionalId: z
+    .number()
+    .int('El profesional es requerido')
+    .positive('El profesional es requerido'),
   diaSemana: z
     .number()
     .min(0, 'Día de la semana inválido')

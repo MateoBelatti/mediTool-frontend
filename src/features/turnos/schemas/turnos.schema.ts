@@ -7,7 +7,10 @@ export const CrearTurnoFormSchema = z.object({
     .refine((val) => !isNaN(val) && val > 0, {
       message: 'El paciente es requerido',
     }),
-  profesionalId: z.number(),
+  profesionalId: z
+    .number()
+    .int('El profesional es requerido')
+    .positive('El profesional es requerido'),
   fecha: z.string().min(1, 'La fecha es requerida'),
   hora: z
     .string({ message: 'La hora es requerida' })

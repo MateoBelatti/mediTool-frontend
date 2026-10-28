@@ -1,11 +1,21 @@
-import { useState, useEffect } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { useState, useEffect, type ChangeEvent } from 'react'
+import { isAxiosError } from 'axios'
+import {
+  Controller,
+  useForm,
+  type UseFormRegisterReturn,
+} from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { Modal } from '@/shared/components/Modal/Modal'
 import { Button } from '@/shared/components/Button/Button'
-import { useAuth } from '@/features/auth/hooks/useAuth'
-import { usePacientesVinculados } from '@/features/pacientes/hooks/usePacientes'
+import { useAuth, ROLES } from '@/features/auth/hooks/useAuth'
+import {
+  usePacientesTodos,
+  usePacientesVinculados,
+} from '@/features/pacientes/hooks/usePacientes'
+import { useProfesionales } from '@/features/pacientes/hooks/useProfesionales'
+import type { Profesional } from '@/features/pacientes/types/profesional.types'
 import {
   CrearTurnoFormSchema,
   type CrearTurnoFormDto,
@@ -19,21 +29,10 @@ import { useCreateTurnoSuelto } from '../../hooks/useTurnos'
 import { useCreateTurnoFijo } from '@/features/turnos-fijos/hooks/useTurnosFijos'
 import styles from './TurnoFormModal.module.css'
 
-const HORA_INICIO = '07'
-const HORA_FIN = '21'
+const HORAS = Array.from({ length: 15 }, (_, index) =>
+  String(index + 7).padStart(2, '0')
+)
 const MINUTOS = ['00', '15', '30', '45'] as const
-
-const generarOpcionesHoras = (inicio: string, fin: string): string[] => {
-  const start = parseInt(inicio, 10)
-  const end = parseInt(fin, 10)
-  const horas: string[] = []
-  for (let h = start; h <= end; h++) {
-    horas.push(String(h).padStart(2, '0'))
-  }
-  return horas
-}
-
-const OPCIONES_HORAS = generarOpcionesHoras(HORA_INICIO, HORA_FIN)
 
 interface TimePickerProps {
   value?: string
@@ -42,61 +41,124 @@ interface TimePickerProps {
 }
 
 const TimePicker = ({ value = '', onChange, hasError }: TimePickerProps) => {
-  const [hh, mm] = value && value.includes(':') ? value.split(':') : ['', '']
+  const [hh = '', mm = ''] = value ? value.split(':') : []
 
-  const handleHourChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newHour = e.target.value
-    if (!newHour) {
-      onChange('')
-    } else {
-      onChange(`${newHour}:${mm || '00'}`)
-    }
+  const handleHourChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const nuevaHora = e.target.value
+    onChange(nuevaHora ? `${nuevaHora}:${mm || '00'}` : '')
   }
 
-  const handleMinuteChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newMinute = e.target.value
-    if (!newMinute) {
-      if (hh) onChange(`${hh}:00`)
-      else onChange('')
-    } else {
-      onChange(`${hh || '09'}:${newMinute}`)
+  const handleMinuteChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const nuevoMinuto = e.target.value
+    if (!hh) {
+      onChange(nuevoMinuto ? `09:${nuevoMinuto}` : '')
+      return
     }
+    onChange(`${hh}:${nuevoMinuto || '00'}`)
   }
+
+  const inputClass = `${styles.input} ${hasError ? styles.inputError : ''}`
 
   return (
-    <div
-      className={`${styles.timePicker} ${hasError ? styles.inputError : ''}`}
-    >
+    <div className={styles.timeFields}>
       <select
         value={hh}
         onChange={handleHourChange}
-        className={styles.timeSelect}
+        className={inputClass}
         aria-label="Hora"
       >
         <option value="">HH</option>
-        {OPCIONES_HORAS.map((h) => (
-          <option key={h} value={h}>
-            {h}
+        {HORAS.map((hora) => (
+          <option key={hora} value={hora}>
+            {hora}
           </option>
         ))}
       </select>
-      <span className={styles.timeSeparator}>:</span>
       <select
         value={mm}
         onChange={handleMinuteChange}
-        className={styles.timeSelect}
+        className={inputClass}
         aria-label="Minutos"
       >
         <option value="">MM</option>
-        {MINUTOS.map((m) => (
-          <option key={m} value={m}>
-            {m}
+        {MINUTOS.map((minuto) => (
+          <option key={minuto} value={minuto}>
+            {minuto}
           </option>
         ))}
       </select>
     </div>
   )
 }
+
+interface ApiErrorBody {
+  message?: unknown
+  details?: unknown
+}
+
+const getApiErrorMessage = (error: unknown, fallback: string): string => {
+  if (!isAxiosError(error)) return fallback
+
+  const data: unknown = error.response?.data
+  if (!data || typeof data !== 'object') return fallback
+
+  const body = data as ApiErrorBody
+  if (typeof body.message === 'string' && body.message.trim().length > 0) {
+    return body.message
+  }
+
+  if (Array.isArray(body.details)) {
+    const detail = body.details.find(
+      (item): item is string =>
+        typeof item === 'string' && item.trim().length > 0
+    )
+    if (detail) return detail
+  }
+
+  return fallback
+}
+
+interface ProfesionalFieldProps {
+  registration: UseFormRegisterReturn<'profesionalId'>
+  profesionales: Profesional[]
+  isLoading: boolean
+  error?: string
+}
+
+const ProfesionalField = ({
+  registration,
+  profesionales,
+  isLoading,
+  error,
+}: ProfesionalFieldProps) => (
+  <div className={styles.field}>
+    <label htmlFor="turno-profesional">Profesional</label>
+    <select
+      id="turno-profesional"
+      {...registration}
+      className={styles.input}
+      disabled={isLoading}
+    >
+      <option value={0}>Seleccione un profesional...</option>
+      {profesionales.map((profesional) => (
+        <option key={profesional.id} value={profesional.id}>
+          {profesional.nombre} {profesional.apellido}
+          {profesional.matricula ? ` (${profesional.matricula})` : ''}
+        </option>
+      ))}
+    </select>
+    {isLoading && (
+      <span className={styles.hint}>Cargando profesionales...</span>
+    )}
+    {!isLoading && profesionales.length === 0 && (
+      <span className={styles.hint}>
+        No hay profesionales disponibles. Creá uno desde la sección
+        Profesionales.
+      </span>
+    )}
+    {error && <span className={styles.error}>{error}</span>}
+  </div>
+)
 
 interface TurnoFormModalProps {
   isOpen: boolean
@@ -115,27 +177,48 @@ export const TurnoFormModal = ({
 }: TurnoFormModalProps) => {
   const [activeTab, setActiveTab] = useState<TabType>(initialTab)
   const [prevIsOpen, setPrevIsOpen] = useState(isOpen)
+  const [apiError, setApiError] = useState<string | null>(null)
 
   if (isOpen !== prevIsOpen) {
     setPrevIsOpen(isOpen)
     if (isOpen) {
       setActiveTab(initialTab)
+      setApiError(null)
     }
   }
 
   const { user } = useAuth()
+  const isAdmin = user?.role === ROLES.ADMIN
   const profesionalId = user?.id ? parseInt(user.id) : 0
-  const { data: pacientesVinculadosData } = usePacientesVinculados({
-    page: 1,
-    pageSize: 100,
-  })
-  const pacientes = pacientesVinculadosData?.items
+  const profesionalIdPorDefecto = isAdmin ? 0 : profesionalId
+  const fechaKey = format(defaultFecha || new Date(), 'yyyy-MM-dd')
+
+  const { profesionales, isLoadingProfesionales } = useProfesionales()
+  const profesionalesDisponibles = (profesionales ?? [])
+    .filter((profesional) => profesional.id !== profesionalId)
+    .sort((a, b) =>
+      `${a.apellido} ${a.nombre}`.localeCompare(`${b.apellido} ${b.nombre}`)
+    )
+  const sinProfesionalesDisponibles =
+    isAdmin && (isLoadingProfesionales || profesionalesDisponibles.length === 0)
+
+  const { data: pacientesVinculadosData } = usePacientesVinculados(
+    { page: 1, pageSize: 100 },
+    !isAdmin
+  )
+  const { data: pacientesTodosData } = usePacientesTodos(
+    { page: 1, pageSize: 100 },
+    isAdmin
+  )
+  const pacientes = isAdmin
+    ? pacientesTodosData?.items
+    : pacientesVinculadosData?.items
 
   const createSueltoMutation = useCreateTurnoSuelto()
   const createFijoMutation = useCreateTurnoFijo()
 
   const getValoresDefaultSuelto = (fecha?: Date): CrearTurnoFormDto => ({
-    profesionalId,
+    profesionalId: profesionalIdPorDefecto,
     pacienteId: '' as unknown as number,
     fecha: format(fecha || new Date(), 'yyyy-MM-dd'),
     hora: '',
@@ -145,7 +228,7 @@ export const TurnoFormModal = ({
   const getValoresDefaultFijo = (fecha?: Date): CrearTurnoFijoDto => {
     const d = fecha || new Date()
     return {
-      profesionalId,
+      profesionalId: profesionalIdPorDefecto,
       pacienteId: '' as unknown as number,
       fechaInicio: format(d, 'yyyy-MM-dd'),
       fechaFin: '',
@@ -172,12 +255,27 @@ export const TurnoFormModal = ({
       formFijo.reset(getValoresDefaultFijo(defaultFecha))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, defaultFecha, profesionalId])
+  }, [isOpen, fechaKey, profesionalId, isAdmin])
+
+  const handleClose = () => {
+    setApiError(null)
+    onClose()
+  }
+
+  const handleTabChange = (tab: TabType) => {
+    setActiveTab(tab)
+    setApiError(null)
+  }
 
   const onSubmitSuelto = (data: CrearTurnoFormDto) => {
+    setApiError(null)
+    const profesionalSeleccionado = isAdmin
+      ? Number(data.profesionalId)
+      : profesionalId
+
     const formattedData: CrearTurnoDto = {
       pacienteId: Number(data.pacienteId),
-      profesionalId,
+      profesionalId: profesionalSeleccionado,
       fechaHora: `${data.fecha}T${data.hora}:00`,
       duracionMin: Number(data.duracionMin),
     }
@@ -185,16 +283,29 @@ export const TurnoFormModal = ({
     createSueltoMutation.mutate(formattedData, {
       onSuccess: () => {
         formSuelto.reset(getValoresDefaultSuelto(defaultFecha))
-        onClose()
+        handleClose()
+      },
+      onError: (error) => {
+        setApiError(
+          getApiErrorMessage(
+            error,
+            'No se pudo crear el turno. Intentá nuevamente.'
+          )
+        )
       },
     })
   }
 
   const onSubmitFijo = (data: CrearTurnoFijoDto) => {
+    setApiError(null)
+    const profesionalSeleccionado = isAdmin
+      ? Number(data.profesionalId)
+      : profesionalId
+
     const formattedData: CrearTurnoFijoDto = {
       ...data,
       pacienteId: Number(data.pacienteId),
-      profesionalId,
+      profesionalId: profesionalSeleccionado,
       diaSemana: Number(data.diaSemana),
       duracionMin: Number(data.duracionMin),
       fechaFin: data.fechaFin || undefined,
@@ -203,23 +314,31 @@ export const TurnoFormModal = ({
     createFijoMutation.mutate(formattedData, {
       onSuccess: () => {
         formFijo.reset(getValoresDefaultFijo(defaultFecha))
-        onClose()
+        handleClose()
+      },
+      onError: (error) => {
+        setApiError(
+          getApiErrorMessage(
+            error,
+            'No se pudo crear el turno fijo. Intentá nuevamente.'
+          )
+        )
       },
     })
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Crear Nuevo Turno">
+    <Modal isOpen={isOpen} onClose={handleClose} title="Crear Nuevo Turno">
       <div className={styles.tabs}>
         <button
           className={`${styles.tab} ${activeTab === 'suelto' ? styles.activeTab : ''}`}
-          onClick={() => setActiveTab('suelto')}
+          onClick={() => handleTabChange('suelto')}
         >
           Turno Único
         </button>
         <button
           className={`${styles.tab} ${activeTab === 'fijo' ? styles.activeTab : ''}`}
-          onClick={() => setActiveTab('fijo')}
+          onClick={() => handleTabChange('fijo')}
         >
           Turno Fijo (Recurrente)
         </button>
@@ -231,6 +350,17 @@ export const TurnoFormModal = ({
             onSubmit={formSuelto.handleSubmit(onSubmitSuelto)}
             className={styles.form}
           >
+            {isAdmin && (
+              <ProfesionalField
+                registration={formSuelto.register('profesionalId', {
+                  valueAsNumber: true,
+                })}
+                profesionales={profesionalesDisponibles}
+                isLoading={isLoadingProfesionales}
+                error={formSuelto.formState.errors.profesionalId?.message}
+              />
+            )}
+
             <div className={styles.field}>
               <label>Paciente</label>
               <select
@@ -244,6 +374,11 @@ export const TurnoFormModal = ({
                   </option>
                 ))}
               </select>
+              {isAdmin && (
+                <span className={styles.hint}>
+                  El paciente debe estar vinculado al profesional seleccionado.
+                </span>
+              )}
               {formSuelto.formState.errors.pacienteId && (
                 <span className={styles.error}>
                   {formSuelto.formState.errors.pacienteId.message}
@@ -300,11 +435,17 @@ export const TurnoFormModal = ({
               )}
             </div>
 
+            {apiError && <p className={styles.apiError}>{apiError}</p>}
+
             <div className={styles.actions}>
-              <Button type="button" variant="ghost" onClick={onClose}>
+              <Button type="button" variant="ghost" onClick={handleClose}>
                 Cancelar
               </Button>
-              <Button type="submit" isLoading={createSueltoMutation.isPending}>
+              <Button
+                type="submit"
+                isLoading={createSueltoMutation.isPending}
+                disabled={sinProfesionalesDisponibles}
+              >
                 Crear Turno
               </Button>
             </div>
@@ -314,6 +455,17 @@ export const TurnoFormModal = ({
             onSubmit={formFijo.handleSubmit(onSubmitFijo)}
             className={styles.form}
           >
+            {isAdmin && (
+              <ProfesionalField
+                registration={formFijo.register('profesionalId', {
+                  valueAsNumber: true,
+                })}
+                profesionales={profesionalesDisponibles}
+                isLoading={isLoadingProfesionales}
+                error={formFijo.formState.errors.profesionalId?.message}
+              />
+            )}
+
             <div className={styles.field}>
               <label>Paciente</label>
               <select
@@ -327,6 +479,11 @@ export const TurnoFormModal = ({
                   </option>
                 ))}
               </select>
+              {isAdmin && (
+                <span className={styles.hint}>
+                  El paciente debe estar vinculado al profesional seleccionado.
+                </span>
+              )}
               {formFijo.formState.errors.pacienteId && (
                 <span className={styles.error}>
                   {formFijo.formState.errors.pacienteId.message}
@@ -414,11 +571,17 @@ export const TurnoFormModal = ({
               )}
             </div>
 
+            {apiError && <p className={styles.apiError}>{apiError}</p>}
+
             <div className={styles.actions}>
-              <Button type="button" variant="ghost" onClick={onClose}>
+              <Button type="button" variant="ghost" onClick={handleClose}>
                 Cancelar
               </Button>
-              <Button type="submit" isLoading={createFijoMutation.isPending}>
+              <Button
+                type="submit"
+                isLoading={createFijoMutation.isPending}
+                disabled={sinProfesionalesDisponibles}
+              >
                 Crear Turno Fijo
               </Button>
             </div>
