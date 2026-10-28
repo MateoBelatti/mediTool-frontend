@@ -1,0 +1,117 @@
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 1.5rem;
+}
+
+.tab {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  color: var(--text-secondary);
+}
+
+.activeTab {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.formContainer {
+  padding-bottom: 0.5rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.fieldRow {
+  display: flex;
+  gap: 1rem;
+}
+
+.fieldRow > .field {
+  flex: 1;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field label {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.input {
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  background-color: white;
+}
+
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.input.inputError {
+  border-color: var(--danger);
+}
+
+.timeFields {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.timeFields > select {
+  flex: 1;
+  min-width: 0;
+}
+
+.error {
+  color: var(--danger);
+  font-size: var(--text-xs);
+  margin-top: 0.25rem;
+}
+
+.hint {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+.apiError {
+  padding: 0.75rem;
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-alt);
+  color: var(--danger);
+  font-size: var(--text-sm);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}

@@ -1,0 +1,34 @@
+export interface LoginRequestDto {
+  email: string
+  password: string
+}
+
+export interface RefreshTokenRequestDto {
+  refreshToken: string
+}
+
+export interface AuthResponseDto {
+  accessToken: string
+  refreshToken?: string
+}
+
+export interface UserClaims {
+  sub?: string
+  email?: string
+  name?: string
+  exp?: number
+  // Fallbacks for .NET default claims mapping
+  'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'?: string
+  'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'?: string
+  'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'?: string
+  role?: string
+  'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'?: string
+  [key: string]: unknown
+}
+
+export interface User {
+  id: string
+  email: string
+  name: string
+  role: string
+}

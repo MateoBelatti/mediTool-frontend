@@ -1,0 +1,158 @@
+.listContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.listItem {
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+  border: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.listItem:hover {
+  transform: translateX(4px);
+  box-shadow: var(--shadow-sm);
+  border-color: var(--border-color);
+}
+
+.itemMainInfo {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.reunionInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 200px;
+}
+
+.reunionTitle {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  min-width: 0;
+  word-break: break-word;
+}
+
+.datetimeInfo {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.infoCol {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+.icon {
+  color: var(--border-color);
+  flex-shrink: 0;
+}
+
+.itemBadges {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.editButton {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.editButton:hover {
+  background-color: var(--surface-alt);
+  color: var(--accent);
+}
+
+@media (max-width: 1024px) {
+  .listItem {
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .itemMainInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .reunionInfo {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .datetimeInfo {
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    width: 100%;
+  }
+
+  .itemBadges {
+    gap: 0.5rem;
+  }
+}
+
+.loadingContainer,
+.emptyContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: var(--text-muted);
+  background: white;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+}
+
+.emptyIcon {
+  color: var(--border-color);
+  margin-bottom: 1rem;
+}
+
+.spinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 3px solid var(--surface-alt);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

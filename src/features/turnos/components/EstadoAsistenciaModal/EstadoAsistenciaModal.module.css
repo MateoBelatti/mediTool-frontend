@@ -1,0 +1,176 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal {
+  background: white;
+  border-radius: var(--radius-lg);
+  width: 90%;
+  max-width: 400px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.header {
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.title {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-1) 0;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: var(--space-1);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.closeBtn:hover {
+  background: var(--border-color);
+  color: var(--text-secondary);
+}
+
+.content {
+  padding: var(--space-6);
+}
+
+.instruction {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-4) 0;
+  font-weight: 500;
+}
+
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.optionBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  background: var(--surface-color);
+  color: var(--text-secondary);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.optionBtn:hover {
+  transform: translateY(-1px);
+}
+
+.optionBtn.selected {
+  border-width: 2px;
+}
+
+/* Colors for specific statuses */
+.optPendiente:hover {
+  background: var(--border-color);
+  color: var(--text-secondary);
+}
+.optPendiente.selected {
+  background: var(--border-color);
+  border-color: var(--text-muted);
+  color: var(--text-secondary);
+}
+
+.optPresente:hover {
+  background: var(--success);
+  color: white;
+}
+.optPresente.selected {
+  background: var(--success);
+  border-color: var(--success);
+  color: white;
+}
+
+.optAusente:hover {
+  background: var(--danger);
+  color: white;
+}
+.optAusente.selected {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: white;
+}
+
+.optReprogramado:hover {
+  background: var(--warning);
+  color: white;
+}
+.optReprogramado.selected {
+  background: var(--warning);
+  border-color: var(--warning);
+  color: white;
+}
+
+.optCancelado:hover {
+  background: var(--surface-alt);
+  color: var(--text-secondary);
+}
+.optCancelado.selected {
+  background: var(--surface-alt);
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
