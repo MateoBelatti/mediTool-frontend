@@ -1,4 +1,3 @@
-
 import { Calendar, Users, MapPin, Pencil } from 'lucide-react'
 import type { ReunionResponseDto } from '../../schemas/reuniones.schema'
 import styles from './ReunionesGrid.module.css'
@@ -7,6 +6,7 @@ interface ReunionesGridProps {
   reuniones: ReunionResponseDto[]
   isLoading: boolean
   onEditClick: (reunion: ReunionResponseDto) => void
+  puedeEditar: (reunion: ReunionResponseDto) => boolean
   tituloSearch: string
 }
 
@@ -14,6 +14,7 @@ export const ReunionesGrid = ({
   reuniones,
   isLoading,
   onEditClick,
+  puedeEditar,
   tituloSearch,
 }: ReunionesGridProps) => {
   if (isLoading) {
@@ -54,6 +55,13 @@ export const ReunionesGrid = ({
     <div className={styles.listContainer}>
       {reunionesFiltradas.map((reunion) => {
         const { fecha, hora } = formatFechaHora(reunion.fechaHora)
+        const profesionales = reunion.profesionales ?? []
+        const nombresProfesionales = profesionales
+          .map(
+            (profesional) => `${profesional.apellido}, ${profesional.nombre}`
+          )
+          .join(' · ')
+
         return (
           <div key={reunion.id} className={styles.listItem}>
             <div className={styles.itemMainInfo}>
@@ -71,20 +79,30 @@ export const ReunionesGrid = ({
                   <MapPin size={16} className={styles.icon} />
                   <span>{reunion.modalidad || 'No definida'}</span>
                 </div>
+                {profesionales.length > 0 && (
+                  <div className={styles.infoCol} title={nombresProfesionales}>
+                    <Users size={16} className={styles.icon} />
+                    <span className={styles.profesionalesText}>
+                      {nombresProfesionales}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
             <div className={styles.itemBadges}>
-              <button
-                className={styles.editButton}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onEditClick(reunion)
-                }}
-                aria-label="Editar reunión"
-              >
-                <Pencil size={18} />
-              </button>
+              {puedeEditar(reunion) && (
+                <button
+                  className={styles.editButton}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onEditClick(reunion)
+                  }}
+                  aria-label="Editar reunión"
+                >
+                  <Pencil size={18} />
+                </button>
+              )}
             </div>
           </div>
         )

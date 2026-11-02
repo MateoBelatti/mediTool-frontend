@@ -60,6 +60,7 @@ export const TurnoSchema = z.object({
   fechaRegistro: z.string().optional(),
   fechaRegistroAsistencia: z.string().nullable().optional(),
   observaciones: z.string().nullable().optional(),
+  informeId: z.number().nullable().optional(),
   paciente: PacienteBasicoSchema.optional(),
   profesional: ProfesionalBasicoSchema.optional(),
 })

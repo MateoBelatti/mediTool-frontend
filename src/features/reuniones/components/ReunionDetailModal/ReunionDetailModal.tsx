@@ -1,4 +1,4 @@
-import { Calendar, Clock, MapPin } from 'lucide-react'
+import { Calendar, Clock, MapPin, Users } from 'lucide-react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { Modal } from '@/shared/components/Modal/Modal'
@@ -31,6 +31,7 @@ export const ReunionDetailModal = ({
         { locale: es }
       )
     : null
+  const profesionales = reunion.profesionales ?? []
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Detalle de la Reunión">
@@ -58,6 +59,22 @@ export const ReunionDetailModal = ({
               </p>
             </div>
           </div>
+
+          {profesionales.length > 0 && (
+            <div className={styles.infoRow}>
+              <Users size={18} className={styles.icon} />
+              <div>
+                <p className={styles.label}>Profesionales asignados</p>
+                <ul className={styles.profesionalesList}>
+                  {profesionales.map((profesional) => (
+                    <li key={profesional.id} className={styles.profesionalItem}>
+                      {profesional.apellido}, {profesional.nombre}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
 
           {creadaEl && (
             <div className={styles.infoRow}>
