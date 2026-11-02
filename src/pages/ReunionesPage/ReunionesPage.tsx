@@ -1,6 +1,9 @@
-import {  useState, useMemo  } from 'react'
-import { useAuth } from '@/features/auth/hooks/useAuth'
-import { useReunionesByProfesionalId } from '@/features/reuniones/hooks/useReuniones'
+import { useState, useMemo } from 'react'
+import { ROLES, useAuth } from '@/features/auth/hooks/useAuth'
+import {
+  useReuniones,
+  useReunionesByProfesionalId,
+} from '@/features/reuniones/hooks/useReuniones'
 import { ReunionesFilters } from '@/features/reuniones/components/ReunionesFilters/ReunionesFilters'
 import { ReunionesGrid } from '@/features/reuniones/components/ReunionesGrid/ReunionesGrid'
 import { ReunionFormModal } from '@/features/reuniones/components/ReunionFormModal/ReunionFormModal'
@@ -10,9 +13,15 @@ import styles from './ReunionesPage.module.css'
 export const ReunionesPage = () => {
   const { user } = useAuth()
   const profesionalId = user?.id ? parseInt(user.id) : 0
+  const isAdmin = user?.role === ROLES.ADMIN
 
-  const { data: reuniones, isLoading: isLoadingReuniones } =
-    useReunionesByProfesionalId(profesionalId)
+  const { data: reunionesAdmin, isLoading: isLoadingAdmin } =
+    useReuniones(isAdmin)
+  const { data: reunionesPropias, isLoading: isLoadingPropias } =
+    useReunionesByProfesionalId(profesionalId, !isAdmin)
+
+  const reuniones = isAdmin ? reunionesAdmin : reunionesPropias
+  const isLoadingReuniones = isAdmin ? isLoadingAdmin : isLoadingPropias
 
   const [fechaDesde, setFechaDesde] = useState('')
   const [fechaHasta, setFechaHasta] = useState('')
@@ -53,6 +62,9 @@ export const ReunionesPage = () => {
     setIsModalOpen(true)
   }
 
+  const puedeEditarReunion = (reunion: ReunionResponseDto) =>
+    isAdmin || reunion.profesionalId === profesionalId
+
   return (
     <div className={styles.pageContainer}>
       <div className={styles.content}>
@@ -70,6 +82,7 @@ export const ReunionesPage = () => {
           reuniones={reunionesFiltradas}
           isLoading={isLoadingReuniones}
           onEditClick={handleEditReunion}
+          puedeEditar={puedeEditarReunion}
           tituloSearch={tituloSearch}
         />
       </div>

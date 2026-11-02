@@ -62,6 +62,13 @@
   white-space: nowrap;
 }
 
+.profesionalesText {
+  max-width: 18rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .icon {
   color: var(--border-color);
   flex-shrink: 0;
