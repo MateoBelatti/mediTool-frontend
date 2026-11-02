@@ -11,6 +11,7 @@ import { TurnoFijoProfilePage } from '@/pages/TurnoFijoProfilePage/TurnoFijoProf
 import { AsistenciasPage } from '@/pages/AsistenciasPage/AsistenciasPage'
 import { InformesPage } from '@/pages/InformesPage/InformesPage'
 import { ReunionesPage } from '@/pages/ReunionesPage/ReunionesPage'
+import { PerfilPage } from '@/pages/PerfilPage/PerfilPage'
 
 import { ProtectedRoute } from './ProtectedRoute'
 
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
       {
         path: 'reuniones',
         element: <ReunionesPage />,
+      },
+      {
+        path: 'perfil',
+        element: <PerfilPage />,
       },
       {
         path: '*',

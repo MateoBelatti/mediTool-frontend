@@ -13,6 +13,7 @@ import {
   ChevronLeft,
   Activity,
   Stethoscope,
+  User,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { SidebarItem } from './SidebarItem'
@@ -75,6 +76,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
   }
 
   const toolsItems = [
+    { icon: User, label: 'Perfil', path: '/perfil' },
     { icon: Settings, label: 'Configuración', path: '/configuracion' },
     { icon: LogOut, label: 'Salir', onClick: handleLogout },
   ]
