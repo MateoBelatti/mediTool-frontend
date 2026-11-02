@@ -12,10 +12,11 @@ export const REUNIONES_KEYS = {
     [...REUNIONES_KEYS.all, 'profesional', profesionalId] as const,
 }
 
-export const useReuniones = () =>
+export const useReuniones = (enabled = true) =>
   useQuery({
     queryKey: REUNIONES_KEYS.all,
     queryFn: () => reunionesService.getAll(),
+    enabled,
   })
 
 export const useReunionById = (id: number) =>
@@ -25,11 +26,14 @@ export const useReunionById = (id: number) =>
     enabled: !!id,
   })
 
-export const useReunionesByProfesionalId = (profesionalId: number) =>
+export const useReunionesByProfesionalId = (
+  profesionalId: number,
+  enabled = true
+) =>
   useQuery({
     queryKey: REUNIONES_KEYS.byProfesional(profesionalId),
     queryFn: () => reunionesService.getByProfesionalId(profesionalId),
-    enabled: !!profesionalId,
+    enabled: enabled && !!profesionalId,
   })
 
 export const useCreateReunion = () => {
