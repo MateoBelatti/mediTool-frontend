@@ -6,12 +6,10 @@ import {
   FileText,
   User,
   Calendar,
-  Plus,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
-import { Button } from '@/shared/components/Button/Button'
 import styles from './DailyAgenda.module.css'
 import type { Turno } from '../../turnos/types/turnos.types'
 import type { ReunionResponseDto } from '../../reuniones/schemas/reuniones.schema'
@@ -20,7 +18,6 @@ interface DailyAgendaProps {
   selectedDate: Date
   turnosDelDia?: Turno[]
   reunionesDelDia?: ReunionResponseDto[]
-  onAddTurno?: () => void
   onReunionClick?: (reunion: ReunionResponseDto) => void
 }
 
@@ -42,7 +39,6 @@ export const DailyAgenda = ({
   selectedDate,
   turnosDelDia = [],
   reunionesDelDia = [],
-  onAddTurno,
   onReunionClick,
 }: DailyAgendaProps) => {
   const navigate = useNavigate()
@@ -100,11 +96,6 @@ export const DailyAgenda = ({
             {fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1)}
           </span>
         </div>
-        {onAddTurno && (
-          <Button size="sm" leftIcon={<Plus size={16} />} onClick={onAddTurno}>
-            Nuevo turno
-          </Button>
-        )}
       </div>
 
       {agendaItems.length > 0 ? (
@@ -239,17 +230,6 @@ export const DailyAgenda = ({
         <div className={styles.emptyState}>
           <CalendarX2 size={48} strokeWidth={1} />
           <p>No hay turnos ni reuniones programadas para este día.</p>
-          {onAddTurno && (
-            <Button
-              size="sm"
-              variant="outline"
-              leftIcon={<Plus size={16} />}
-              onClick={onAddTurno}
-              style={{ marginTop: 'var(--space-3)' }}
-            >
-              Nuevo turno
-            </Button>
-          )}
         </div>
       )}
     </div>

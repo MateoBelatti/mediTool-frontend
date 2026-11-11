@@ -49,6 +49,11 @@ const ReunionesPage = lazy(() =>
     default: m.ReunionesPage,
   }))
 )
+const PerfilPage = lazy(() =>
+  import('@/pages/PerfilPage/PerfilPage').then((m) => ({
+    default: m.PerfilPage,
+  }))
+)
 const NotFoundPage = lazy(() =>
   import('@/pages/NotFoundPage/NotFoundPage').then((m) => ({
     default: m.NotFoundPage,
@@ -107,6 +112,10 @@ const router = createBrowserRouter([
       {
         path: 'reuniones',
         element: <ReunionesPage />,
+      },
+      {
+        path: 'perfil',
+        element: <PerfilPage />,
       },
       {
         path: '*',

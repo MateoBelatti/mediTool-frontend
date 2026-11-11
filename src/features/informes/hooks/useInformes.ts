@@ -63,6 +63,7 @@ export const useUpdateInforme = () => {
       queryClient.invalidateQueries({
         queryKey: INFORMES_KEYS.detail(variables.id),
       })
+      queryClient.invalidateQueries({ queryKey: TURNOS_KEYS.all })
     },
   })
 }
@@ -74,6 +75,7 @@ export const useDeleteInforme = () => {
     onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: INFORMES_KEYS.all })
       queryClient.invalidateQueries({ queryKey: INFORMES_KEYS.detail(id) })
+      queryClient.invalidateQueries({ queryKey: TURNOS_KEYS.all })
     },
   })
 }
