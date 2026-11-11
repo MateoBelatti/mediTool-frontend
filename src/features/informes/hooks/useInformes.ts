@@ -11,6 +11,8 @@ export const INFORMES_KEYS = {
   detail: (id: number) => [...INFORMES_KEYS.all, 'detail', id] as const,
   byProfesional: (profesionalId: number) =>
     [...INFORMES_KEYS.all, 'profesional', profesionalId] as const,
+  byPaciente: (pacienteId: number) =>
+    [...INFORMES_KEYS.all, 'paciente', pacienteId] as const,
   byTurno: (turnoId: number) =>
     [...INFORMES_KEYS.all, 'turno', turnoId] as const,
 }
@@ -40,6 +42,28 @@ export const useInformesByProfesionalId = (profesionalId: number) =>
     queryKey: INFORMES_KEYS.byProfesional(profesionalId),
     queryFn: () => informesService.getByProfesionalId(profesionalId),
     enabled: !!profesionalId,
+  })
+
+export const useInformesByPacienteId = (
+  pacienteId: number,
+  profesionalId: number,
+  isAdmin: boolean
+) =>
+  useQuery({
+    queryKey: [
+      ...INFORMES_KEYS.byPaciente(pacienteId),
+      isAdmin ? 'admin' : profesionalId,
+    ],
+    queryFn: async () => {
+      const informes = isAdmin
+        ? await informesService.getAll()
+        : await informesService.getByProfesionalId(profesionalId)
+
+      return informes
+        .filter((informe) => informe.pacienteId === pacienteId)
+        .sort((a, b) => b.fecha.localeCompare(a.fecha))
+    },
+    enabled: !!pacienteId && (isAdmin || !!profesionalId),
   })
 
 export const useCreateInforme = () => {
