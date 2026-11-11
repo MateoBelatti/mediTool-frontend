@@ -12,6 +12,7 @@ import {
   ChevronLeft,
   Activity,
   Stethoscope,
+  User,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { SidebarItem } from './SidebarItem'
@@ -73,7 +74,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
     logout()
   }
 
-  const toolsItems = [{ icon: LogOut, label: 'Salir', onClick: handleLogout }]
+  const toolsItems = [
+    { icon: User, label: 'Perfil', path: '/perfil' },
+    { icon: LogOut, label: 'Salir', onClick: handleLogout },
+  ]
 
   return (
     <>
@@ -119,7 +123,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
             <h3 className={styles.sectionTitle}>Herramientas</h3>
             <div className={styles.itemsContainer}>
               {toolsItems.map((item) => (
-                <SidebarItem key={item.label} {...item} />
+                <SidebarItem key={item.path || item.label} {...item} />
               ))}
             </div>
           </div>

@@ -1,9 +1,10 @@
-import {  useEffect  } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Modal } from '@/shared/components/Modal/Modal'
 import { Button } from '@/shared/components/Button/Button'
-import { useAuth } from '@/features/auth/hooks/useAuth'
+import { ROLES, useAuth } from '@/features/auth/hooks/useAuth'
+import { useProfesionales } from '@/features/pacientes/hooks/useProfesionales'
 import {
   ReunionCreateSchema,
   type ReunionCreateDto,
@@ -25,9 +26,14 @@ export const ReunionFormModal = ({
 }: ReunionFormModalProps) => {
   const { user } = useAuth()
   const profesionalId = user?.id ? parseInt(user.id) : 0
+  const isAdmin = user?.role === ROLES.ADMIN
 
   const createMutation = useCreateReunion()
   const updateMutation = useUpdateReunion()
+  const { profesionales, isLoadingProfesionales } = useProfesionales()
+  const profesionalesOrdenados = [...(profesionales ?? [])].sort((a, b) =>
+    `${a.apellido} ${a.nombre}`.localeCompare(`${b.apellido} ${b.nombre}`)
+  )
 
   const form = useForm<ReunionCreateDto>({
     resolver: zodResolver(ReunionCreateSchema),
@@ -37,8 +43,11 @@ export const ReunionFormModal = ({
       fechaHora: '',
       modalidad: '',
       descripcion: '',
+      profesionalesIds: isAdmin ? [] : [profesionalId],
     },
   })
+
+  const profesionalesSeleccionados = form.watch('profesionalesIds') ?? []
 
   useEffect(() => {
     if (reunionToEdit) {
@@ -49,12 +58,21 @@ export const ReunionFormModal = ({
         .toISOString()
         .slice(0, 16)
 
+      const profesionalesAsignados =
+        reunionToEdit.profesionales?.map((profesional) => profesional.id) ?? []
+
       form.reset({
         profesionalId: reunionToEdit.profesionalId,
         titulo: reunionToEdit.titulo,
         fechaHora: localISOTime,
         modalidad: reunionToEdit.modalidad || '',
         descripcion: reunionToEdit.descripcion || '',
+        profesionalesIds:
+          profesionalesAsignados.length > 0
+            ? profesionalesAsignados
+            : isAdmin
+              ? []
+              : [profesionalId],
       })
     } else {
       form.reset({
@@ -63,14 +81,16 @@ export const ReunionFormModal = ({
         fechaHora: '',
         modalidad: '',
         descripcion: '',
+        profesionalesIds: isAdmin ? [] : [profesionalId],
       })
     }
-  }, [reunionToEdit, isOpen, form, profesionalId])
+  }, [reunionToEdit, isOpen, form, profesionalId, isAdmin])
 
   const onSubmit = (data: ReunionCreateDto) => {
     const formattedData = {
       ...data,
       profesionalId,
+      profesionalesIds: isAdmin ? data.profesionalesIds : [profesionalId],
     }
 
     if (reunionToEdit) {
@@ -110,6 +130,63 @@ export const ReunionFormModal = ({
             {form.formState.errors.titulo && (
               <span className={styles.error}>
                 {form.formState.errors.titulo.message}
+              </span>
+            )}
+          </div>
+
+          <div className={styles.field}>
+            <label>Profesionales asignados</label>
+            {isAdmin ? (
+              isLoadingProfesionales ? (
+                <span className={styles.helperText}>
+                  Cargando profesionales...
+                </span>
+              ) : profesionalesOrdenados.length === 0 ? (
+                <span className={styles.helperText}>
+                  No hay profesionales disponibles.
+                </span>
+              ) : (
+                <div className={styles.checkboxGrid}>
+                  {profesionalesOrdenados.map((profesional) => {
+                    const seleccionado = profesionalesSeleccionados.includes(
+                      profesional.id
+                    )
+                    return (
+                      <label
+                        key={profesional.id}
+                        className={styles.checkboxItem}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={seleccionado}
+                          onChange={(e) => {
+                            const nuevosIds = e.target.checked
+                              ? [...profesionalesSeleccionados, profesional.id]
+                              : profesionalesSeleccionados.filter(
+                                  (id) => id !== profesional.id
+                                )
+                            form.setValue('profesionalesIds', nuevosIds, {
+                              shouldDirty: true,
+                              shouldValidate: true,
+                            })
+                          }}
+                        />
+                        <span>
+                          {profesional.apellido}, {profesional.nombre}
+                        </span>
+                      </label>
+                    )
+                  })}
+                </div>
+              )
+            ) : (
+              <span className={styles.helperText}>
+                Quedarás asignado automáticamente a la reunión.
+              </span>
+            )}
+            {form.formState.errors.profesionalesIds && (
+              <span className={styles.error}>
+                {form.formState.errors.profesionalesIds.message}
               </span>
             )}
           </div>

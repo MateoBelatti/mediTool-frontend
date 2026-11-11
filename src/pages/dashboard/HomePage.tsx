@@ -10,7 +10,6 @@ import { useAuth } from '../../features/auth/hooks/useAuth'
 import { useAgendaTurnos } from '../../features/turnos/hooks/useTurnos'
 import { useReunionesByProfesionalId } from '../../features/reuniones/hooks/useReuniones'
 import { ReunionDetailModal } from '@/features/reuniones/components/ReunionDetailModal/ReunionDetailModal'
-import { TurnoFormModal } from '@/features/turnos/components/TurnoFormModal/TurnoFormModal'
 import {
   isSameDay,
   format,
@@ -30,7 +29,6 @@ export const HomePage = () => {
   const profesionalId = user?.id ? parseInt(user.id) : undefined
 
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
-  const [isTurnoModalOpen, setIsTurnoModalOpen] = useState(false)
   const [reunionSeleccionada, setReunionSeleccionada] =
     useState<ReunionResponseDto | null>(null)
 
@@ -164,7 +162,6 @@ export const HomePage = () => {
             selectedDate={selectedDate}
             turnosDelDia={turnosDelDia}
             reunionesDelDia={reunionesDelDia}
-            onAddTurno={() => setIsTurnoModalOpen(true)}
             onReunionClick={setReunionSeleccionada}
           />
         </div>
@@ -173,12 +170,6 @@ export const HomePage = () => {
           <QuickActions />
         </div>
       </div>
-
-      <TurnoFormModal
-        isOpen={isTurnoModalOpen}
-        onClose={() => setIsTurnoModalOpen(false)}
-        defaultFecha={selectedDate}
-      />
 
       <ReunionDetailModal
         isOpen={reunionSeleccionada !== null}
