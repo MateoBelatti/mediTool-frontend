@@ -26,6 +26,10 @@
   animation: slideUp 0.3s ease-out;
 }
 
+.lg {
+  max-width: min(1100px, 95vw);
+}
+
 .header {
   display: flex;
   justify-content: space-between;
