@@ -27,3 +27,8 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# Local tooling
+.opencode/
+AGENTS.md
+opencode.json

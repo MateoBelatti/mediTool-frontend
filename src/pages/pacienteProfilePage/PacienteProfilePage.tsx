@@ -12,17 +12,28 @@ import {
   Clock,
   Edit,
   GraduationCap,
+  FileText,
 } from 'lucide-react'
 import { pacienteService } from '@/features/pacientes/services/paciente.service'
 import { turnosService } from '@/features/turnos/services/turnos.service'
+import { useInformesByPacienteId } from '@/features/informes/hooks/useInformes'
 import { useAuth, ROLES } from '@/features/auth/hooks/useAuth'
 import { Button } from '@/shared/components/Button/Button'
 import { PatientFormModal } from '@/features/pacientes/components/PatientFormModal'
 import { usePacientes } from '@/features/pacientes/hooks/usePacientes'
 import { useProfesionales } from '@/features/pacientes/hooks/useProfesionales'
+import { DocumentosPaciente } from '@/features/documentos/components/DocumentosPaciente/DocumentosPaciente'
 import type { PacienteFormData } from '@/features/pacientes/schemas/paciente.schema'
 import { Modal } from '@/shared/components/Modal/Modal'
 import styles from './PacienteProfilePage.module.css'
+
+const formatFechaInforme = (fecha: string) => {
+  if (fecha.length === 10) {
+    const [year, month, day] = fecha.split('-')
+    return `${day}/${month}/${year}`
+  }
+  return new Date(fecha).toLocaleDateString()
+}
 
 export const PacienteProfilePage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -30,7 +41,9 @@ export const PacienteProfilePage: React.FC = () => {
   const { user } = useAuth()
   const isAdmin = user?.role === ROLES.ADMIN
 
-  const [activeTab, setActiveTab] = useState<'info' | 'turnos'>('info')
+  const [activeTab, setActiveTab] = useState<
+    'info' | 'turnos' | 'informes' | 'documentos'
+  >('info')
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [pacienteToUnlink, setPacienteToUnlink] = useState<number | null>(null)
   const queryClient = useQueryClient()
@@ -64,6 +77,9 @@ export const PacienteProfilePage: React.FC = () => {
       }),
     enabled: !!id && !!user?.id && !isAdmin,
   })
+
+  const { data: informesPaciente, isLoading: isLoadingInformes } =
+    useInformesByPacienteId(Number(id) || 0, Number(user?.id) || 0, isAdmin)
 
   const handleEditSubmit = (data: PacienteFormData) => {
     if (paciente) {
@@ -177,6 +193,18 @@ export const PacienteProfilePage: React.FC = () => {
           >
             Historial de Turnos
           </button>
+          <button
+            className={`${styles.tab} ${activeTab === 'informes' ? styles.active : ''}`}
+            onClick={() => setActiveTab('informes')}
+          >
+            Informes
+          </button>
+          <button
+            className={`${styles.tab} ${activeTab === 'documentos' ? styles.active : ''}`}
+            onClick={() => setActiveTab('documentos')}
+          >
+            Documentos
+          </button>
         </div>
 
         <div className={styles.content}>
@@ -273,6 +301,49 @@ export const PacienteProfilePage: React.FC = () => {
                   )
                 })()
               )}
+            </div>
+          )}
+
+          {activeTab === 'informes' && (
+            <div className={styles.turnosSection}>
+              {isLoadingInformes ? (
+                <p>Cargando informes...</p>
+              ) : informesPaciente && informesPaciente.length > 0 ? (
+                <ul className={styles.informesList}>
+                  {informesPaciente.map((informe) => (
+                    <li key={informe.id} className={styles.informeItem}>
+                      <div className={styles.informeHeader}>
+                        <FileText size={16} />
+                        <strong>{formatFechaInforme(informe.fecha)}</strong>
+                        <span>{informe.tipo || 'Sin tipo'}</span>
+                      </div>
+                      <div className={styles.turnoDetails}>
+                        {informe.turnoId && (
+                          <span>Turno #{informe.turnoId}</span>
+                        )}
+                        {informe.estado && (
+                          <span className={styles.statusBadge}>
+                            {informe.estado}
+                          </span>
+                        )}
+                      </div>
+                      {informe.contenido && (
+                        <p className={styles.informeContenido}>
+                          {informe.contenido}
+                        </p>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No hay informes registrados para este paciente.</p>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'documentos' && (
+            <div className={styles.documentosSection}>
+              <DocumentosPaciente pacienteId={paciente.id} />
             </div>
           )}
         </div>
