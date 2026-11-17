@@ -13,7 +13,6 @@ import {
   Edit,
   GraduationCap,
   FileText,
-  FolderOpen,
 } from 'lucide-react'
 import { pacienteService } from '@/features/pacientes/services/paciente.service'
 import { turnosService } from '@/features/turnos/services/turnos.service'
@@ -23,6 +22,7 @@ import { Button } from '@/shared/components/Button/Button'
 import { PatientFormModal } from '@/features/pacientes/components/PatientFormModal'
 import { usePacientes } from '@/features/pacientes/hooks/usePacientes'
 import { useProfesionales } from '@/features/pacientes/hooks/useProfesionales'
+import { DocumentosPaciente } from '@/features/documentos/components/DocumentosPaciente/DocumentosPaciente'
 import type { PacienteFormData } from '@/features/pacientes/schemas/paciente.schema'
 import { Modal } from '@/shared/components/Modal/Modal'
 import styles from './PacienteProfilePage.module.css'
@@ -342,9 +342,8 @@ export const PacienteProfilePage: React.FC = () => {
           )}
 
           {activeTab === 'documentos' && (
-            <div className={styles.emptyState}>
-              <FolderOpen size={40} className={styles.emptyStateIcon} />
-              <p>La sección de documentos estará disponible próximamente.</p>
+            <div className={styles.documentosSection}>
+              <DocumentosPaciente pacienteId={paciente.id} />
             </div>
           )}
         </div>
