@@ -4,10 +4,8 @@ import { useAuth } from '@/features/auth/hooks/useAuth'
 import { usePacientes } from '@/features/pacientes/hooks/usePacientes'
 import { useInformesByProfesionalId } from '@/features/informes/hooks/useInformes'
 import { InformesFilters } from '@/features/informes/components/InformesFilters/InformesFilters'
-import {
-  InformesGrid,
-  type InformeWithPaciente,
-} from '@/features/informes/components/InformesGrid/InformesGrid'
+import { InformesTimeline } from '@/features/informes/components/InformesTimeline/InformesTimeline'
+import type { InformeWithPaciente } from '@/features/informes/types/informes.types'
 import { InformeFormModal } from '@/features/informes/components/InformeFormModal/InformeFormModal'
 import { InformeDetailModal } from '@/features/informes/components/InformeDetailModal/InformeDetailModal'
 import styles from './InformesPage.module.css'
@@ -32,6 +30,8 @@ export const InformesPage = () => {
   const [pacienteSearch, setPacienteSearch] = useState('')
 
   const [informeToEdit, setInformeToEdit] =
+    useState<InformeWithPaciente | null>(null)
+  const [detailInforme, setDetailInforme] =
     useState<InformeWithPaciente | null>(null)
 
   // Enriquecer informes con datos del paciente
@@ -125,10 +125,16 @@ export const InformesPage = () => {
 
   const handleEditFromDetail = (informe: InformeWithPaciente) => {
     navigate(location.pathname, { replace: true, state: {} })
+    setDetailInforme(null)
     handleEditInforme(informe)
   }
 
+  const handleViewInforme = (informe: InformeWithPaciente) => {
+    setDetailInforme(informe)
+  }
+
   const handleCloseDetail = () => {
+    setDetailInforme(null)
     if (viewInformeForTurnoId) {
       navigate(location.pathname, { replace: true, state: {} })
     }
@@ -156,11 +162,11 @@ export const InformesPage = () => {
           onNewInformeClick={handleNewInforme}
         />
 
-        <InformesGrid
+        <InformesTimeline
           informes={informesFiltrados}
           isLoading={isLoadingInformes}
-          onEditClick={handleEditInforme}
           pacienteSearch={pacienteSearch}
+          onViewClick={handleViewInforme}
         />
       </div>
 
@@ -174,9 +180,9 @@ export const InformesPage = () => {
       />
 
       <InformeDetailModal
-        isOpen={!!viewInformeForTurnoId}
+        isOpen={!!viewInformeForTurnoId || !!detailInforme}
         onClose={handleCloseDetail}
-        informe={informeByTurno}
+        informe={informeByTurno ?? detailInforme}
         onEdit={handleEditFromDetail}
       />
     </div>
