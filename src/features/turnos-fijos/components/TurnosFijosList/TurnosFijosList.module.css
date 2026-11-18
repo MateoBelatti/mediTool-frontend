@@ -12,7 +12,7 @@
 }
 
 .card {
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-md);
   padding: 1.5rem;
   box-shadow: var(--shadow-sm);
@@ -60,8 +60,8 @@
 
 .badgeInactivo {
   font-size: 0.7rem;
-  background-color: var(--danger);
-  color: white;
+  background-color: var(--badge-ausente-bg);
+  color: var(--badge-ausente-text);
   padding: 0.2rem 0.5rem;
   border-radius: var(--radius-sm);
   font-weight: 600;
@@ -94,7 +94,7 @@
   justify-content: center;
   padding: 4rem 2rem;
   color: var(--text-muted);
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   text-align: center;

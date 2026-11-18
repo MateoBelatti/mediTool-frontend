@@ -1,19 +1,81 @@
 :root {
-  --bg-color: #faf9f5;
-  --surface-color: #ffffff;
+  color-scheme: light;
+
+  /* Superficies */
+  --bg-main: #faf9f5;
+  --bg-card: #ffffff;
+  --bg-sidebar: #22302a;
   --surface-alt: #f1efe9;
+  --input-bg: #ffffff;
+
+  /* Bordes y overlays */
   --border-color: #e3e0d6;
+  --border-subtle: rgba(31, 36, 32, 0.06);
+  --overlay-bg: rgba(0, 0, 0, 0.5);
+  --overlay-soft: rgba(0, 0, 0, 0.2);
+
+  /* Textos */
   --text-primary: #1f2420;
   --text-secondary: #5b6660;
   --text-muted: #8b948c;
-  --sidebar-bg: #22302a;
   --sidebar-text: #edefea;
-  --accent: #4a6b5c;
-  --accent-hover: #3c5749;
-  --accent-bg: #e4ebe5;
+  --sidebar-text-muted: #cbd5e1;
+  --sidebar-section-text: #94a3b8;
+
+  /* Acento principal */
+  --accent-primary: #4a6b5c;
+  --accent-primary-hover: #3c5749;
+  --accent-primary-bg: #e4ebe5;
+  --accent-soft: rgba(74, 107, 92, 0.08);
+  --accent-soft-hover: rgba(74, 107, 92, 0.12);
+  --on-accent: #ffffff;
+  --text-on-solid: #ffffff;
+  --avatar-green: #3d6050;
+  --avatar-brown: #8c6b38;
+  --avatar-blue: #385268;
+  --avatar-purple: #6b4d75;
+
+  /* Colores semánticos */
   --success: #4c7a5b;
+  --success-bg: #e8f5e9;
   --warning: #c08a3e;
+  --warning-bg: #fdf6e3;
   --danger: #b4483b;
+  --danger-bg: #fbeae8;
+  --info: #2563eb;
+  --info-bg: #e0f2fe;
+  --purple: #9333ea;
+  --purple-bg: #f3e8ff;
+  --orange: #ea580c;
+  --orange-bg: #ffedd5;
+
+  /* Badges de estado */
+  --badge-pending-bg: #faeed7;
+  --badge-pending-text: #9e6b20;
+  --badge-presente-bg: #e4ebe5;
+  --badge-presente-text: #3c5749;
+  --badge-ausente-bg: #fbeae8;
+  --badge-ausente-text: #b4483b;
+  --badge-cancelado-bg: #f1efe9;
+  --badge-cancelado-text: #5b6660;
+  --badge-reprogramado-bg: #e4effa;
+  --badge-reprogramado-text: #2b6cb0;
+  --badge-info-bg: #e2e8f0;
+  --badge-info-text: #334155;
+
+  /* Sidebar */
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.08);
+  --sidebar-active-bg: #e4ebe5;
+  --sidebar-active-text: #4a6b5c;
+
+  /* Alias legacy (mantienen compatibilidad con los CSS existentes) */
+  --bg-color: var(--bg-main);
+  --surface-color: var(--bg-card);
+  --sidebar-bg: var(--bg-sidebar);
+  --accent: var(--accent-primary);
+  --accent-hover: var(--accent-primary-hover);
+  --accent-bg: var(--accent-primary-bg);
+
   --text-xs: 12px;
   --text-sm: 14px;
   --text-base: 16px;
@@ -33,6 +95,72 @@
   --shadow-md: 0 4px 12px rgba(31, 36, 32, 0.08);
 }
 
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg-main: #121614;
+  --bg-card: #1a211e;
+  --bg-sidebar: #0d1411;
+  --surface-alt: #161d1a;
+  --input-bg: #161d1a;
+
+  --border-color: #27332e;
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --overlay-bg: rgba(0, 0, 0, 0.65);
+  --overlay-soft: rgba(0, 0, 0, 0.35);
+
+  --text-primary: #eaece9;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  --sidebar-text: #eaece9;
+  --sidebar-text-muted: #9ca3af;
+  --sidebar-section-text: #6b7280;
+
+  --accent-primary: #34d399;
+  --accent-primary-hover: #4ade80;
+  --accent-primary-bg: rgba(52, 211, 153, 0.12);
+  --accent-soft: rgba(52, 211, 153, 0.1);
+  --accent-soft-hover: rgba(52, 211, 153, 0.16);
+  --on-accent: #0d1411;
+  --avatar-green: #4f7a64;
+  --avatar-brown: #a8844a;
+  --avatar-blue: #4a6b85;
+  --avatar-purple: #835f8f;
+
+  --success: #34d399;
+  --success-bg: rgba(52, 211, 153, 0.14);
+  --warning: #fbbf24;
+  --warning-bg: #292316;
+  --danger: #f87171;
+  --danger-bg: rgba(248, 113, 113, 0.14);
+  --info: #60a5fa;
+  --info-bg: rgba(96, 165, 250, 0.14);
+  --purple: #c084fc;
+  --purple-bg: rgba(192, 132, 252, 0.14);
+  --orange: #fb923c;
+  --orange-bg: rgba(251, 146, 60, 0.14);
+
+  --badge-pending-bg: #292316;
+  --badge-pending-text: #fbbf24;
+  --badge-presente-bg: rgba(52, 211, 153, 0.14);
+  --badge-presente-text: #6ee7b7;
+  --badge-ausente-bg: rgba(248, 113, 113, 0.14);
+  --badge-ausente-text: #fca5a5;
+  --badge-cancelado-bg: #232b27;
+  --badge-cancelado-text: #9ca3af;
+  --badge-reprogramado-bg: rgba(96, 165, 250, 0.14);
+  --badge-reprogramado-text: #93c5fd;
+  --badge-info-bg: #232b27;
+  --badge-info-text: #9ca3af;
+
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.06);
+  --sidebar-active-bg: rgba(52, 211, 153, 0.14);
+  --sidebar-active-text: #34d399;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
 body {
   margin: 0;
   font-family:
@@ -45,6 +173,15 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    transition: none;
+  }
 }
 
 * {

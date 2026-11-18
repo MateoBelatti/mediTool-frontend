@@ -20,12 +20,12 @@
 }
 
 .unread {
-  background-color: rgba(74, 107, 92, 0.08);
+  background-color: var(--accent-soft);
   border-left: 3px solid var(--accent);
 }
 
 .unread:hover {
-  background-color: rgba(74, 107, 92, 0.12);
+  background-color: var(--accent-soft-hover);
 }
 
 .iconWrapper {
@@ -40,22 +40,22 @@
 }
 
 .iconTurnosSinAsistencia {
-  background-color: rgba(192, 138, 62, 0.15);
+  background-color: var(--warning-bg);
   color: var(--warning);
 }
 
 .iconSistema {
-  background-color: rgba(74, 107, 92, 0.15);
+  background-color: var(--accent-primary-bg);
   color: var(--accent);
 }
 
 .iconRecordatorioEnviado {
-  background-color: rgba(76, 122, 91, 0.15);
+  background-color: var(--success-bg);
   color: var(--success);
 }
 
 .iconErrorRecordatorio {
-  background-color: rgba(180, 72, 59, 0.15);
+  background-color: var(--danger-bg);
   color: var(--danger);
 }
 

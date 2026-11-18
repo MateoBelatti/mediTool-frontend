@@ -70,7 +70,11 @@ export const PatientList: React.FC<PatientListProps> = ({
             <button
               className={styles.editBtn}
               onClick={() => navigate(`/pacientes/${paciente.id}`)}
-              style={{ flex: 1, backgroundColor: '#f1f5f9', color: '#0f172a' }}
+              style={{
+                flex: 1,
+                backgroundColor: 'var(--surface-alt)',
+                color: 'var(--text-primary)',
+              }}
             >
               Ver Perfil
             </button>

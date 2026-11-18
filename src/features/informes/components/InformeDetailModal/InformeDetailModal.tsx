@@ -7,7 +7,7 @@ import {
 } from 'lucide-react'
 import { Modal } from '@/shared/components/Modal/Modal'
 import { Button } from '@/shared/components/Button/Button'
-import type { InformeWithPaciente } from '../InformesGrid/InformesGrid'
+import type { InformeWithPaciente } from '../../types/informes.types'
 import styles from './InformeDetailModal.module.css'
 
 interface InformeDetailModalProps {

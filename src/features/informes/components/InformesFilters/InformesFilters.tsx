@@ -1,4 +1,5 @@
-import { Search, Calendar as CalendarIcon, Plus } from 'lucide-react'
+import { useState } from 'react'
+import { Plus, SlidersHorizontal, X } from 'lucide-react'
 import { Button } from '@/shared/components/Button/Button'
 import styles from './InformesFilters.module.css'
 
@@ -21,59 +22,86 @@ export const InformesFilters = ({
   onPacienteSearchChange,
   onNewInformeClick,
 }: InformesFiltersProps) => {
+  const [showDateFilters, setShowDateFilters] = useState(false)
+
+  const hasActiveDateFilters = Boolean(fechaDesde || fechaHasta)
+
+  const handleClearDateFilters = () => {
+    onFechaDesdeChange('')
+    onFechaHastaChange('')
+  }
+
   return (
-    <div className={styles.filtersContainer}>
-      <div className={styles.headerTop}>
-        <h2 className={styles.title}>Informes</h2>
-        <Button
-          onClick={onNewInformeClick}
-          leftIcon={<Plus size={18} />}
-          size="sm"
-          className={styles.newButton}
-        >
-          Nuevo Informe
-        </Button>
-      </div>
+    <div className={styles.container}>
+      <div className={styles.topBar}>
+        <h1 className={styles.title}>Informes</h1>
 
-      <div className={styles.controlsSection}>
-        <div className={styles.filterGroup}>
-          <label className={styles.label}>
-            <CalendarIcon size={16} />
-            <span>Rango de Fechas</span>
-          </label>
-          <div className={styles.dateInputs}>
-            <input
-              type="date"
-              value={fechaDesde}
-              onChange={(e) => onFechaDesdeChange(e.target.value)}
-              className={styles.input}
-            />
-            <span className={styles.separator}>hasta</span>
-            <input
-              type="date"
-              value={fechaHasta}
-              onChange={(e) => onFechaHastaChange(e.target.value)}
-              className={styles.input}
-            />
-          </div>
-        </div>
-
-        <div className={styles.filterGroup}>
-          <label className={styles.label}>
-            <Search size={16} />
-            <span>Buscar Paciente</span>
-          </label>
-          <div className={styles.searchContainer}>
+        <div className={styles.actionsBar}>
+          <div className={styles.searchWrapper}>
             <input
               type="text"
-              placeholder="Nombre o DNI..."
+              placeholder="Buscar por paciente o DNI..."
               value={pacienteSearch}
               onChange={(e) => onPacienteSearchChange(e.target.value)}
               className={styles.searchInput}
             />
           </div>
+
+          <button
+            type="button"
+            className={`${styles.filterButton} ${hasActiveDateFilters ? styles.filterButtonActive : ''}`}
+            onClick={() => setShowDateFilters((prev) => !prev)}
+            aria-label="Abrir filtros de fecha"
+          >
+            <SlidersHorizontal size={15} />
+            <span>Filtros</span>
+            {hasActiveDateFilters && <span className={styles.filterDot} />}
+          </button>
+
+          <Button
+            onClick={onNewInformeClick}
+            leftIcon={<Plus size={18} />}
+            className={styles.newButton}
+          >
+            Nuevo informe
+          </Button>
         </div>
       </div>
+
+      {showDateFilters && (
+        <div className={styles.dateFilterDropdown}>
+          <div className={styles.dateGroup}>
+            <span className={styles.dateLabel}>Desde:</span>
+            <input
+              type="date"
+              value={fechaDesde}
+              onChange={(e) => onFechaDesdeChange(e.target.value)}
+              className={styles.dateInput}
+            />
+          </div>
+
+          <div className={styles.dateGroup}>
+            <span className={styles.dateLabel}>Hasta:</span>
+            <input
+              type="date"
+              value={fechaHasta}
+              onChange={(e) => onFechaHastaChange(e.target.value)}
+              className={styles.dateInput}
+            />
+          </div>
+
+          {hasActiveDateFilters && (
+            <button
+              type="button"
+              onClick={handleClearDateFilters}
+              className={styles.clearFiltersBtn}
+            >
+              <X size={14} />
+              <span>Limpiar fechas</span>
+            </button>
+          )}
+        </div>
+      )}
     </div>
   )
 }

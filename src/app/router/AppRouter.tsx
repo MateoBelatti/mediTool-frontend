@@ -54,6 +54,11 @@ const PerfilPage = lazy(() =>
     default: m.PerfilPage,
   }))
 )
+const ConfiguracionPage = lazy(() =>
+  import('@/pages/ConfiguracionPage/ConfiguracionPage').then((m) => ({
+    default: m.ConfiguracionPage,
+  }))
+)
 const NotFoundPage = lazy(() =>
   import('@/pages/NotFoundPage/NotFoundPage').then((m) => ({
     default: m.NotFoundPage,
@@ -116,6 +121,10 @@ const router = createBrowserRouter([
       {
         path: 'perfil',
         element: <PerfilPage />,
+      },
+      {
+        path: 'configuracion',
+        element: <ConfiguracionPage />,
       },
       {
         path: '*',

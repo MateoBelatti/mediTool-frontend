@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import { useState, useMemo } from 'react'
 import type { Turno } from '@/features/turnos/types/turnos.types'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { format } from 'date-fns'
+import { es } from 'date-fns/locale'
 import { AsistenciasGrid } from '@/features/turnos/components/AsistenciasGrid/AsistenciasGrid'
 import { useAgendaTurnos } from '@/features/turnos/hooks/useTurnos'
 import { useAuth } from '@/features/auth/hooks/useAuth'
@@ -11,10 +13,13 @@ export const AsistenciasPage = () => {
   const { user } = useAuth()
   const profesionalId = user?.id ? parseInt(user.id) : undefined
 
-  // State for the selected month
+  // Estado del mes seleccionado
   const [currentDate, setCurrentDate] = useState(new Date())
 
-  // Calculate the first and last day of the selected month
+  // Vista: 'planilla' o 'rapido'
+  const [vista, setVista] = useState<'planilla' | 'rapido'>('planilla')
+
+  // Calcular primer y último día del mes
   const firstDayOfMonth = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth(),
@@ -26,15 +31,15 @@ export const AsistenciasPage = () => {
     0
   )
 
-  const formatDate = (d: Date) => d.toISOString().split('T')[0]
+  const formatDate = (d: Date) => format(d, 'yyyy-MM-dd')
 
-  // Fetch turnos for the whole month
+  // Traer turnos del mes
   const { data: turnosDataPage, isLoading } = useAgendaTurnos({
     desde: formatDate(firstDayOfMonth),
     hasta: formatDate(lastDayOfMonth),
     profesionalId: profesionalId!,
     page: 1,
-    pageSize: 100, // Fetch up to 100 turnos for the month view
+    pageSize: 100,
   })
 
   const { pacientes: pacientesPage, pacientesVinculados } = usePacientes(
@@ -48,8 +53,8 @@ export const AsistenciasPage = () => {
   const turnosData = turnosDataPage?.items
   const pacientes = pacientesPage?.items || pacientesVinculados?.items
 
-  // Enrich turnos with paciente data if missing, just like in TurnosPage
-  const turnos = React.useMemo(() => {
+  // Enriquecer turnos con paciente si falta
+  const turnos = useMemo(() => {
     if (!turnosData || !pacientes) return turnosData
     return turnosData.map((turno: Turno) => {
       if (!turno.paciente && turno.pacienteId) {
@@ -74,57 +79,81 @@ export const AsistenciasPage = () => {
     )
   }
 
-  const monthNames = [
-    'Enero',
-    'Febrero',
-    'Marzo',
-    'Abril',
-    'Mayo',
-    'Junio',
-    'Julio',
-    'Agosto',
-    'Septiembre',
-    'Octubre',
-    'Noviembre',
-    'Diciembre',
-  ]
+  // Subtítulo con fecha de hoy
+  const hoyTexto = format(new Date(), "EEEE d 'de' MMMM 'de' yyyy", {
+    locale: es,
+  })
+  const hoyCapitalizado = hoyTexto.charAt(0).toUpperCase() + hoyTexto.slice(1)
+
+  // Mes y año actual para el selector
+  const mesAnioTexto = format(currentDate, 'MMMM yyyy', { locale: es })
+  const mesAnioCapitalizado =
+    mesAnioTexto.charAt(0).toUpperCase() + mesAnioTexto.slice(1)
 
   return (
     <div className={styles.pageContainer}>
       <header className={styles.header}>
-        <div className={styles.headerContent}>
+        <div className={styles.titleSection}>
           <h1 className={styles.title}>Asistencias</h1>
+          <p className={styles.subtitle}>{hoyCapitalizado}</p>
         </div>
 
-        <div className={styles.monthSelector}>
-          <button
-            onClick={handlePreviousMonth}
-            className={styles.navButton}
-            aria-label="Mes anterior"
-          >
-            <ChevronLeft size={20} />
-          </button>
-          <h2 className={styles.currentMonth}>
-            {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
-          </h2>
-          <button
-            onClick={handleNextMonth}
-            className={styles.navButton}
-            aria-label="Mes siguiente"
-          >
-            <ChevronRight size={20} />
-          </button>
+        <div className={styles.controlsSection}>
+          <div className={styles.viewTabs}>
+            <button
+              type="button"
+              className={`${styles.viewTab} ${
+                vista === 'planilla' ? styles.viewTabActive : ''
+              }`}
+              onClick={() => setVista('planilla')}
+            >
+              Planilla
+            </button>
+            <button
+              type="button"
+              className={`${styles.viewTab} ${
+                vista === 'rapido' ? styles.viewTabActive : ''
+              }`}
+              onClick={() => setVista('rapido')}
+            >
+              Registro rápido
+            </button>
+          </div>
+
+          <div className={styles.monthSelector}>
+            <button
+              type="button"
+              onClick={handlePreviousMonth}
+              className={styles.navButton}
+              aria-label="Mes anterior"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <span className={styles.currentMonth}>{mesAnioCapitalizado}</span>
+            <button
+              type="button"
+              onClick={handleNextMonth}
+              className={styles.navButton}
+              aria-label="Mes siguiente"
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
         </div>
       </header>
 
       <div className={styles.content}>
         {isLoading ? (
-          <div className={styles.loadingState}>Cargando asistencias...</div>
+          <div className={styles.loadingState}>
+            <div className={styles.spinner} />
+            <span>Cargando asistencias...</span>
+          </div>
         ) : (
           <AsistenciasGrid
             turnos={turnos || []}
             month={currentDate.getMonth()}
             year={currentDate.getFullYear()}
+            vista={vista}
           />
         )}
       </div>

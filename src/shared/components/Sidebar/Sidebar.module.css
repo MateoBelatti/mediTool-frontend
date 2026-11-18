@@ -1,17 +1,10 @@
 .sidebar {
-  --sidebar-hover-bg: var(--border-color);
-  --sidebar-active-bg: var(--accent-bg);
-  --text-muted: #cbd5e1;
-  --text-active: var(--accent);
-  --accent-color: var(--accent);
-  --border-color: var(--border-color);
-
   width: 260px;
   height: 100vh;
   margin: 0;
   border-radius: 0;
-  background-color: var(--sidebar-bg);
-  color: var(--text-muted);
+  background-color: var(--bg-sidebar);
+  color: var(--sidebar-text-muted);
   display: flex;
   flex-direction: column;
   padding: 2rem 1.25rem;
@@ -49,11 +42,11 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: var(--surface-color);
+  color: var(--sidebar-text);
 }
 
 .logoIcon {
-  color: var(--text-active);
+  color: var(--accent-primary);
 }
 
 .logo h2 {
@@ -86,7 +79,7 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 600;
-  color: #94a3b8; /* Lighter gray for section headers */
+  color: var(--sidebar-section-text);
   margin-bottom: 0.75rem;
   padding: 0 0.5rem;
 }
@@ -104,7 +97,7 @@
   padding: 0.75rem 0.875rem;
   border-radius: var(--radius-md);
   text-decoration: none;
-  color: var(--text-muted);
+  color: var(--sidebar-text-muted);
   font-size: var(--text-sm);
   font-weight: 500;
   transition: all 0.2s ease-in-out;
@@ -125,7 +118,7 @@
   top: 15%;
   bottom: 15%;
   width: 3px;
-  background-color: var(--accent-color);
+  background-color: var(--accent-primary);
   border-radius: 0 4px 4px 0;
   opacity: 0;
   transform: scaleY(0);
@@ -139,7 +132,7 @@
 
 .sidebarItem.active {
   background-color: var(--sidebar-active-bg);
-  color: var(--text-active);
+  color: var(--sidebar-active-text);
 }
 
 .sidebarItem.active::before {
@@ -148,12 +141,12 @@
 }
 
 .sidebarItem.active .icon {
-  color: var(--accent-color);
+  color: var(--sidebar-active-text);
 }
 
 .icon {
   flex-shrink: 0;
-  color: #cbd5e1;
+  color: var(--sidebar-text-muted);
   transition: color 0.2s ease;
 }
 
@@ -165,8 +158,8 @@
   left: 0;
   transform: translateY(-50%);
   z-index: 101;
-  background-color: var(--sidebar-bg);
-  color: var(--surface-color);
+  background-color: var(--bg-sidebar);
+  color: var(--sidebar-text);
   border: none;
   border-radius: 0 12px 12px 0;
   width: 32px;
@@ -190,7 +183,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: var(--overlay-bg);
   backdrop-filter: blur(2px);
   z-index: 99;
 }

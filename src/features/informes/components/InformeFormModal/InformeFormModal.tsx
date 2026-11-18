@@ -15,7 +15,7 @@ import {
   type InformeCreateDto,
 } from '../../schemas/informes.schema'
 import { useCreateInforme, useUpdateInforme } from '../../hooks/useInformes'
-import type { InformeWithPaciente } from '../InformesGrid/InformesGrid'
+import type { InformeWithPaciente } from '../../types/informes.types'
 import styles from './InformeFormModal.module.css'
 
 interface InformeFormModalProps {
