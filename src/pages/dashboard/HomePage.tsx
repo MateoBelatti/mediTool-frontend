@@ -22,7 +22,6 @@ import { es } from 'date-fns/locale'
 import type { ReunionResponseDto } from '@/features/reuniones/schemas/reuniones.schema'
 
 import { NotificationBell } from '@/features/notificaciones'
-import 'react-calendar/dist/Calendar.css'
 
 export const HomePage = () => {
   const { user } = useAuth()
