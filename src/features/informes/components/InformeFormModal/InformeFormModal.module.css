@@ -1,26 +1,32 @@
 .formContainer {
   padding: 1rem 0;
+  width: 100%;
+  min-width: 0;
 }
 
 .form {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  min-width: 0;
 }
 
 .field {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  min-width: 0;
 }
 
 .fieldRow {
   display: flex;
   gap: 1rem;
+  min-width: 0;
 }
 
 .fieldRow > .field {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .field label {
@@ -31,6 +37,9 @@
 
 .input,
 .textarea {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: 0.625rem 0.75rem;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
@@ -67,4 +76,19 @@
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid var(--surface-alt);
+}
+
+@media (max-width: 640px) {
+  .fieldRow {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .actions {
+    flex-direction: column-reverse;
+  }
+
+  .actions > * {
+    width: 100%;
+  }
 }
