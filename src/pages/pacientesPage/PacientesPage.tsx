@@ -7,7 +7,7 @@ import { PatientFormModal } from '../../features/pacientes/components/PatientFor
 import type { Paciente } from '../../features/pacientes/types/paciente.types'
 import type { PacienteFormData } from '../../features/pacientes/schemas/paciente.schema'
 import styles from './PacientesPage.module.css'
-import { Plus, Search, Menu } from 'lucide-react'
+import { Plus, SlidersHorizontal, X } from 'lucide-react'
 import { Button } from '@/shared/components/Button/Button'
 import { Pagination } from '@/shared/components/Pagination/Pagination'
 
@@ -134,79 +134,21 @@ export const PacientesPage: React.FC = () => {
   const currentPacientes = currentPageResult?.items || []
   const totalPages = currentPageResult?.totalPages || 1
 
+  const hasActiveSort = sortField !== 'nombre' || sortOrder !== 'asc'
+
+  const handleResetSort = () => {
+    setSortField('nombre')
+    setSortOrder('asc')
+  }
+
   return (
     <div className={styles.pageContainer}>
-      <div className={styles.filtersContainer}>
-        <div className={styles.headerTop}>
-          <h2 className={styles.title}>Pacientes</h2>
-          <div className={styles.headerActions}>
-            <Button
-              onClick={() => handleOpenModal()}
-              leftIcon={<Plus size={18} />}
-              size="sm"
-            >
-              Nuevo Paciente
-            </Button>
-            <button
-              className={styles.mobileMenuBtn}
-              onClick={() => setShowFilters(!showFilters)}
-            >
-              <Menu size={24} />
-            </button>
-          </div>
-        </div>
+      <div className={styles.header}>
+        <div className={styles.topBar}>
+          <h1 className={styles.title}>Pacientes</h1>
 
-        <div
-          className={`${styles.controlsSection} ${showFilters ? styles.showControls : ''}`}
-        >
-          <div className={styles.filterGroup}>
-            <label className={styles.label}>
-              <span>Ordenar por</span>
-            </label>
-            <select
-              value={sortField}
-              onChange={(e) => setSortField(e.target.value as SortField)}
-              style={{
-                padding: '8px',
-                borderRadius: '4px',
-                border: '1px solid #ddd',
-              }}
-            >
-              <option value="nombre">Nombre</option>
-              <option value="apellido">Apellido</option>
-              <option value="dni">DNI</option>
-              <option value="obraSocial">Obra Social</option>
-              <option value="escuela">Escuela</option>
-            </select>
-          </div>
-
-          <div className={styles.filterGroup}>
-            <label className={styles.label}>
-              <span>Orden</span>
-            </label>
-            <select
-              value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value as SortOrder)}
-              style={{
-                padding: '8px',
-                borderRadius: '4px',
-                border: '1px solid #ddd',
-              }}
-            >
-              <option value="asc">Ascendente</option>
-              <option value="desc">Descendente</option>
-            </select>
-          </div>
-
-          <div
-            className={styles.filterGroup}
-            style={{ flex: 1, minWidth: '250px' }}
-          >
-            <label className={styles.label}>
-              <Search size={16} />
-              <span>Buscar Paciente</span>
-            </label>
-            <div className={styles.searchContainer}>
+          <div className={styles.actionsBar}>
+            <div className={styles.searchWrapper}>
               <input
                 type="text"
                 placeholder="Buscar por nombre, apellido o DNI..."
@@ -215,8 +157,69 @@ export const PacientesPage: React.FC = () => {
                 className={styles.searchInput}
               />
             </div>
+
+            <button
+              type="button"
+              className={`${styles.filterButton} ${hasActiveSort ? styles.filterButtonActive : ''}`}
+              onClick={() => setShowFilters((prev) => !prev)}
+              aria-label="Abrir filtros de orden"
+            >
+              <SlidersHorizontal size={15} />
+              <span>Filtros</span>
+              {hasActiveSort && <span className={styles.filterDot} />}
+            </button>
+
+            <Button
+              onClick={() => handleOpenModal()}
+              leftIcon={<Plus size={18} />}
+              className={styles.newButton}
+            >
+              Nuevo paciente
+            </Button>
           </div>
         </div>
+
+        {showFilters && (
+          <div className={styles.sortFilterDropdown}>
+            <div className={styles.filterGroup}>
+              <span className={styles.filterLabel}>Ordenar por</span>
+              <select
+                value={sortField}
+                onChange={(e) => setSortField(e.target.value as SortField)}
+                className={styles.filterSelect}
+              >
+                <option value="nombre">Nombre</option>
+                <option value="apellido">Apellido</option>
+                <option value="dni">DNI</option>
+                <option value="obraSocial">Obra Social</option>
+                <option value="escuela">Escuela</option>
+              </select>
+            </div>
+
+            <div className={styles.filterGroup}>
+              <span className={styles.filterLabel}>Orden</span>
+              <select
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value as SortOrder)}
+                className={styles.filterSelect}
+              >
+                <option value="asc">Ascendente</option>
+                <option value="desc">Descendente</option>
+              </select>
+            </div>
+
+            {hasActiveSort && (
+              <button
+                type="button"
+                onClick={handleResetSort}
+                className={styles.clearFiltersBtn}
+              >
+                <X size={14} />
+                <span>Restablecer</span>
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       <div className={styles.content}>

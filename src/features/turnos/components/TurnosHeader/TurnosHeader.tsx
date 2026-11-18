@@ -8,25 +8,23 @@ interface TurnosHeaderProps {
 export const TurnosHeader = ({ activeTab, onTabChange }: TurnosHeaderProps) => {
   return (
     <header className={styles.topHeader}>
-      <div className={styles.titleSection}>
-        <h1 className={styles.title}>Turnos</h1>
+      <h1 className={styles.title}>Turnos</h1>
 
-        <div className={styles.modeTabs}>
-          <button
-            type="button"
-            className={`${styles.modeTab} ${activeTab === 'fijos' ? styles.modeTabActive : ''}`}
-            onClick={() => onTabChange('fijos')}
-          >
-            Turnos Fijos
-          </button>
-          <button
-            type="button"
-            className={`${styles.modeTab} ${activeTab === 'sueltos' ? styles.modeTabActive : ''}`}
-            onClick={() => onTabChange('sueltos')}
-          >
-            Turnos Sueltos
-          </button>
-        </div>
+      <div className={styles.modeTabs}>
+        <button
+          type="button"
+          className={`${styles.modeTab} ${activeTab === 'fijos' ? styles.modeTabActive : ''}`}
+          onClick={() => onTabChange('fijos')}
+        >
+          Turnos Fijos
+        </button>
+        <button
+          type="button"
+          className={`${styles.modeTab} ${activeTab === 'sueltos' ? styles.modeTabActive : ''}`}
+          onClick={() => onTabChange('sueltos')}
+        >
+          Turnos Sueltos
+        </button>
       </div>
     </header>
   )
