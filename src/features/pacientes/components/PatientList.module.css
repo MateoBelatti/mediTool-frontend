@@ -35,7 +35,7 @@
   height: 36px;
   border-radius: var(--radius-md);
   background-color: var(--accent);
-  color: var(--text-primary);
+  color: var(--on-accent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -78,7 +78,7 @@
   display: flex;
   justify-content: flex-end;
   padding-top: 0.75rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-top: 1px solid var(--border-subtle);
 }
 
 .editBtn,
@@ -124,7 +124,7 @@
   color: var(--text-secondary);
   background-color: var(--surface-color);
   border-radius: var(--radius-lg);
-  border: 1px dashed rgba(0, 0, 0, 0.1);
+  border: 1px dashed var(--border-subtle);
   margin-top: 1.5rem;
 }
 

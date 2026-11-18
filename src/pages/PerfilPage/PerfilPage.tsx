@@ -6,12 +6,17 @@ import {
   Award,
   FileText,
   Shield,
+  Settings,
 } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth, ROLES } from '@/features/auth/hooks/useAuth'
 import { useProfesionales } from '@/features/pacientes/hooks/useProfesionales'
+import { Button } from '@/shared/components/Button/Button'
+import { ThemeToggle } from '@/shared/components/ThemeToggle/ThemeToggle'
 import styles from './PerfilPage.module.css'
 
 export const PerfilPage = () => {
+  const navigate = useNavigate()
   const { user } = useAuth()
   const profesionalId = user?.id ? parseInt(user.id) : undefined
   const { profesional, isLoading, error } = useProfesionales(profesionalId)
@@ -47,6 +52,17 @@ export const PerfilPage = () => {
           <p className={styles.subtitle}>
             Información personal y profesional de tu cuenta
           </p>
+        </div>
+        <div className={styles.headerActions}>
+          <ThemeToggle />
+          <Button
+            variant="secondary"
+            size="sm"
+            leftIcon={<Settings size={16} />}
+            onClick={() => navigate('/configuracion')}
+          >
+            Configuración
+          </Button>
         </div>
       </div>
 

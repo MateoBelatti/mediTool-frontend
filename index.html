@@ -10,6 +10,22 @@
     />
     <meta name="theme-color" content="#4a6b5c" />
     <title>mediTool</title>
+    <script>
+      ;(() => {
+        try {
+          const stored = localStorage.getItem('meditool-theme')
+          const theme =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light'
+          document.documentElement.dataset.theme = theme
+        } catch {
+          document.documentElement.dataset.theme = 'light'
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

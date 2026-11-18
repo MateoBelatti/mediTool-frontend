@@ -2,18 +2,27 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-height: 0;
+  gap: var(--space-3);
 }
 
 .header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--space-2);
-  margin-bottom: var(--space-4);
 }
 
-.header h3 {
+.headerTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.headerTitle h3 {
   margin: 0;
   font-size: var(--text-lg);
+  font-weight: 600;
   color: var(--text-primary);
 }
 
@@ -21,205 +30,239 @@
   color: var(--accent);
 }
 
-/* react-calendar custom styles */
-.calendarWrapper {
-  flex: 1;
+.nav {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
 }
 
-:global(.react-calendar) {
-  width: 100%;
-  max-width: 100%;
-  background: white;
-  border: none;
-  font-family: inherit;
-  line-height: 1.125em;
-}
-
-:global(.react-calendar--doubleView) {
-  width: 700px;
-}
-
-:global(.react-calendar--doubleView .react-calendar__viewContainer) {
-  display: flex;
-  margin: -0.5em;
-}
-
-:global(.react-calendar--doubleView .react-calendar__viewContainer > *) {
-  width: 50%;
-  margin: 0.5em;
-}
-
-:global(.react-calendar),
-:global(.react-calendar *),
-:global(.react-calendar *:before),
-:global(.react-calendar *:after) {
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-:global(.react-calendar button) {
-  margin: 0;
-  border: 0;
-  outline: none;
-}
-
-:global(.react-calendar button:enabled:hover) {
-  cursor: pointer;
-}
-
-:global(.react-calendar__navigation) {
-  display: flex;
-  height: 44px;
-  margin-bottom: 1em;
-}
-
-:global(.react-calendar__navigation button) {
-  min-width: 44px;
-  background: none;
-  font-size: var(--text-base);
-  font-weight: 600;
-  color: var(--text-primary);
-  border-radius: var(--radius-sm);
-  transition: background-color 0.2s ease;
-}
-
-:global(.react-calendar__navigation button:disabled) {
-  background-color: var(--surface-alt);
-}
-
-:global(.react-calendar__navigation button:enabled:hover),
-:global(.react-calendar__navigation button:enabled:focus) {
-  background-color: var(--surface-alt);
-}
-
-:global(.react-calendar__month-view__weekdays) {
-  text-align: center;
-  text-transform: uppercase;
-  font-weight: 600;
-  font-size: var(--text-xs);
-  color: var(--text-muted);
-  margin-bottom: 0.5em;
-}
-
-:global(.react-calendar__month-view__weekdays__weekday) {
-  padding: 0.5em;
-}
-
-:global(.react-calendar__month-view__weekdays__weekday abbr) {
-  text-decoration: none;
-}
-
-:global(.react-calendar__month-view__weekNumbers .react-calendar__tile) {
+.navButton {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75em;
-  font-weight: bold;
-}
-
-:global(.react-calendar__month-view__days__day--weekend) {
-  color: var(--danger);
-}
-
-:global(.react-calendar__month-view__days__day--neighboringMonth) {
-  color: var(--text-muted);
-}
-
-:global(.react-calendar__year-view .react-calendar__tile),
-:global(.react-calendar__decade-view .react-calendar__tile),
-:global(.react-calendar__century-view .react-calendar__tile) {
-  padding: 2em 0.5em;
-}
-
-:global(.react-calendar__tile) {
-  max-width: 100%;
-  padding: 10px 6.6667px;
-  background: none;
-  text-align: center;
-  line-height: 16px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  background-color: transparent;
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
-  font-size: var(--text-sm);
-  color: var(--text-primary);
-  position: relative;
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease;
 }
 
-:global(.react-calendar__tile:disabled) {
-  background-color: var(--surface-alt);
-  color: var(--text-muted);
-}
-
-:global(.react-calendar__tile:enabled:hover),
-:global(.react-calendar__tile:enabled:focus) {
+.navButton:hover {
   background-color: var(--accent-bg);
+  border-color: var(--accent);
   color: var(--accent);
 }
 
-:global(.react-calendar__tile--now) {
-  background: var(--surface-alt);
-  font-weight: bold;
+.navButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
 }
 
-:global(.react-calendar__tile--now:enabled:hover),
-:global(.react-calendar__tile--now:enabled:focus) {
-  background: var(--accent-bg);
-}
-
-:global(.react-calendar__tile--hasActive) {
-  background: var(--accent);
-}
-
-:global(.react-calendar__tile--hasActive:enabled:hover),
-:global(.react-calendar__tile--hasActive:enabled:focus) {
-  background: var(--accent-hover);
-}
-
-:global(.react-calendar__tile--active) {
-  background: var(--accent);
-  color: white;
-  font-weight: bold;
-}
-
-:global(.react-calendar__tile--active:enabled:hover),
-:global(.react-calendar__tile--active:enabled:focus) {
-  background: var(--accent-hover);
-}
-
-:global(.react-calendar--selectRange .react-calendar__tile--hover) {
-  background-color: var(--surface-alt);
-}
-
-/* Dot indicators for appointments and meetings */
-.dots {
-  position: absolute;
-  bottom: 2px;
-  left: 50%;
-  transform: translateX(-50%);
+.monthBar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.monthLabel {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.todayButton {
+  padding: 3px var(--space-2);
+  background-color: var(--accent-bg);
+  border: none;
+  border-radius: var(--radius-lg);
+  color: var(--accent);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.todayButton:hover {
+  background-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.todayButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.weekDays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
   gap: 2px;
 }
 
-.hasTurnoDot,
-.hasReunionDot {
-  width: 4px;
-  height: 4px;
+.weekDay {
+  padding: var(--space-1) 0;
+  text-align: center;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 2px;
+  flex: 1;
+  min-height: 0;
+}
+
+.day {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 36px;
+  padding: var(--space-1) 0;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.day:hover {
+  background-color: var(--surface-alt);
+  border-color: var(--border-color);
+}
+
+.day:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.dayNumber {
+  line-height: 1;
+}
+
+.otherMonth {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+.otherMonth:hover {
+  opacity: 0.8;
+}
+
+.weekend {
+  color: var(--text-secondary);
+}
+
+.today {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.today:hover {
+  background-color: var(--accent-bg);
+  border-color: var(--accent);
+}
+
+.selected,
+.selected:hover {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+}
+
+.dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  height: 5px;
+}
+
+.dot {
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
 }
 
-.hasTurnoDot {
+.turnoDot {
   background-color: var(--accent);
 }
 
-.hasReunionDot {
+.reunionDot {
   background-color: var(--danger);
 }
 
-:global(.react-calendar__tile--active) .hasTurnoDot {
-  background-color: white;
+.selected .turnoDot {
+  background-color: var(--on-accent);
+}
+
+.selected .reunionDot {
+  background-color: var(--on-accent);
+  opacity: 0.6;
+}
+
+.otherMonth .dot {
+  opacity: 0.5;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-top: auto;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-color);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+.legendDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+@media (max-width: 768px) {
+  .container {
+    height: auto;
+  }
+
+  .days {
+    flex: none;
+    grid-auto-rows: 40px;
+  }
 }

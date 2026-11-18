@@ -28,8 +28,8 @@
   /* Imagen placeholder que recuerda al arte oscuro/azul del requerimiento */
   background: linear-gradient(
     135deg,
-    var(--text-primary) 0%,
-    var(--text-primary) 100%
+    var(--bg-sidebar) 0%,
+    var(--bg-sidebar) 100%
   );
   /* Si se tuviera la imagen real:
   background-image: url('ruta-a-imagen.jpg');
@@ -47,11 +47,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.2); /* Oscurece ligeramente */
+  background: var(--overlay-soft);
 }
 
 .imageTitle {
-  color: var(--surface-color);
+  color: var(--text-on-solid);
   font-size: 2.5rem;
   letter-spacing: 0.2em;
   font-weight: 300;

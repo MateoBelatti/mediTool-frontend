@@ -233,7 +233,7 @@ export const PatientFormModal: React.FC<PatientFormModalProps> = ({
             <div
               style={{
                 marginTop: '30px',
-                borderTop: '1px solid #e5e7eb',
+                borderTop: '1px solid var(--border-color)',
                 paddingTop: '20px',
               }}
             >
@@ -242,7 +242,7 @@ export const PatientFormModal: React.FC<PatientFormModalProps> = ({
                   fontSize: '1rem',
                   fontWeight: 600,
                   marginBottom: '15px',
-                  color: '#374151',
+                  color: 'var(--text-primary)',
                 }}
               >
                 Profesionales Asociados
@@ -260,7 +260,9 @@ export const PatientFormModal: React.FC<PatientFormModalProps> = ({
                     flex: 1,
                     padding: '8px',
                     borderRadius: '6px',
-                    border: '1px solid #d1d5db',
+                    border: '1px solid var(--border-color)',
+                    backgroundColor: 'var(--input-bg)',
+                    color: 'var(--text-primary)',
                   }}
                 >
                   <option value="">
@@ -287,8 +289,8 @@ export const PatientFormModal: React.FC<PatientFormModalProps> = ({
                     alignItems: 'center',
                     gap: '5px',
                     padding: '8px 16px',
-                    backgroundColor: '#3b82f6',
-                    color: 'white',
+                    backgroundColor: 'var(--info)',
+                    color: 'var(--on-accent)',
                     borderRadius: '6px',
                     border: 'none',
                     cursor: selectedProfToLink ? 'pointer' : 'not-allowed',
@@ -318,15 +320,18 @@ export const PatientFormModal: React.FC<PatientFormModalProps> = ({
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         padding: '10px',
-                        backgroundColor: '#f9fafb',
+                        backgroundColor: 'var(--surface-alt)',
                         borderRadius: '6px',
-                        border: '1px solid #e5e7eb',
+                        border: '1px solid var(--border-color)',
                       }}
                     >
                       <span>
                         {p.nombre} {p.apellido}{' '}
                         <span
-                          style={{ color: '#6b7280', fontSize: '0.875rem' }}
+                          style={{
+                            color: 'var(--text-secondary)',
+                            fontSize: '0.875rem',
+                          }}
                         >
                           - {p.matricula || p.email}
                         </span>
@@ -342,7 +347,7 @@ export const PatientFormModal: React.FC<PatientFormModalProps> = ({
                         style={{
                           background: 'none',
                           border: 'none',
-                          color: '#ef4444',
+                          color: 'var(--danger)',
                           cursor: 'pointer',
                           display: 'flex',
                           alignItems: 'center',
@@ -356,7 +361,12 @@ export const PatientFormModal: React.FC<PatientFormModalProps> = ({
                   ))}
                 </ul>
               ) : (
-                <p style={{ color: '#6b7280', fontSize: '0.875rem' }}>
+                <p
+                  style={{
+                    color: 'var(--text-secondary)',
+                    fontSize: '0.875rem',
+                  }}
+                >
                   No hay profesionales vinculados a este paciente.
                 </p>
               )}

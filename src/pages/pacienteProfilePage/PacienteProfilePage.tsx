@@ -148,9 +148,9 @@ export const PacienteProfilePage: React.FC = () => {
             <Button
               variant="secondary"
               style={{
-                backgroundColor: '#fee2e2',
-                color: '#dc2626',
-                borderColor: '#fca5a5',
+                backgroundColor: 'var(--danger-bg)',
+                color: 'var(--danger)',
+                borderColor: 'var(--danger)',
               }}
               onClick={() => setPacienteToUnlink(paciente.id)}
             >

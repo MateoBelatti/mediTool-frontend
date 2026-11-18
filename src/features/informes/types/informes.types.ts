@@ -29,3 +29,13 @@ export interface InformeResponseDto {
   estado?: string | null
   createdAt?: string | null
 }
+
+export interface PacienteData {
+  nombre: string
+  apellido: string
+  dni?: string
+}
+
+export interface InformeWithPaciente extends InformeResponseDto {
+  pacienteData?: PacienteData
+}

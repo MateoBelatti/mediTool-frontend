@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: var(--overlay-bg);
   backdrop-filter: blur(2px);
   display: flex;
   align-items: center;
@@ -30,7 +30,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem 2rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .header h2 {
@@ -86,15 +86,16 @@
   padding: 0.75rem 1rem;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
-  background-color: var(--bg-color);
+  background-color: var(--input-bg);
+  color: var(--text-primary);
   font-size: 0.95rem;
   outline: none;
   transition: all 0.2s ease;
 }
 
 .formGroup input:focus {
-  border-color: var(--text-primary);
-  background-color: var(--surface-color);
+  border-color: var(--accent-primary);
+  background-color: var(--bg-card);
 }
 
 .error {
@@ -108,7 +109,7 @@
   gap: 1rem;
   margin-top: 1rem;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-top: 1px solid var(--border-subtle);
 }
 
 .cancelBtn,
@@ -133,12 +134,12 @@
 }
 
 .submitBtn {
-  background-color: var(--text-primary);
-  color: var(--surface-color);
+  background-color: var(--accent-primary);
+  color: var(--on-accent);
 }
 
 .submitBtn:hover {
-  background-color: var(--border-color);
+  background-color: var(--accent-primary-hover);
 }
 
 .submitBtn:disabled {
