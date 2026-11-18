@@ -7,6 +7,7 @@ import {
 import { ReunionesFilters } from '@/features/reuniones/components/ReunionesFilters/ReunionesFilters'
 import { ReunionesGrid } from '@/features/reuniones/components/ReunionesGrid/ReunionesGrid'
 import { ReunionFormModal } from '@/features/reuniones/components/ReunionFormModal/ReunionFormModal'
+import { ReunionDetailModal } from '@/features/reuniones/components/ReunionDetailModal/ReunionDetailModal'
 import type { ReunionResponseDto } from '@/features/reuniones/schemas/reuniones.schema'
 import styles from './ReunionesPage.module.css'
 
@@ -27,12 +28,18 @@ export const ReunionesPage = () => {
   const [fechaHasta, setFechaHasta] = useState('')
   const [tituloSearch, setTituloSearch] = useState('')
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  // Modal para crear / editar
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false)
   const [reunionToEdit, setReunionToEdit] = useState<ReunionResponseDto | null>(
     null
   )
 
-  // Filtrado de servidor (fechas) - implementado localmente por simplicidad
+  // Modal de detalle con la descripción
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
+  const [selectedReunion, setSelectedReunion] =
+    useState<ReunionResponseDto | null>(null)
+
+  // Filtrado de servidor (fechas) - implementado localmente
   const reunionesFiltradas = useMemo(() => {
     if (!reuniones) return []
     let filtered = reuniones
@@ -54,12 +61,17 @@ export const ReunionesPage = () => {
 
   const handleNewReunion = () => {
     setReunionToEdit(null)
-    setIsModalOpen(true)
+    setIsFormModalOpen(true)
   }
 
   const handleEditReunion = (reunion: ReunionResponseDto) => {
     setReunionToEdit(reunion)
-    setIsModalOpen(true)
+    setIsFormModalOpen(true)
+  }
+
+  const handleReunionClick = (reunion: ReunionResponseDto) => {
+    setSelectedReunion(reunion)
+    setIsDetailModalOpen(true)
   }
 
   const puedeEditarReunion = (reunion: ReunionResponseDto) =>
@@ -82,14 +94,31 @@ export const ReunionesPage = () => {
           reuniones={reunionesFiltradas}
           isLoading={isLoadingReuniones}
           onEditClick={handleEditReunion}
+          onReunionClick={handleReunionClick}
           puedeEditar={puedeEditarReunion}
           tituloSearch={tituloSearch}
         />
       </div>
 
+      <ReunionDetailModal
+        isOpen={isDetailModalOpen}
+        onClose={() => {
+          setIsDetailModalOpen(false)
+          setSelectedReunion(null)
+        }}
+        reunion={selectedReunion}
+        onEdit={handleEditReunion}
+        puedeEditar={
+          selectedReunion ? puedeEditarReunion(selectedReunion) : false
+        }
+      />
+
       <ReunionFormModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isFormModalOpen}
+        onClose={() => {
+          setIsFormModalOpen(false)
+          setReunionToEdit(null)
+        }}
         reunionToEdit={reunionToEdit}
       />
     </div>
