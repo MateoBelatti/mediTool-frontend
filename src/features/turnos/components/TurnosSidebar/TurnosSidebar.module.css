@@ -102,7 +102,7 @@
 .reglaItemActive {
   border: 2px solid var(--accent);
   background-color: var(--surface-color);
-  box-shadow: 0 2px 8px rgba(74, 107, 92, 0.12);
+  box-shadow: var(--shadow-md);
 }
 
 .reglaItemActive:hover {
@@ -114,8 +114,8 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background-color: #4a6b5c;
-  color: #ffffff;
+  background-color: var(--accent-primary);
+  color: var(--on-accent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -164,8 +164,8 @@
 
 .badgeInactivoInline {
   font-size: 0.625rem;
-  background-color: #fbeae8;
-  color: var(--danger);
+  background-color: var(--badge-ausente-bg);
+  color: var(--badge-ausente-text);
   padding: 1px 5px;
   border-radius: 4px;
   font-weight: 600;

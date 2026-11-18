@@ -5,7 +5,7 @@
 }
 
 .listItem {
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-md);
   padding: 1rem 1.25rem;
   box-shadow: var(--shadow-sm);
@@ -117,34 +117,34 @@
 }
 
 .estadoPendiente {
-  background-color: var(--warning);
-  color: white;
+  background-color: var(--badge-pending-bg);
+  color: var(--badge-pending-text);
 }
 
 .estadoPresente {
-  background-color: var(--success);
-  color: white;
+  background-color: var(--badge-presente-bg);
+  color: var(--badge-presente-text);
 }
 
 .estadoCancelado {
-  background-color: var(--danger);
-  color: white;
+  background-color: var(--badge-cancelado-bg);
+  color: var(--badge-cancelado-text);
 }
 
 .estadoReprogramado {
-  background-color: var(--accent);
-  color: white;
+  background-color: var(--badge-reprogramado-bg);
+  color: var(--badge-reprogramado-text);
 }
 
 .estadoAusente {
-  background-color: var(--surface-alt);
-  color: var(--text-secondary);
+  background-color: var(--badge-ausente-bg);
+  color: var(--badge-ausente-text);
 }
 
 .fijoBadge {
   font-size: 0.7rem;
-  background-color: var(--warning);
-  color: white;
+  background-color: var(--badge-pending-bg);
+  color: var(--badge-pending-text);
   padding: 0.2rem 0.5rem;
   border-radius: var(--radius-sm);
   font-weight: 600;
@@ -158,7 +158,7 @@
   justify-content: center;
   padding: 4rem 2rem;
   color: var(--text-muted);
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   text-align: center;

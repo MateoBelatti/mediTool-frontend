@@ -65,7 +65,8 @@
   transition:
     border-color 0.2s,
     box-shadow 0.2s;
-  background-color: white;
+  background-color: var(--input-bg);
+  color: var(--text-primary);
 }
 
 .input:focus {

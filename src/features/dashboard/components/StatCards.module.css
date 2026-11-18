@@ -39,12 +39,12 @@
 }
 
 .iconWrapper.warning {
-  background-color: #fdf6e3;
+  background-color: var(--warning-bg);
   color: var(--warning);
 }
 
 .iconWrapper.success {
-  background-color: #e8f5e9;
+  background-color: var(--success-bg);
   color: var(--success);
 }
 

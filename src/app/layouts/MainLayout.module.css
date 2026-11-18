@@ -2,7 +2,7 @@
   display: flex;
   height: 100vh;
   overflow: hidden;
-  background-color: var(--bg-color, var(--bg-color));
+  background-color: var(--bg-color);
 }
 
 .contentWrapper {

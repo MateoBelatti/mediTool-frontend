@@ -31,7 +31,7 @@
 :global(.react-calendar) {
   width: 100%;
   max-width: 100%;
-  background: white;
+  background: var(--bg-card);
   border: none;
   font-family: inherit;
   line-height: 1.125em;
@@ -181,7 +181,7 @@
 
 :global(.react-calendar__tile--active) {
   background: var(--accent);
-  color: white;
+  color: var(--on-accent);
   font-weight: bold;
 }
 
@@ -221,5 +221,5 @@
 }
 
 :global(.react-calendar__tile--active) .hasTurnoDot {
-  background-color: white;
+  background-color: var(--on-accent);
 }

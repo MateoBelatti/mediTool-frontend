@@ -49,5 +49,5 @@
   background-color: var(--surface-color);
   color: var(--accent-hover);
   font-weight: 700;
-  box-shadow: 0 1px 3px rgba(31, 36, 32, 0.08);
+  box-shadow: var(--shadow-sm);
 }

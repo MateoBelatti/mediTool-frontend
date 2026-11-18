@@ -76,7 +76,7 @@
   transition:
     border-color 0.2s,
     box-shadow 0.2s;
-  background-color: var(--bg-color);
+  background-color: var(--input-bg);
 }
 
 .textarea {
@@ -87,7 +87,7 @@
 .textarea:focus {
   border-color: var(--accent);
   box-shadow: var(--shadow-sm);
-  background-color: white;
+  background-color: var(--bg-card);
 }
 
 .error {

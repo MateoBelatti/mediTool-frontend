@@ -17,7 +17,7 @@
   font-family: inherit;
   outline: none;
   text-align: center;
-  box-shadow: 0 1px 3px rgba(31, 36, 32, 0.04);
+  box-shadow: var(--shadow-sm);
 }
 
 .card:hover {
@@ -106,26 +106,26 @@
 }
 
 .badgePresente {
-  background-color: var(--accent-bg);
-  color: var(--accent-hover);
+  background-color: var(--badge-presente-bg);
+  color: var(--badge-presente-text);
 }
 
 .badgePendiente {
-  background-color: #faeed7;
-  color: #9e6b20;
+  background-color: var(--badge-pending-bg);
+  color: var(--badge-pending-text);
 }
 
 .badgeAusente {
-  background-color: #fbeae8;
-  color: var(--danger);
+  background-color: var(--badge-ausente-bg);
+  color: var(--badge-ausente-text);
 }
 
 .badgeCancelado {
-  background-color: var(--surface-alt);
-  color: var(--text-muted);
+  background-color: var(--badge-cancelado-bg);
+  color: var(--badge-cancelado-text);
 }
 
 .badgeReprogramado {
-  background-color: #e4effa;
-  color: #2b6cb0;
+  background-color: var(--badge-reprogramado-bg);
+  color: var(--badge-reprogramado-text);
 }

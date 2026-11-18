@@ -58,13 +58,13 @@
 }
 
 .badgePresencial {
-  background-color: #dcf0e2;
-  color: #2c5e43;
+  background-color: var(--badge-presente-bg);
+  color: var(--badge-presente-text);
 }
 
 .badgeVirtual {
-  background-color: #e2e8f0;
-  color: #334155;
+  background-color: var(--badge-info-bg);
+  color: var(--badge-info-text);
 }
 
 .badgeDefault {
@@ -184,24 +184,24 @@
   justify-content: center;
   font-size: 11px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-on-solid);
   flex-shrink: 0;
 }
 
 .avatarGreen {
-  background-color: #3d6050;
+  background-color: var(--avatar-green);
 }
 
 .avatarBrown {
-  background-color: #8c6b38;
+  background-color: var(--avatar-brown);
 }
 
 .avatarBlue {
-  background-color: #385268;
+  background-color: var(--avatar-blue);
 }
 
 .avatarPurple {
-  background-color: #6b4d75;
+  background-color: var(--avatar-purple);
 }
 
 .profesionalNombre {

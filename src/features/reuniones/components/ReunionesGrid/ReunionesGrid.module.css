@@ -37,10 +37,10 @@
 
 .tabButtonActive {
   border: 1.5px solid var(--text-primary);
-  background-color: #ffffff;
+  background-color: var(--bg-card);
   color: var(--text-primary);
   font-weight: 600;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-sm);
 }
 
 .sectionsWrapper {
@@ -96,7 +96,7 @@
 
 .card:focus-visible {
   border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(74, 107, 92, 0.2);
+  box-shadow: 0 0 0 2px var(--accent-primary-bg);
 }
 
 .cardDateBlock {
@@ -162,13 +162,13 @@
 }
 
 .badgePresencial {
-  background-color: #dcf0e2;
-  color: #2c5e43;
+  background-color: var(--badge-presente-bg);
+  color: var(--badge-presente-text);
 }
 
 .badgeVirtual {
-  background-color: #e2e8f0;
-  color: #334155;
+  background-color: var(--badge-info-bg);
+  color: var(--badge-info-text);
 }
 
 .badgeDefault {
@@ -201,7 +201,7 @@
   justify-content: center;
   font-size: 11px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-on-solid);
   border: 2px solid var(--surface-color);
   margin-left: -6px;
   flex-shrink: 0;
@@ -212,19 +212,19 @@
 }
 
 .avatarGreen {
-  background-color: #3d6050;
+  background-color: var(--avatar-green);
 }
 
 .avatarBrown {
-  background-color: #8c6b38;
+  background-color: var(--avatar-brown);
 }
 
 .avatarBlue {
-  background-color: #385268;
+  background-color: var(--avatar-blue);
 }
 
 .avatarPurple {
-  background-color: #6b4d75;
+  background-color: var(--avatar-purple);
 }
 
 .participantsText {

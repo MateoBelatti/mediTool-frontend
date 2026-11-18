@@ -41,7 +41,7 @@
   text-transform: uppercase;
   min-width: 200px;
   border-bottom: 1px solid var(--border-color);
-  box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.06);
+  box-shadow: 2px 0 4px -2px var(--border-subtle);
 }
 
 .dayColHeader {
@@ -75,7 +75,7 @@
 }
 
 .todayColHeader {
-  background-color: rgba(74, 107, 92, 0.03);
+  background-color: var(--accent-primary-bg);
 }
 
 .todayBadge {
@@ -95,7 +95,7 @@
 }
 
 .tableRow:hover {
-  background-color: #fcfbfa;
+  background-color: var(--surface-alt);
 }
 
 .tableRow:last-child {
@@ -112,11 +112,11 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.06);
+  box-shadow: 2px 0 4px -2px var(--border-subtle);
 }
 
 .tableRow:hover .stickyCol {
-  background-color: #fcfbfa;
+  background-color: var(--surface-alt);
 }
 
 .rowIndex {
@@ -142,7 +142,7 @@
 }
 
 .todayCell {
-  background-color: rgba(74, 107, 92, 0.03);
+  background-color: var(--accent-primary-bg);
 }
 
 .turnoPill {
@@ -163,7 +163,7 @@
 
 .turnoPill:hover {
   transform: scale(1.1);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-sm);
 }
 
 .turnoPill:focus-visible {
@@ -179,44 +179,44 @@
 
 /* Estado: Atrasado (sin registrar) */
 .pillAtrasado {
-  background-color: #f7ecd9;
+  background-color: var(--badge-pending-bg);
 }
 
 .pillAtrasado .pillDot {
-  background-color: #8c6b38;
+  background-color: var(--badge-pending-text);
 }
 
 /* Estado: Presente */
 .pillPresente {
-  background-color: #dcf0e2;
+  background-color: var(--badge-presente-bg);
 }
 
 .pillPresente .pillDot {
-  background-color: #2c5e43;
+  background-color: var(--badge-presente-text);
 }
 
 /* Estado: Ausente */
 .pillAusenteJustificada {
-  background-color: #f7ecd9;
-  border: 1px solid #8c6b38;
+  background-color: var(--badge-pending-bg);
+  border: 1px solid var(--badge-pending-text);
 }
 
 .pillAusenteJustificada .pillDot {
-  background-color: #8c6b38;
+  background-color: var(--badge-pending-text);
 }
 
 .pillAusenteInjustificada {
-  background-color: #fee2e2;
+  background-color: var(--badge-ausente-bg);
 }
 
 .pillAusenteInjustificada .pillDot {
-  background-color: #b4483b;
+  background-color: var(--badge-ausente-text);
 }
 
 /* Estado: Próximo */
 .pillProximo {
   background-color: transparent;
-  border: 1.5px dashed #cfc9bb;
+  border: 1.5px dashed var(--border-color);
 }
 
 .pillProximo .pillDot {
@@ -245,7 +245,7 @@
   width: 14px;
   height: 14px;
   border-radius: 4px;
-  background-color: #f7ecd9;
+  background-color: var(--badge-pending-bg);
   display: inline-block;
   position: relative;
 }
@@ -258,7 +258,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: #8c6b38;
+  background-color: var(--badge-pending-text);
 }
 
 .legendDotHoy {
@@ -269,7 +269,7 @@
 .legendBoxProximo {
   width: 14px;
   height: 14px;
-  border: 1.5px dashed #cfc9bb;
+  border: 1.5px dashed var(--border-color);
   border-radius: 3px;
   display: inline-block;
 }
@@ -392,13 +392,13 @@
 
 .quickBtnPresenteActive {
   background-color: var(--accent) !important;
-  color: #ffffff !important;
+  color: var(--on-accent) !important;
   border-color: var(--accent) !important;
 }
 
 .quickBtnAusenteActive {
   background-color: var(--text-primary) !important;
-  color: #ffffff !important;
+  color: var(--on-accent) !important;
   border-color: var(--text-primary) !important;
 }
 

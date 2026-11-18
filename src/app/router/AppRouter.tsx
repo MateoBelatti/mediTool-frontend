@@ -12,6 +12,7 @@ import { AsistenciasPage } from '@/pages/AsistenciasPage/AsistenciasPage'
 import { InformesPage } from '@/pages/InformesPage/InformesPage'
 import { ReunionesPage } from '@/pages/ReunionesPage/ReunionesPage'
 import { PerfilPage } from '@/pages/PerfilPage/PerfilPage'
+import { ConfiguracionPage } from '@/pages/ConfiguracionPage/ConfiguracionPage'
 
 import { ProtectedRoute } from './ProtectedRoute'
 
@@ -71,6 +72,10 @@ const router = createBrowserRouter([
       {
         path: 'perfil',
         element: <PerfilPage />,
+      },
+      {
+        path: 'configuracion',
+        element: <ConfiguracionPage />,
       },
       {
         path: '*',

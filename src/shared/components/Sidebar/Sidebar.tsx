@@ -7,7 +7,6 @@ import {
   StickyNote,
   ClipboardCheck,
   BarChart2,
-  Settings,
   LogOut,
   ChevronRight,
   ChevronLeft,
@@ -77,7 +76,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
 
   const toolsItems = [
     { icon: User, label: 'Perfil', path: '/perfil' },
-    { icon: Settings, label: 'Configuración', path: '/configuracion' },
     { icon: LogOut, label: 'Salir', onClick: handleLogout },
   ]
 

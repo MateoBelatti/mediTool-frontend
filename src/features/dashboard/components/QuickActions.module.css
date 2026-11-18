@@ -50,7 +50,7 @@
 }
 
 .actionBtn:hover {
-  border-color: var(--primary-color);
+  border-color: var(--accent-primary);
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
@@ -66,23 +66,23 @@
 }
 
 .blue {
-  background-color: #e0f2fe;
-  color: #0284c7;
+  background-color: var(--info-bg);
+  color: var(--info);
 }
 
 .green {
-  background-color: #dcfce7;
-  color: #16a34a;
+  background-color: var(--success-bg);
+  color: var(--success);
 }
 
 .purple {
-  background-color: #f3e8ff;
-  color: #9333ea;
+  background-color: var(--purple-bg);
+  color: var(--purple);
 }
 
 .orange {
-  background-color: #ffedd5;
-  color: #ea580c;
+  background-color: var(--orange-bg);
+  color: var(--orange);
 }
 
 .btnContent {
