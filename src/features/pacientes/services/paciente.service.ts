@@ -6,6 +6,10 @@ import type {
 } from '../types/paciente.types'
 import type { Profesional } from '../types/profesional.types'
 import type {
+  HistorialPacienteResponse,
+  HistorialQueryParams,
+} from '../types/historial.types'
+import type {
   PageResult,
   PaginationParams,
 } from '@/shared/types/pagination.types'
@@ -30,6 +34,17 @@ export const pacienteService = {
 
   async getById(id: number): Promise<Paciente> {
     const response = await apiClient.get<Paciente>(`/Paciente/${id}`)
+    return response.data
+  },
+
+  async getHistorial(
+    id: number,
+    params: HistorialQueryParams
+  ): Promise<HistorialPacienteResponse> {
+    const response = await apiClient.get<HistorialPacienteResponse>(
+      `/Paciente/${id}/historial`,
+      { params }
+    )
     return response.data
   },
 
