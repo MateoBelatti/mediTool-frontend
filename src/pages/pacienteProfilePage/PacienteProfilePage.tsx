@@ -9,31 +9,20 @@ import {
   MapPin,
   Calendar,
   CreditCard,
-  Clock,
   Edit,
   GraduationCap,
-  FileText,
 } from 'lucide-react'
 import { pacienteService } from '@/features/pacientes/services/paciente.service'
-import { turnosService } from '@/features/turnos/services/turnos.service'
-import { useInformesByPacienteId } from '@/features/informes/hooks/useInformes'
 import { useAuth, ROLES } from '@/features/auth/hooks/useAuth'
 import { Button } from '@/shared/components/Button/Button'
 import { PatientFormModal } from '@/features/pacientes/components/PatientFormModal'
+import { HistorialPaciente } from '@/features/pacientes/components/HistorialPaciente/HistorialPaciente'
 import { usePacientes } from '@/features/pacientes/hooks/usePacientes'
 import { useProfesionales } from '@/features/pacientes/hooks/useProfesionales'
 import { DocumentosPaciente } from '@/features/documentos/components/DocumentosPaciente/DocumentosPaciente'
 import type { PacienteFormData } from '@/features/pacientes/schemas/paciente.schema'
 import { Modal } from '@/shared/components/Modal/Modal'
 import styles from './PacienteProfilePage.module.css'
-
-const formatFechaInforme = (fecha: string) => {
-  if (fecha.length === 10) {
-    const [year, month, day] = fecha.split('-')
-    return `${day}/${month}/${year}`
-  }
-  return new Date(fecha).toLocaleDateString()
-}
 
 export const PacienteProfilePage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -42,7 +31,7 @@ export const PacienteProfilePage: React.FC = () => {
   const isAdmin = user?.role === ROLES.ADMIN
 
   const [activeTab, setActiveTab] = useState<
-    'info' | 'turnos' | 'informes' | 'documentos'
+    'info' | 'historial' | 'documentos'
   >('info')
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [pacienteToUnlink, setPacienteToUnlink] = useState<number | null>(null)
@@ -62,24 +51,6 @@ export const PacienteProfilePage: React.FC = () => {
     queryFn: () => pacienteService.getById(Number(id)),
     enabled: !!id,
   })
-
-  // We fetch previous appointments (turnos) for this patient
-  const { data: turnosResult, isLoading: isLoadingTurnos } = useQuery({
-    queryKey: ['turnos', 'paciente', id],
-    queryFn: () =>
-      turnosService.getAgenda({
-        desde: '2000-01-01',
-        hasta: '2100-01-01',
-        profesionalId: Number(user?.id),
-        pacienteId: Number(id),
-        page: 1,
-        pageSize: 1000,
-      }),
-    enabled: !!id && !!user?.id && !isAdmin,
-  })
-
-  const { data: informesPaciente, isLoading: isLoadingInformes } =
-    useInformesByPacienteId(Number(id) || 0, Number(user?.id) || 0, isAdmin)
 
   const handleEditSubmit = (data: PacienteFormData) => {
     if (paciente) {
@@ -188,16 +159,10 @@ export const PacienteProfilePage: React.FC = () => {
             Información General
           </button>
           <button
-            className={`${styles.tab} ${activeTab === 'turnos' ? styles.active : ''}`}
-            onClick={() => setActiveTab('turnos')}
+            className={`${styles.tab} ${activeTab === 'historial' ? styles.active : ''}`}
+            onClick={() => setActiveTab('historial')}
           >
-            Historial de Turnos
-          </button>
-          <button
-            className={`${styles.tab} ${activeTab === 'informes' ? styles.active : ''}`}
-            onClick={() => setActiveTab('informes')}
-          >
-            Informes
+            Historial
           </button>
           <button
             className={`${styles.tab} ${activeTab === 'documentos' ? styles.active : ''}`}
@@ -254,91 +219,8 @@ export const PacienteProfilePage: React.FC = () => {
             </div>
           )}
 
-          {activeTab === 'turnos' && (
-            <div className={styles.turnosSection}>
-              {isAdmin ? (
-                <p>
-                  El historial de turnos completo requiere vista de profesional.
-                </p>
-              ) : isLoadingTurnos ? (
-                <p>Cargando turnos...</p>
-              ) : (
-                (() => {
-                  const turnosDelPaciente =
-                    turnosResult?.items?.filter(
-                      (t) => t.pacienteId === paciente.id
-                    ) || []
-                  return turnosDelPaciente.length > 0 ? (
-                    <ul className={styles.turnosList}>
-                      {turnosDelPaciente.map((turno) => (
-                        <li key={turno.id} className={styles.turnoItem}>
-                          <div className={styles.turnoHeader}>
-                            <Clock size={16} />
-                            <strong>
-                              {new Date(turno.fechaHora).toLocaleDateString()}{' '}
-                              {new Date(turno.fechaHora).toLocaleTimeString(
-                                [],
-                                {
-                                  hour: '2-digit',
-                                  minute: '2-digit',
-                                }
-                              )}
-                            </strong>
-                          </div>
-                          <div className={styles.turnoDetails}>
-                            <span
-                              className={`${styles.statusBadge} ${styles[turno.estado.toLowerCase()] || ''}`}
-                            >
-                              {turno.estado}
-                            </span>
-                            <span>{turno.duracionMin} min</span>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>No hay turnos registrados con este profesional.</p>
-                  )
-                })()
-              )}
-            </div>
-          )}
-
-          {activeTab === 'informes' && (
-            <div className={styles.turnosSection}>
-              {isLoadingInformes ? (
-                <p>Cargando informes...</p>
-              ) : informesPaciente && informesPaciente.length > 0 ? (
-                <ul className={styles.informesList}>
-                  {informesPaciente.map((informe) => (
-                    <li key={informe.id} className={styles.informeItem}>
-                      <div className={styles.informeHeader}>
-                        <FileText size={16} />
-                        <strong>{formatFechaInforme(informe.fecha)}</strong>
-                        <span>{informe.tipo || 'Sin tipo'}</span>
-                      </div>
-                      <div className={styles.turnoDetails}>
-                        {informe.turnoId && (
-                          <span>Turno #{informe.turnoId}</span>
-                        )}
-                        {informe.estado && (
-                          <span className={styles.statusBadge}>
-                            {informe.estado}
-                          </span>
-                        )}
-                      </div>
-                      {informe.contenido && (
-                        <p className={styles.informeContenido}>
-                          {informe.contenido}
-                        </p>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No hay informes registrados para este paciente.</p>
-              )}
-            </div>
+          {activeTab === 'historial' && (
+            <HistorialPaciente pacienteId={paciente.id} />
           )}
 
           {activeTab === 'documentos' && (
