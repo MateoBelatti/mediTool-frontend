@@ -312,7 +312,7 @@ export const HistorialPaciente = ({ pacienteId }: HistorialPacienteProps) => {
                   <EventoCard
                     key={claveEvento(evento)}
                     evento={evento}
-                    onClick={() => setEventoSeleccionado(evento)}
+                    onClick={(element) => handleEventoClick(evento, element)}
                   />
                 ))}
               </div>
