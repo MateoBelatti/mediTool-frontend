@@ -4,7 +4,10 @@ import { useAuth, ROLES } from '@/features/auth/hooks/useAuth'
 import { usePacientes } from '../../features/pacientes/hooks/usePacientes'
 import { PatientList } from '../../features/pacientes/components/PatientList'
 import { PatientFormModal } from '../../features/pacientes/components/PatientFormModal'
-import type { Paciente } from '../../features/pacientes/types/paciente.types'
+import type {
+  Paciente,
+  PacienteCreateDto,
+} from '../../features/pacientes/types/paciente.types'
 import type { PacienteFormData } from '../../features/pacientes/schemas/paciente.schema'
 import styles from './PacientesPage.module.css'
 import { Plus, SlidersHorizontal, X } from 'lucide-react'
@@ -79,15 +82,22 @@ export const PacientesPage: React.FC = () => {
   }
 
   const handleSubmit = (data: PacienteFormData) => {
+    // El input de tipo date devuelve '' cuando está vacío; el backend espera
+    // un DateOnly? y no puede convertir el string vacío.
+    const dto: PacienteCreateDto = {
+      ...data,
+      fechaNacimiento: data.fechaNacimiento || undefined,
+    }
+
     if (selectedPaciente) {
       updatePaciente(
-        { id: selectedPaciente.id, data },
+        { id: selectedPaciente.id, data: dto },
         {
           onSuccess: () => handleCloseModal(),
         }
       )
     } else {
-      createPaciente(data, {
+      createPaciente(dto, {
         onSuccess: () => handleCloseModal(),
       })
     }
