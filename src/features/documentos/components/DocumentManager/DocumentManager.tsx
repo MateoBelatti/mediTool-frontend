@@ -8,7 +8,7 @@ import { Modal } from '@/shared/components/Modal/Modal'
 import type { DocumentoPaciente } from '../../types/documento.types'
 import styles from './DocumentManager.module.css'
 
-const MAX_ARCHIVO_BYTES = 10 * 1024 * 1024
+const MAX_ARCHIVO_BYTES = 25 * 1024 * 1024
 const EXTENSIONES_PERMITIDAS = ['.pdf', '.doc', '.docx']
 
 interface DocumentManagerProps {
@@ -69,7 +69,7 @@ export const DocumentManager = ({
     }
 
     if (archivo.size > MAX_ARCHIVO_BYTES) {
-      setError('El archivo supera el tamaño máximo permitido de 10 MB.')
+      setError('El archivo supera el tamaño máximo permitido de 25 MB.')
       return
     }
 
@@ -122,7 +122,7 @@ export const DocumentManager = ({
           <strong>
             {isUploading ? 'Subiendo documento...' : 'Subir documento'}
           </strong>
-          <span>PDF o Word (.doc, .docx) · máximo 10 MB</span>
+          <span>PDF o Word (.doc, .docx) · máximo 25 MB</span>
         </div>
         <Button
           variant="secondary"
